@@ -50,6 +50,22 @@ class _RecorderListPageState extends State<RecorderListPage> {
       imageCount: 3,
       audioCount: 1,
     ),
+    RecordItem(
+      id: 5,
+      title: "부당한 업무 지시",
+      content: "내 업무 범위가 아닌데 계속 시킨다",
+      date: "2024.01.12",
+      imageCount: 3,
+      audioCount: 1,
+    ),
+    RecordItem(
+      id: 6,
+      title: "야근 강요 기록",
+      content: "또 다시 야근을 강요당했다. 이번이 벌써...",
+      date: "2024.01.13",
+      imageCount: 1,
+      audioCount: 0,
+    ),
   ];
 
   @override
@@ -78,7 +94,6 @@ class _RecorderListPageState extends State<RecorderListPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print('FAB 버튼 클릭됨'); // 디버깅용
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -88,7 +103,9 @@ class _RecorderListPageState extends State<RecorderListPage> {
         },
         backgroundColor: const Color(0xFF0891B2),
         child: const Icon(Icons.add, color: Colors.white),
+        shape: const CircleBorder(),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
