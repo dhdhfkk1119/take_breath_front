@@ -45,11 +45,9 @@ class MainScreenState extends State<MainScreen> {
           selectedItemColor: primaryColor, // 코랄 핑크
           unselectedItemColor: Colors.grey,
           items: const [
-            BottomNavigationBarItem(
-                label: '커뮤니티', icon: Icon(CupertinoIcons.cart)),
-            BottomNavigationBarItem(
-                label: '기록실', icon: Icon(CupertinoIcons.square_on_circle)),
-            BottomNavigationBarItem(label: '상담리스트', icon: Icon(Icons.place)),
+            BottomNavigationBarItem(label: '커뮤니티', icon: Icon(Icons.comment)),
+            BottomNavigationBarItem(label: '기록실', icon: Icon(Icons.radio)),
+            BottomNavigationBarItem(label: '상담리스트', icon: Icon(Icons.people)),
             BottomNavigationBarItem(
                 label: '채팅', icon: Icon(CupertinoIcons.chat_bubble_text_fill)),
             BottomNavigationBarItem(
