@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:take_breath/_core/constants/custom_color.dart';
 
 /// [CustomWidget]
 ///
@@ -20,13 +21,15 @@ class CustomWidget {
       Color? color,
       FontWeight? weight,
       TextDecoration? decoration,
-      TextOverflow? overflow}) {
+      TextOverflow? overflow,
+      int? maxLines}) {
     return Text(
       title,
+      maxLines: maxLines ?? 1,
       style: TextStyle(
         fontSize: size ?? 18,
         fontWeight: weight ?? FontWeight.w700,
-        color: color ?? Colors.black,
+        color: color ?? brandFontColor,
         decoration: decoration ?? TextDecoration.none,
         overflow: overflow ?? TextOverflow.ellipsis,
       ),
