@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:take_breath/_core/constants/custom_color.dart';
+import 'package:take_breath/_core/constants/custom_showDialog.dart';
 import 'package:take_breath/_core/constants/custom_widget.dart';
 
 class CommunityDetailAppBar extends StatelessWidget
@@ -12,31 +14,59 @@ class CommunityDetailAppBar extends StatelessWidget
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      title: Row(
-        children: [
-          CustomWidget.buildTitle(
-            "상세 페이지",
-            weight: FontWeight.bold,
-            size: 20,
-          ),
-          const SizedBox(width: 4),
-        ],
+      leading: InkWell(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: Icon(CupertinoIcons.back, color: Colors.black),
+      ),
+      title: CustomWidget.buildTitle(
+        "상세 페이지",
+        weight: FontWeight.bold,
+        size: 20,
       ),
       centerTitle: true,
       actions: [
         IconButton(
-          icon: const Icon(CupertinoIcons.list_bullet),
           onPressed: () {
-            Scaffold.of(context).openDrawer(); // 부모 Scaffold 찾기
+            showBottomMenu(
+              context: context,
+              items: [
+                BottomMenuItem(
+                  title: "신고하기",
+                  icon: Icon(
+                    Icons.report,
+                  ),
+                  onTap: () {
+                    showReportBottomSheet(
+                      context: context,
+                      onReport: () {},
+                      postId: 1,
+                    );
+                  },
+                ),
+                BottomMenuItem(
+                  title: "수정",
+                  icon: Icon(
+                    Icons.edit,
+                    color: brandBackColor,
+                  ),
+                  onTap: () {},
+                ),
+                BottomMenuItem(
+                  title: "삭제",
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  onTap: () {
+                    // 내 번호, 게시물 번호 넘기기
+                  },
+                ),
+              ],
+            );
           },
-        ),
-        IconButton(
-          icon: const Icon(CupertinoIcons.search),
-          onPressed: onSearchPressed,
-        ),
-        IconButton(
-          icon: const Icon(CupertinoIcons.bell_fill),
-          onPressed: () {},
+          icon: Icon(Icons.more_vert),
         ),
       ],
     );

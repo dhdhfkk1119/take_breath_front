@@ -32,10 +32,10 @@ class CommunityListItem extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0), // 이미지 모서리를 둥글게 처리
                   child: Container(
-                    color: Colors.grey[300], // 임시 배경색
+                    color: Colors.grey[300],
                     child: const Center(
                       child: Icon(
-                        CupertinoIcons.photo, // 이미지 대체 아이콘
+                        CupertinoIcons.photo,
                         size: 40,
                         color: Colors.black45,
                       ),
