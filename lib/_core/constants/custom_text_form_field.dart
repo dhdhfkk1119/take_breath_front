@@ -31,7 +31,7 @@ class CustomTextFormField extends StatelessWidget {
     }
 
     final defaultDecoration = InputDecoration(
-      hintText: hint != null ? "Enter $hint" : null,
+      hintText: hint != null ? "$hint" : null,
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
       ),

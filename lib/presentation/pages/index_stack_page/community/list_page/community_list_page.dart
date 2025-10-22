@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:take_breath/_core/constants/custom_color.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/community/list_page/widgets/community_list_app_bar.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/community/list_page/widgets/community_list_body.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/community/list_page/widgets/community_list_filter.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/community/list_page/widgets/community_list_search_app_bar.dart';
+import 'package:take_breath/presentation/pages/index_stack_page/community/write_page/community_write_page.dart';
 
 class CommunityListPage extends StatefulWidget {
   const CommunityListPage({super.key});
@@ -50,19 +50,23 @@ class _CommunityListPageState extends State<CommunityListPage> {
               onSearchPressed: _toggleSearch,
             ),
       body: CommunityListBody(),
-      floatingActionButton: IconButton(
-        // IconButton을 직접 사용하지 않고, FloatingActionButton 위젯을 사용하는 것이 더 일반적입니다.
-        // 하지만 기존의 Icon 스타일을 유지하기 위해 FloatingActionButton.large를 사용할 수도 있습니다.
-        icon: const Icon(
-          CupertinoIcons.plus_circle_fill,
-          size: 50,
-        ),
-        color: brandBackColor, // 아이콘 색상 직접 지정
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // 작성 페이지로 이동 로직
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CommunityWritePage(),
+            ),
+          ).then((_) {
+            // 새로운 기록이 추가되었을 수도 있으므로 리스트 새로고침
+            setState(() {});
+          });
         },
+        backgroundColor: const Color(0xFF0891B2),
+        child: const Icon(Icons.add, color: Colors.white),
+        shape: const CircleBorder(),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
