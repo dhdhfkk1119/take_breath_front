@@ -18,19 +18,18 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // 새로운 색상 팔레트 (봄 웜톤)
-    const Color primaryColor = Color(0xFFF96666); // 코랄 핑크
+    const Color primaryColor = Color(0xFFF96666);
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: IndexedStack(
         index: _selectedIndex,
-        children: const [
-          CommunityListPage(),
-          RecorderListPage(),
-          CounselorListPage(),
-          ChatListPage(),
-          MypageListPage()
+        children: [
+          const CommunityListPage(),
+          const RecorderListPage(),
+          const CounselorListPage(),
+          const ChatListPage(),
+          const MypageListPage()
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -42,7 +41,7 @@ class MainScreenState extends State<MainScreen> {
               _selectedIndex = index;
             });
           },
-          selectedItemColor: primaryColor, // 코랄 핑크
+          selectedItemColor: primaryColor,
           unselectedItemColor: Colors.grey,
           items: const [
             BottomNavigationBarItem(label: '커뮤니티', icon: Icon(Icons.comment)),
