@@ -1,1 +1,0 @@
- C:\\take_breath_front\\.dart_tool\\flutter_build\\ad1c9903a11b935e394dd1e31b7bc6d9\\native_assets.yaml: 

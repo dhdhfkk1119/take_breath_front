@@ -257,6 +257,15 @@ $RECYCLE.BIN/
 
 .gradle/
 
+
+
+# 빌드 및 캐시 폴더 무시
+/build/
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+
 # Windows shortcuts
 *.lnk
 
