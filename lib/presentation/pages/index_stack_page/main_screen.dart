@@ -27,7 +27,7 @@ class MainScreenState extends State<MainScreen> {
         index: _selectedIndex,
         children: const [
           CommunityListPage(),
-          RecoderListPage(),
+          RecorderListPage(),
           CounselorListPage(),
           ChatListPage(),
           MypageListPage()
