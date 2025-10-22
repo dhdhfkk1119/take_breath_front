@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:take_breath/_core/constants/custom_widget.dart';
 
-class CommunityListAppBar extends StatelessWidget
+class CommunityDetailBody extends StatelessWidget
     implements PreferredSizeWidget {
   final VoidCallback? onSearchPressed;
 
-  const CommunityListAppBar({super.key, this.onSearchPressed});
+  const CommunityDetailBody({super.key, this.onSearchPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class CommunityListAppBar extends StatelessWidget
       title: Row(
         children: [
           CustomWidget.buildTitle(
-            "커뮤니티",
+            "상세 페이지",
             weight: FontWeight.bold,
             size: 20,
           ),
