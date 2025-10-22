@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../list_page/models/record_item.dart';
 import 'widgets/recorder_write_app_bar.dart';
 import 'widgets/recorder_write_title_field.dart';
 import 'widgets/recorder_write_content_field.dart';
@@ -7,18 +8,46 @@ import 'widgets/recorder_write_audio_list.dart';
 import 'widgets/recorder_write_attach_buttons.dart';
 
 class RecorderWritePage extends StatefulWidget {
-  const RecorderWritePage({Key? key}) : super(key: key);
+  final RecordItem? editingRecord;
+
+  const RecorderWritePage({
+    Key? key,
+    this.editingRecord,
+  }) : super(key: key);
 
   @override
   State<RecorderWritePage> createState() => _RecorderWritePageState();
 }
 
 class _RecorderWritePageState extends State<RecorderWritePage> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _contentController = TextEditingController();
+  late TextEditingController _titleController;
+  late TextEditingController _contentController;
 
   List<String> selectedImages = [];
   List<String> selectedAudios = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController();
+    _contentController = TextEditingController();
+
+    // 수정 모드인 경우 기존 데이터 로드
+    if (widget.editingRecord != null) {
+      _titleController.text = widget.editingRecord!.title;
+      _contentController.text = widget.editingRecord!.content;
+
+      // 기존 이미지 개수만큼 로드
+      for (int i = 0; i < widget.editingRecord!.imageCount; i++) {
+        selectedImages.add('image_${i + 1}');
+      }
+
+      // 기존 오디오 개수만큼 로드
+      for (int i = 0; i < widget.editingRecord!.audioCount; i++) {
+        selectedAudios.add('audio_${i + 1}');
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -32,6 +61,7 @@ class _RecorderWritePageState extends State<RecorderWritePage> {
     return Scaffold(
       appBar: RecorderWriteAppBar(
         onSave: _saveRecord,
+        isEditMode: widget.editingRecord != null,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -109,9 +139,27 @@ class _RecorderWritePageState extends State<RecorderWritePage> {
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('기록이 저장되었습니다')),
-    );
-    Navigator.pop(context);
+    // 수정 모드인 경우 기존 기록 업데이트
+    if (widget.editingRecord != null) {
+      widget.editingRecord!.update(
+        title: _titleController.text,
+        content: _contentController.text,
+        imageCount: selectedImages.length,
+        audioCount: selectedAudios.length,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('기록이 수정되었습니다')),
+      );
+
+      // 수정된 기록을 반환하면서 이전 페이지로 이동
+      Navigator.pop(context, widget.editingRecord);
+    } else {
+      // 새로 작성하는 경우
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('기록이 저장되었습니다')),
+      );
+      Navigator.pop(context);
+    }
   }
 }

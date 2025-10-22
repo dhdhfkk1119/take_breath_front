@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../write_page/recorder_write_page.dart';
+import 'models/record_item.dart';
 import 'widgets/recorder_list_app_bar.dart';
 import 'widgets/recorder_filter_bar.dart';
 import 'widgets/recorder_search_bar.dart';
@@ -16,6 +17,8 @@ class RecorderListPage extends StatefulWidget {
 class _RecorderListPageState extends State<RecorderListPage> {
   bool showFilter = false;
   bool showSearch = false;
+  DateTime? selectedDate;
+  List<RecordItem> filteredRecords = [];
 
   final List<RecordItem> records = [
     RecordItem(
@@ -69,6 +72,30 @@ class _RecorderListPageState extends State<RecorderListPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    filteredRecords = records;
+  }
+
+  void _filterRecordsByDate(DateTime? date) {
+    setState(() {
+      selectedDate = date;
+      if (date == null) {
+        filteredRecords = records;
+      } else {
+        // 선택한 날짜와 일치하는 기록만 필터링
+        String formattedDate = _formatDateToString(date);
+        filteredRecords =
+            records.where((record) => record.date == formattedDate).toList();
+      }
+    });
+  }
+
+  String _formatDateToString(DateTime date) {
+    return "${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}";
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: RecorderListAppBar(
@@ -82,13 +109,40 @@ class _RecorderListPageState extends State<RecorderListPage> {
             showSearch = !showSearch;
           });
         },
+        onDateSelected: _filterRecordsByDate,
       ),
       body: Column(
         children: [
           if (showSearch) const RecorderSearchBar(),
           if (showFilter) const RecorderFilterBar(),
+          // 선택된 날짜 표시
+          if (selectedDate != null)
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${_formatDateToString(selectedDate!)} 의 기록 (${filteredRecords.length}개)',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF0891B2),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => _filterRecordsByDate(null),
+                    child: const Icon(
+                      CupertinoIcons.xmark_circle_fill,
+                      color: Color(0xFF0891B2),
+                      size: 24,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           Expanded(
-            child: RecorderListBody(records: records),
+            child: RecorderListBody(records: filteredRecords),
           ),
         ],
       ),
@@ -99,7 +153,10 @@ class _RecorderListPageState extends State<RecorderListPage> {
             MaterialPageRoute(
               builder: (context) => const RecorderWritePage(),
             ),
-          );
+          ).then((_) {
+            // 새로운 기록이 추가되었을 수도 있으므로 리스트 새로고침
+            setState(() {});
+          });
         },
         backgroundColor: const Color(0xFF0891B2),
         child: const Icon(Icons.add, color: Colors.white),
@@ -108,22 +165,4 @@ class _RecorderListPageState extends State<RecorderListPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
-}
-
-class RecordItem {
-  final int id;
-  final String title;
-  final String content;
-  final String date;
-  final int imageCount;
-  final int audioCount;
-
-  RecordItem({
-    required this.id,
-    required this.title,
-    required this.content,
-    required this.date,
-    required this.imageCount,
-    required this.audioCount,
-  });
 }

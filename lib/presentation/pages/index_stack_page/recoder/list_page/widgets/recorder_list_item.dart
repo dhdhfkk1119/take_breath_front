@@ -1,21 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import '../../detail_page/recorder_detail_page.dart';
+import '../models/record_item.dart';
 
-import '../recoder_list_page.dart';
-
-class RecorderListItem extends StatelessWidget {
+class RecorderListItem extends StatefulWidget {
   final RecordItem record;
+  final VoidCallback onRecordUpdated;
 
   const RecorderListItem({
     Key? key,
     required this.record,
+    required this.onRecordUpdated,
   }) : super(key: key);
 
+  @override
+  State<RecorderListItem> createState() => _RecorderListItemState();
+}
+
+class _RecorderListItemState extends State<RecorderListItem> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // TODO: 상세 페이지로 이동
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecorderDetailPage(record: widget.record),
+          ),
+        ).then((_) {
+          // 상세 페이지에서 돌아올 때 부모 위젯에 알림
+          widget.onRecordUpdated();
+        });
       },
       child: Container(
         padding: const EdgeInsets.all(12),
@@ -27,17 +42,13 @@ class RecorderListItem extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 썸네일
             _buildThumbnail(),
-
-            // 텍스트 정보
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 제목
                   Text(
-                    record.title,
+                    widget.record.title,
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
@@ -46,10 +57,8 @@ class RecorderListItem extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
-
-                  // 내용 미리보기
                   Text(
-                    record.content,
+                    widget.record.content,
                     style: TextStyle(
                       fontSize: 13,
                       color: Colors.grey[600],
@@ -58,8 +67,6 @@ class RecorderListItem extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
-
-                  // 날짜 및 아이콘 정보
                   _buildMetadata(),
                 ],
               ),
@@ -71,8 +78,7 @@ class RecorderListItem extends StatelessWidget {
   }
 
   Widget _buildThumbnail() {
-    // 이미지가 있는 경우
-    if (record.imageCount > 0) {
+    if (widget.record.imageCount > 0) {
       return Container(
         width: 80,
         height: 80,
@@ -89,8 +95,7 @@ class RecorderListItem extends StatelessWidget {
       );
     }
 
-    // 이미지 없고 음성만 있는 경우
-    if (record.audioCount > 0) {
+    if (widget.record.audioCount > 0) {
       return Container(
         width: 80,
         height: 80,
@@ -114,14 +119,14 @@ class RecorderListItem extends StatelessWidget {
     return Row(
       children: [
         Text(
-          record.date,
+          widget.record.date,
           style: TextStyle(
             fontSize: 12,
             color: Colors.grey[500],
           ),
         ),
         const SizedBox(width: 8),
-        if (record.imageCount > 0) ...[
+        if (widget.record.imageCount > 0) ...[
           Icon(
             CupertinoIcons.photo,
             size: 12,
@@ -129,7 +134,7 @@ class RecorderListItem extends StatelessWidget {
           ),
           const SizedBox(width: 2),
           Text(
-            '${record.imageCount}',
+            '${widget.record.imageCount}',
             style: TextStyle(
               fontSize: 11,
               color: Colors.grey[500],
@@ -137,7 +142,7 @@ class RecorderListItem extends StatelessWidget {
           ),
           const SizedBox(width: 8),
         ],
-        if (record.audioCount > 0) ...[
+        if (widget.record.audioCount > 0) ...[
           Icon(
             CupertinoIcons.mic_fill,
             size: 12,
@@ -145,7 +150,7 @@ class RecorderListItem extends StatelessWidget {
           ),
           const SizedBox(width: 2),
           Text(
-            '${record.audioCount}',
+            '${widget.record.audioCount}',
             style: TextStyle(
               fontSize: 11,
               color: Colors.grey[500],
