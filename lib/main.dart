@@ -31,15 +31,6 @@ class MyApp extends StatelessWidget {
         Locale('ko', 'KR'),
         Locale('en', 'US'),
       ],
-      // 키보드 깜빡임 해결
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(
-            textScaleFactor: 1.0,
-          ),
-          child: child ?? const SizedBox(),
-        );
-      },
     );
   }
 }

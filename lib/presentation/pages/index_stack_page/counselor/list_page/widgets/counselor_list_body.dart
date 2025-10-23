@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import '../../detail_page/counselor_detail_page.dart';
 import '../models/counselor_model.dart';
 import 'counselor_item.dart';
 
 class CounselorListBody extends StatelessWidget {
   final List<CounselorModel> counselors;
-  final Function(CounselorModel) onItemTap;
 
   const CounselorListBody({
     Key? key,
     required this.counselors,
-    required this.onItemTap,
   }) : super(key: key);
 
   @override
@@ -19,7 +18,16 @@ class CounselorListBody extends StatelessWidget {
       itemBuilder: (context, index) {
         return CounselorItem(
           counselor: counselors[index],
-          onTap: () => onItemTap(counselors[index]),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CounselorDetailPage(
+                  counselor: counselors[index],
+                ),
+              ),
+            );
+          },
         );
       },
     );
