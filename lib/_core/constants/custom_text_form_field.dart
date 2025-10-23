@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // 재사용 가능한 위젯으로 설계 하기 위함
 // 맞춤 기능을 추가 하기 위해 재 설계 한다.
@@ -11,6 +12,8 @@ class CustomTextFormField extends StatelessWidget {
   final InputDecoration? decoration;
   final ValueChanged<String>? onChanged; // <<<--- 이 줄 추가
   final bool enabled;
+  final List<TextInputFormatter>? inputFormatters; //
+  final TextInputType? keyboardType;
 
   const CustomTextFormField({
     Key? key,
@@ -22,6 +25,8 @@ class CustomTextFormField extends StatelessWidget {
     this.decoration,
     this.onChanged, // <<<--- 이 줄 추가
     this.enabled = true,
+    this.inputFormatters,
+    this.keyboardType,
   }) : super(key: key);
 
   @override
@@ -63,6 +68,8 @@ class CustomTextFormField extends StatelessWidget {
       decoration: mergedDecoration,
       onChanged: onChanged, // <<<--- 이 줄 추가 (TextFormField의 onChanged에 연결)
       enabled: enabled,
+      inputFormatters: inputFormatters,
+      keyboardType: TextInputType.phone,
     );
   }
 }

@@ -1,28 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:take_breath/_core/constants/custom_color.dart';
 import 'package:take_breath/_core/constants/custom_widget.dart';
 
 class CustomTextButton extends StatelessWidget {
   final String text;
   final VoidCallback click;
-  // 버튼 비활성화 추가하기 -> 연속 클릭으로 데이터 중복으로 들어가는 거 방지
-  const CustomTextButton({super.key, required this.text, required this.click});
+  final Widget? icon;
+  final double? height;
+
+  const CustomTextButton({
+    super.key,
+    required this.text,
+    required this.click,
+    this.icon,
+    this.height,
+  });
 
   @override
   Widget build(BuildContext context) {
+    const Color brandBackColor = Colors.blue;
+
     return Container(
+      height: height ?? 50,
       decoration: BoxDecoration(
-        color: brandBackColor, // Container의 배경색 (color 속성 대신 여기로 옮김)
-        borderRadius: BorderRadius.circular(5.0), // 둥근 모서리 설정 (선택 사항)
+        color: brandBackColor,
+        borderRadius: BorderRadius.circular(5.0),
       ),
       width: double.infinity,
       child: TextButton(
         onPressed: click,
-        child: CustomWidget.buildTitle(
-          text,
-          size: 16,
-          weight: FontWeight.bold,
-          color: Colors.white,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center, // 중앙 정렬
+          mainAxisSize: MainAxisSize.min, // Row의 크기를 내부 컨텐츠에 맞춥니다.
+          children: [
+            CustomWidget.buildTitle(
+              text,
+              size: 16,
+              weight: FontWeight.bold,
+              color: Colors.white,
+            ),
+            if (icon != null) ...[
+              const SizedBox(width: 8.0), // 아이콘과 텍스트 사이에 간격 추가
+              icon!, // 아이콘 위젯
+            ],
+          ],
         ),
       ),
     );

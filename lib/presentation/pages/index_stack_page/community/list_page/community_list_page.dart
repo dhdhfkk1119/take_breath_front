@@ -21,9 +21,7 @@ class _CommunityListPageState extends State<CommunityListPage> {
     setState(() {
       _isSearching = !_isSearching;
       if (!_isSearching) {
-        // 검색 모드를 닫을 때 검색어 초기화 (선택 사항)
         _searchController.clear();
-        // 키보드 닫기 (선택 사항)
         FocusScope.of(context).unfocus();
       }
     });
@@ -59,7 +57,6 @@ class _CommunityListPageState extends State<CommunityListPage> {
               builder: (context) => const CommunityWritePage(),
             ),
           ).then((_) {
-            // 새로운 기록이 추가되었을 수도 있으므로 리스트 새로고침
             setState(() {});
           });
         },
