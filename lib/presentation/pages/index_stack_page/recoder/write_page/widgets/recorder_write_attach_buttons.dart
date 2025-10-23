@@ -15,15 +15,7 @@ class RecorderWriteAttachButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildButton(
-            icon: CupertinoIcons.photo,
-            label: '사진',
-            onTap: onImagePick,
-          ),
-          const SizedBox(width: 12),
           _buildButton(
             icon: CupertinoIcons.mic_fill,
             label: '음성녹음',
