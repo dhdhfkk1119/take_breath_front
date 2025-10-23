@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import '../../../../../../_core/utils/notification/notification_page..dart';
+import 'package:take_breath/presentation/pages/notification/notification_page..dart';
 
 class RecorderListAppBar extends StatelessWidget
     implements PreferredSizeWidget {

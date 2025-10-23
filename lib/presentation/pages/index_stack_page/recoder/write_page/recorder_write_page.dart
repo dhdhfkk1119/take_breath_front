@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:take_breath/_core/utils/closable_info_box.dart';
+import 'package:take_breath/_core/utils/image_picker_list.dart';
 import '../list_page/models/record_item.dart';
 import 'widgets/recorder_write_app_bar.dart';
 import 'widgets/recorder_write_title_field.dart';
@@ -73,22 +75,7 @@ class _RecorderWritePageState extends State<RecorderWritePage> {
               const SizedBox(height: 16),
               RecorderWriteContentField(controller: _contentController),
               const SizedBox(height: 24),
-              if (selectedImages.isNotEmpty) ...[
-                const Text(
-                  '사진',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 12),
-                RecorderWriteImageList(
-                  images: selectedImages,
-                  onRemove: (index) {
-                    setState(() {
-                      selectedImages.removeAt(index);
-                    });
-                  },
-                ),
-                const SizedBox(height: 24),
-              ],
+              ImagePickerList(),
               if (selectedAudios.isNotEmpty) ...[
                 const Text(
                   '음성 녹음',

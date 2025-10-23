@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:take_breath/_core/utils/notification/widgets/notification_item_widge.dart';
 import 'models/notification_model.dart';
+import 'widgets/notification_item_widge.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);

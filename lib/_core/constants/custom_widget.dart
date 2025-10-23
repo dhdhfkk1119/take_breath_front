@@ -29,7 +29,27 @@ class CustomWidget {
       style: TextStyle(
         fontSize: size ?? 18,
         fontWeight: weight ?? FontWeight.w700,
-        color: color ?? brandFontColor,
+        color: color ?? Colors.black,
+        decoration: decoration ?? TextDecoration.none,
+        overflow: overflow ?? TextOverflow.ellipsis,
+      ),
+    );
+  }
+
+  static Text buildContent(String title,
+      {double? size,
+      Color? color,
+      FontWeight? weight,
+      TextDecoration? decoration,
+      TextOverflow? overflow,
+      int? maxLines}) {
+    return Text(
+      title,
+      maxLines: maxLines,
+      style: TextStyle(
+        fontSize: size ?? 18,
+        fontWeight: weight ?? FontWeight.w700,
+        color: color ?? Colors.black45,
         decoration: decoration ?? TextDecoration.none,
         overflow: overflow ?? TextOverflow.ellipsis,
       ),
