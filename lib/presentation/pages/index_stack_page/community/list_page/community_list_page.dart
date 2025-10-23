@@ -51,6 +51,7 @@ class _CommunityListPageState extends State<CommunityListPage> {
             ),
       body: CommunityListBody(),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'community_list_fab',
         onPressed: () {
           Navigator.push(
             context,
