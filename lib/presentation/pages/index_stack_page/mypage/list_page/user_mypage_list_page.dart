@@ -3,9 +3,11 @@ import '../comment_page/user_comment_history_page.dart';
 import '../edit_page/user_profile_edit_page.dart';
 import '../favorite_page/user_favorite_list_page.dart';
 import '../my_write/my_write_page.dart';
+import '../new_report/user_report_assistant_page.dart';
+import '../report_page/user_report_history_page.dart';
 import '../widgets/user_counseling_history_section.dart';
-import '../widgets/user_profile_section.dart';
 import '../widgets/user_activity_section.dart';
+import '../widgets/user_profile_section.dart';
 import '../widgets/user_report_section.dart';
 
 class UserMypageListPage extends StatelessWidget {
@@ -54,14 +56,20 @@ class UserMypageListPage extends StatelessWidget {
   }
 
   void _handleReportHistory(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('신고내역 페이지로 이동')),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const UserReportHistoryPage(),
+      ),
     );
   }
 
   void _handleNewReport(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('새로운 신고 페이지로 이동')),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const UserReportAssistantPage(),
+      ),
     );
   }
 
