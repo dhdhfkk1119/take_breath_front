@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:take_breath/_core/constants/custom_color.dart';
 import 'package:take_breath/_core/constants/custom_widget.dart';
 
 class CustomTextButton extends StatelessWidget {
@@ -6,23 +7,23 @@ class CustomTextButton extends StatelessWidget {
   final VoidCallback click;
   final Widget? icon;
   final double? height;
+  Color? color;
 
-  const CustomTextButton({
+  CustomTextButton({
     super.key,
     required this.text,
     required this.click,
     this.icon,
     this.height,
+    this.color,
   });
 
   @override
   Widget build(BuildContext context) {
-    const Color brandBackColor = Colors.blue;
-
     return Container(
       height: height ?? 50,
       decoration: BoxDecoration(
-        color: brandBackColor,
+        color: brandBackColor ?? color,
         borderRadius: BorderRadius.circular(5.0),
       ),
       width: double.infinity,

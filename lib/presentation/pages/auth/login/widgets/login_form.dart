@@ -12,6 +12,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isAutoLoginChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +37,23 @@ class _LoginFormState extends State<LoginForm> {
             controller: _passwordController,
           ),
           SizedBox(height: 20),
+          Row(
+            children: [
+              Checkbox(
+                value: _isAutoLoginChecked, // 현재 상태 변수 연결
+                onChanged: (bool? newValue) {
+                  setState(() {
+                    // 체크박스 상태가 변경될 때마다 변수를 업데이트합니다.
+                    _isAutoLoginChecked = newValue ?? false;
+                  });
+                },
+              ),
+              Text(
+                "자동 로그인",
+                style: TextStyle(fontSize: 16),
+              ),
+            ],
+          ),
           CustomTextButton(
             text: "로그인",
             click: () {},

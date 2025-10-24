@@ -42,9 +42,12 @@ class SocialBody extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24.0),
                 ),
+                // 랜덤으로 문구가 등장하게
                 child: InkWell(
                   borderRadius: BorderRadius.circular(24.0),
-                  onTap: () {},
+                  onTap: () {
+                    // 임시 방편
+                  },
                   onFocusChange: (value) {},
                   child: Center(
                     child: Icon(
@@ -91,8 +94,9 @@ class SocialBody extends StatelessWidget {
                 color: Colors.white,
               ),
               click: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const SignPage()));
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => const SignPage()));
+                Navigator.pushNamed(context, "/main");
               }),
           SizedBox(
             height: 8,

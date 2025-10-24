@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       home: const SplashScreen(),
       routes: {
         "/social_page": (context) => const SocialPage(),
-        "/community_list_page": (context) => const CommunityListPage(),
+        "/main": (context) => const MainScreen(),
       },
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
