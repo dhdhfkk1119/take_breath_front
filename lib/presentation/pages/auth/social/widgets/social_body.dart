@@ -3,7 +3,9 @@ import 'package:take_breath/_core/constants/custom_color.dart';
 import 'package:take_breath/_core/constants/custom_google_button.dart';
 import 'package:take_breath/_core/constants/custom_text_button.dart';
 import 'package:take_breath/presentation/pages/auth/login/login_page.dart';
-import 'package:take_breath/presentation/pages/auth/sign/sign_page.dart';
+import 'package:take_breath/presentation/pages/auth/sign/counselor_sign/counselor_sign_page.dart';
+import 'package:take_breath/presentation/pages/auth/sign/member_sign/member_sign_page.dart';
+import 'package:take_breath/presentation/pages/auth/social/widgets/user_type_selected.dart';
 
 class SocialBody extends StatelessWidget {
   const SocialBody({super.key});
@@ -88,16 +90,33 @@ class SocialBody extends StatelessWidget {
             height: 8,
           ),
           CustomTextButton(
-              text: "시작하기",
-              icon: Icon(
-                Icons.arrow_forward,
-                color: Colors.white,
-              ),
-              click: () {
-                // Navigator.push(context,
-                //     MaterialPageRoute(builder: (context) => const SignPage()));
-                Navigator.pushNamed(context, "/main");
-              }),
+            text: "시작하기",
+            icon: const Icon(
+              Icons.arrow_forward,
+              color: Colors.white,
+            ),
+            click: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext dialogContext) {
+                  return UserTypeSelected(
+                    onCounselorSelected: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const CounselorSignPage()));
+                    },
+                    onUserSelected: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MemberSignPage()));
+                    },
+                  );
+                },
+              );
+            },
+          ),
           SizedBox(
             height: 8,
           ),
@@ -113,10 +132,40 @@ class SocialBody extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()));
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext dialogContext) {
+                      return AlertDialog(
+                        title: const Text("접속 유형 선택"),
+                        content: const Text("어떤 유형으로 로그인을 시작하시겠습니까?"),
+                        actions: <Widget>[
+                          // 1. 일반 유저 버튼
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(dialogContext);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const LoginPage()));
+                            },
+                            child: const Text("일반 유저"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(dialogContext); // 팝업 닫기
+                              Navigator.pushNamed(context, "/main");
+                            },
+                            child: const Text(
+                              "상담사",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
                 child: Text(
                   "로그인",

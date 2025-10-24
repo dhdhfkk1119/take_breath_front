@@ -5,14 +5,14 @@ import 'package:take_breath/_core/constants/custom_text_button.dart';
 import 'package:take_breath/_core/constants/custom_text_form_field.dart';
 import 'package:take_breath/presentation/pages/auth/terms/terms_page.dart';
 
-class SignForm extends StatefulWidget {
-  const SignForm({super.key});
+class MemberSignForm extends StatefulWidget {
+  const MemberSignForm({super.key});
 
   @override
-  State<SignForm> createState() => _SignFormState();
+  State<MemberSignForm> createState() => _MemberSignFormState();
 }
 
-class _SignFormState extends State<SignForm> {
+class _MemberSignFormState extends State<MemberSignForm> {
   // 각각의 controller를 개별로 생성
 
   final phoneMaskFormatter = MaskTextInputFormatter(
