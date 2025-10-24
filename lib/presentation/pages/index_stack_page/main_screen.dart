@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_list/chat_list_page.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/counselor/list_page/counselor_list_page.dart';
-import 'package:take_breath/presentation/pages/index_stack_page/mypage/list_page/mypage_list_page.dart';
+import 'package:take_breath/presentation/pages/index_stack_page/mypage/list_page/user_mypage_list_page.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/recoder/list_page/recoder_list_page.dart';
 import 'community/list_page/community_list_page.dart';
 
@@ -29,7 +29,7 @@ class MainScreenState extends State<MainScreen> {
           const RecorderListPage(),
           const CounselorListPage(),
           const ChatListPage(),
-          const MypageListPage()
+          const UserMypageListPage()
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
