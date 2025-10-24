@@ -53,20 +53,6 @@ class UserProfileSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          // 버튼
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: onEditPressed,
-              icon: const Icon(CupertinoIcons.pencil),
-              label: const Text('정보수정'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red[400],
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 12),
-              ),
-            ),
-          ),
         ],
       ),
     );
