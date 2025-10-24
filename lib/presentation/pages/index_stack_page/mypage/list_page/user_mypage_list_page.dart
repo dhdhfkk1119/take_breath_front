@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../comment_page/user_comment_history_page.dart';
 import '../edit_page/user_profile_edit_page.dart';
 import '../favorite_page/user_favorite_list_page.dart';
 import '../my_write/my_write_page.dart';
@@ -44,8 +45,11 @@ class UserMypageListPage extends StatelessWidget {
   }
 
   void _handleCommentHistory(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('댓글내역 페이지로 이동')),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const UserCommentHistoryPage(),
+      ),
     );
   }
 
