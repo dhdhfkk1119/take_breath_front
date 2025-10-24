@@ -48,7 +48,7 @@ class UserActivitySection extends StatelessWidget {
               Expanded(
                 child: _buildActivityButton(
                   icon: CupertinoIcons.chat_bubble_text,
-                  label: '댓글내역',
+                  label: '댓글 내역',
                   onPressed: onCommentHistoryPressed,
                 ),
               ),
@@ -56,7 +56,7 @@ class UserActivitySection extends StatelessWidget {
               Expanded(
                 child: _buildActivityButton(
                   icon: CupertinoIcons.exclamationmark_circle,
-                  label: '신고내역',
+                  label: '신고 내역',
                   onPressed: onReportHistoryPressed,
                 ),
               ),
