@@ -30,7 +30,7 @@ class UserReportSection extends StatelessWidget {
             child: ElevatedButton.icon(
               onPressed: onNewReport,
               icon: const Icon(CupertinoIcons.exclamationmark_circle),
-              label: const Text('새로운 신고'),
+              label: const Text('신고 도우미'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red[400],
                 foregroundColor: Colors.white,
