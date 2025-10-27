@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:take_breath/_core/constants/custom_color.dart';
+import 'package:take_breath/presentation/pages/auth/sign/counselor_sign/counselor_sign_page.dart';
+import 'package:take_breath/presentation/pages/auth/sign/member_sign/member_sign_page.dart';
 
 class UserTypeSelected extends StatelessWidget {
-  // 상담사 선택 시 실행할 콜백 함수
-  final VoidCallback onCounselorSelected;
-  // 일반 유저 선택 시 실행할 콜백 함수
-  final VoidCallback onUserSelected;
-
   const UserTypeSelected({
     super.key,
-    required this.onCounselorSelected,
-    required this.onUserSelected,
   });
 
   @override
@@ -18,7 +13,7 @@ class UserTypeSelected extends StatelessWidget {
     return AlertDialog(
       title: Text(
         "회원 유형을 선택해 주세요",
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        style: TextStyle(color: brandBackColor, fontWeight: FontWeight.bold),
       ),
       backgroundColor: Colors.transparent,
       content: Column(
@@ -30,7 +25,10 @@ class UserTypeSelected extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.pop(context); // 팝업 닫기
-              onUserSelected(); // 콜백 함수 실행
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CounselorSignPage()),
+              );
             },
             child: Container(
               width: 200,
@@ -56,7 +54,12 @@ class UserTypeSelected extends StatelessWidget {
           GestureDetector(
             onTap: () {
               Navigator.pop(context); // 팝업 닫기
-              onUserSelected(); // 콜백 함수 실행
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MemberSignPage(),
+                ),
+              );
             },
             child: Container(
               width: 200,
@@ -79,12 +82,15 @@ class UserTypeSelected extends StatelessWidget {
         ],
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text(
-            "취소",
-            style: TextStyle(color: Colors.white),
+        OutlinedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          style: OutlinedButton.styleFrom(
+            backgroundColor: brandBackColor,
+            foregroundColor: Colors.white,
           ),
+          child: Text("취소"),
         ),
       ],
     );

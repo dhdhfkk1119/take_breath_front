@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:take_breath/_core/constants/custom_color.dart';
 import 'package:take_breath/_core/constants/custom_google_button.dart';
 import 'package:take_breath/_core/constants/custom_text_button.dart';
-import 'package:take_breath/presentation/pages/auth/login/login_page.dart';
+import 'package:take_breath/presentation/pages/auth/login/counselor_login/counselor_login_page.dart';
+import 'package:take_breath/presentation/pages/auth/login/member_login/member_login_page.dart';
 import 'package:take_breath/presentation/pages/auth/sign/counselor_sign/counselor_sign_page.dart';
 import 'package:take_breath/presentation/pages/auth/sign/member_sign/member_sign_page.dart';
 import 'package:take_breath/presentation/pages/auth/social/widgets/user_type_selected.dart';
@@ -99,20 +100,7 @@ class SocialBody extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (BuildContext dialogContext) {
-                  return UserTypeSelected(
-                    onCounselorSelected: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const CounselorSignPage()));
-                    },
-                    onUserSelected: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MemberSignPage()));
-                    },
-                  );
+                  return UserTypeSelected();
                 },
               );
             },
@@ -146,14 +134,19 @@ class SocialBody extends StatelessWidget {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const LoginPage()));
+                                      builder: (context) =>
+                                          const MemberLoginPage()));
                             },
                             child: const Text("일반 유저"),
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.pop(dialogContext); // 팝업 닫기
-                              Navigator.pushNamed(context, "/main");
+                              Navigator.pop(dialogContext);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CounselorLoginPage()));
                             },
                             child: const Text(
                               "상담사",

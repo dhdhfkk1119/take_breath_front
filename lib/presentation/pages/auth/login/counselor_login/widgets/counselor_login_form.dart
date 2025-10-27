@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:take_breath/_core/constants/custom_text_button.dart';
 import 'package:take_breath/_core/constants/custom_text_form_field.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class CounselorLoginForm extends StatefulWidget {
+  const CounselorLoginForm({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<CounselorLoginForm> createState() => _CounselorLoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _CounselorLoginFormState extends State<CounselorLoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isAutoLoginChecked = false;
