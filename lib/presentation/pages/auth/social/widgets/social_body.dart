@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:take_breath/_core/constants/custom_color.dart';
 import 'package:take_breath/_core/constants/custom_google_button.dart';
 import 'package:take_breath/_core/constants/custom_text_button.dart';
-import 'package:take_breath/presentation/pages/auth/login/counselor_login/counselor_login_page.dart';
 import 'package:take_breath/presentation/pages/auth/login/member_login/member_login_page.dart';
-import 'package:take_breath/presentation/pages/auth/sign/counselor_sign/counselor_sign_page.dart';
-import 'package:take_breath/presentation/pages/auth/sign/member_sign/member_sign_page.dart';
 import 'package:take_breath/presentation/pages/auth/social/widgets/user_type_selected.dart';
 
 class SocialBody extends StatelessWidget {
@@ -120,45 +117,10 @@ class SocialBody extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext dialogContext) {
-                      return AlertDialog(
-                        title: const Text("접속 유형 선택"),
-                        content: const Text("어떤 유형으로 로그인을 시작하시겠습니까?"),
-                        actions: <Widget>[
-                          // 1. 일반 유저 버튼
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(dialogContext);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const MemberLoginPage()));
-                            },
-                            child: const Text("일반 유저"),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(dialogContext);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CounselorLoginPage()));
-                            },
-                            child: const Text(
-                              "상담사",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MemberLoginPage()));
                 },
                 child: Text(
                   "로그인",

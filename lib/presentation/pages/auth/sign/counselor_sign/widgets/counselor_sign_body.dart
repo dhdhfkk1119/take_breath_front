@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:take_breath/_core/constants/custom_color.dart';
 import 'package:take_breath/_core/constants/custom_text_button.dart';
 import 'package:take_breath/_core/constants/custom_text_form_field.dart';
 import 'package:take_breath/presentation/pages/auth/terms/terms_page.dart';
+
+import 'counselor_info_form_body.dart';
 
 class CounselorSignBody extends StatefulWidget {
   const CounselorSignBody({super.key});
@@ -33,9 +36,8 @@ class _CounselorSignBodyState extends State<CounselorSignBody> {
   bool isCodeEnabled = false; // 인증 코드 입력 활성화 여부
   String? selectedGender; // 성별 선택 (남 or 여)
   File? _profileImage; // 로컬에서 선택한 이미지 파일
-
+  final List<CounselorInfoFormBody> _licenseForms = [];
   final ImagePicker _picker = ImagePicker();
-  List<File> _licenseImages = [];
 
   Future<void> _pickImage() async {
     final XFile? pickedFile =
@@ -43,16 +45,6 @@ class _CounselorSignBodyState extends State<CounselorSignBody> {
     if (pickedFile != null) {
       setState(() {
         _profileImage = File(pickedFile.path);
-      });
-    }
-  }
-
-  Future<void> _pickLicenseImage() async {
-    final XFile? pickedFile =
-        await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _licenseImages.add(File(pickedFile.path));
       });
     }
   }
@@ -127,54 +119,35 @@ class _CounselorSignBodyState extends State<CounselorSignBody> {
               ),
             ],
           ),
-          const SizedBox(height: 20),
-          const Text(
-            "자격증 이미지 등록",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // 기존에 선택한 이미지 보여주기
-              ..._licenseImages.map(
-                (file) => Stack(
-                  children: [
-                    Image.file(
-                      file,
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.cover,
-                    ),
-                    Positioned(
-                      top: -10,
-                      right: -10,
-                      child: IconButton(
-                        icon: const Icon(Icons.close, color: Colors.red),
-                        onPressed: () {
-                          setState(() {
-                            _licenseImages.remove(file);
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+              const Text(
+                "자격증 등록",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              // 이미지 추가 버튼
-              GestureDetector(
-                onTap: _pickLicenseImage,
-                child: Container(
-                  width: 80,
-                  height: 80,
-                  color: Colors.grey.shade200,
-                  child: const Icon(Icons.add),
-                ),
-              ),
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  final UniqueKey newKey = UniqueKey();
+
+                  setState(() {
+                    final newForm = CounselorInfoFormBody(
+                      key: newKey,
+                      onRemove: () {
+                        setState(() {
+                          _licenseForms.removeWhere((element) =>
+                              element.key == newKey); // Key로 해당 요소를 찾습니다.
+                        });
+                      },
+                    );
+                    _licenseForms.add(newForm);
+                  });
+                },
+              )
             ],
           ),
-          const SizedBox(height: 20),
+          Column(children: _licenseForms),
           CustomTextButton(
             text: "회원가입",
             click: () {
