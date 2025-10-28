@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:take_breath/presentation/pages/index_stack_page/mypage/settings_page/settings_page.dart';
 import '../widgets/counselor_profile_section.dart';
 import '../widgets/counselor_stats_section.dart';
 import '../widgets/counselor_activity_section.dart';
@@ -6,8 +7,18 @@ import '../widgets/counselor_review_section.dart';
 import '../edit_page/counselor_profile_edit_page.dart';
 import '../review_page/counselor_review_list_page.dart';
 
-class CounselorMypageListPage extends StatelessWidget {
+class CounselorMypageListPage extends StatefulWidget {
   const CounselorMypageListPage({Key? key}) : super(key: key);
+
+  @override
+  State<CounselorMypageListPage> createState() =>
+      _CounselorMypageListPageState();
+}
+
+class _CounselorMypageListPageState extends State<CounselorMypageListPage> {
+  // 설정 상태 관리
+  bool _notificationEnabled = true;
+  bool _isAnonymous = true;
 
   void _handleEditProfile(BuildContext context) {
     Navigator.push(
@@ -27,6 +38,27 @@ class CounselorMypageListPage extends StatelessWidget {
     );
   }
 
+  // 설정 버튼 클릭
+  void _showSettingsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return SettingsPage(
+          notificationEnabled: _notificationEnabled,
+          isAnonymous: _isAnonymous,
+          onNotificationChanged: (value) {
+            setState(() => _notificationEnabled = value);
+          },
+          onAnonymousChanged: (value) {
+            setState(() => _isAnonymous = value);
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +71,27 @@ class CounselorMypageListPage extends StatelessWidget {
             pinned: true,
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
+            actions: [
+              // 오른쪽 설정 버튼
+              Padding(
+                padding: const EdgeInsets.only(right: 12.0),
+                child: GestureDetector(
+                  onTap: _showSettingsBottomSheet,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.settings,
+                      color: Colors.grey[700],
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           SliverToBoxAdapter(
             child: Column(
