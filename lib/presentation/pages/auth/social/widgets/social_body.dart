@@ -4,6 +4,7 @@ import 'package:take_breath/_core/constants/custom_google_button.dart';
 import 'package:take_breath/_core/constants/custom_text_button.dart';
 import 'package:take_breath/presentation/pages/auth/login/member_login/member_login_page.dart';
 import 'package:take_breath/presentation/pages/auth/social/widgets/user_type_selected.dart';
+import 'package:take_breath/presentation/pages/index_stack_page/main_screen.dart';
 
 class SocialBody extends StatelessWidget {
   const SocialBody({super.key});
@@ -46,7 +47,12 @@ class SocialBody extends StatelessWidget {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(24.0),
                   onTap: () {
-                    // 임시 방편
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MainScreen(),
+                      ),
+                    );
                   },
                   onFocusChange: (value) {},
                   child: Center(
