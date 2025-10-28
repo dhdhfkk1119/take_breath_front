@@ -3,11 +3,17 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:take_breath/presentation/pages/auth/social/social_page.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/community/list_page/community_list_page.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/main_screen.dart';
+import 'package:take_breath/presentation/pages/index_stack_page/service/notification_service.dart';
 import 'package:take_breath/presentation/pages/splash/splash_screen.dart';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // NotificationService 초기화
+  await NotificationService().initialize();
+
   runApp(const MyApp());
 }
 

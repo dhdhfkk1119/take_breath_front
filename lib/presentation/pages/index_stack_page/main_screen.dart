@@ -5,6 +5,7 @@ import 'package:take_breath/presentation/pages/index_stack_page/counselor/list_p
 import 'package:take_breath/presentation/pages/index_stack_page/mypage/list_page/user_mypage_list_page.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/recoder/list_page/recoder_list_page.dart';
 import 'community/list_page/community_list_page.dart';
+import 'mypage/list_page/counselor_mypage_list_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -29,7 +30,8 @@ class MainScreenState extends State<MainScreen> {
           const RecorderListPage(),
           const CounselorListPage(),
           const ChatListPage(),
-          const UserMypageListPage()
+          const UserMypageListPage(),
+          // const CounselorMypageListPage() // 테스트 용도 회원 종류가 회원, 상담사 경우 확인할때만
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

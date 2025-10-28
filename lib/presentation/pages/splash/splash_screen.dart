@@ -82,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen>
 
                     // 앱 이름
                     const Text(
-                      'Take Breath',
+                      'Take a Breath',
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,

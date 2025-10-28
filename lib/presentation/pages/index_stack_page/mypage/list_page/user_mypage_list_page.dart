@@ -5,13 +5,25 @@ import '../favorite_page/user_favorite_list_page.dart';
 import '../my_write/my_write_page.dart';
 import '../new_report/user_report_assistant_page.dart';
 import '../report_page/user_report_history_page.dart';
+import '../resource_page/resource_page.dart';
+import '../settings_page/settings_page.dart';
 import '../widgets/user_counseling_history_section.dart';
 import '../widgets/user_activity_section.dart';
 import '../widgets/user_profile_section.dart';
 import '../widgets/user_report_section.dart';
+import '../widgets/user_resource_section.dart';
 
-class UserMypageListPage extends StatelessWidget {
+class UserMypageListPage extends StatefulWidget {
   const UserMypageListPage({Key? key}) : super(key: key);
+
+  @override
+  State<UserMypageListPage> createState() => _UserMypageListPageState();
+}
+
+class _UserMypageListPageState extends State<UserMypageListPage> {
+  // 설정 상태 관리
+  bool _notificationEnabled = true;
+  bool _isAnonymous = true;
 
   void _handleEditProfile(BuildContext context) {
     Navigator.push(
@@ -73,6 +85,37 @@ class UserMypageListPage extends StatelessWidget {
     );
   }
 
+  // 자료실 페이지 이동 ← 새로 추가
+  void _handleResourcePage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ResourcePage(),
+      ),
+    );
+  }
+
+  // 설정 버튼 클릭
+  void _showSettingsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return SettingsPage(
+          notificationEnabled: _notificationEnabled,
+          isAnonymous: _isAnonymous,
+          onNotificationChanged: (value) {
+            setState(() => _notificationEnabled = value);
+          },
+          onAnonymousChanged: (value) {
+            setState(() => _isAnonymous = value);
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,6 +123,27 @@ class UserMypageListPage extends StatelessWidget {
         title: const Text('프로필'),
         centerTitle: true,
         elevation: 0,
+        actions: [
+          // 오른쪽 설정 버튼
+          Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: GestureDetector(
+              onTap: _showSettingsBottomSheet,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.settings,
+                  color: Colors.grey[700],
+                  size: 24,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -101,6 +165,11 @@ class UserMypageListPage extends StatelessWidget {
               onFavoriteListPressed: () => _handleFavoriteList(context),
               onCommentHistoryPressed: () => _handleCommentHistory(context),
               onReportHistoryPressed: () => _handleReportHistory(context),
+            ),
+            const SizedBox(height: 20),
+            // 자료실 섹션 ← 새로 추가
+            UserResourceSection(
+              onResourcePressed: () => _handleResourcePage(context),
             ),
             const SizedBox(height: 20),
             // 신고 섹션
