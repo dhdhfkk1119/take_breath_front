@@ -1,152 +1,159 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:take_breath/presentation/pages/index_stack_page/recoder/list_page/widgets/recorder_search_bar.dart';
+import '../../../notification/notification_page..dart';
 import '../write_page/recorder_write_page.dart';
-import 'models/record_item.dart';
 import 'widgets/recorder_list_app_bar.dart';
-import 'widgets/recorder_filter_bar.dart';
-import 'widgets/recorder_search_bar.dart';
 import 'widgets/recorder_list_body.dart';
 
 class RecorderListPage extends StatefulWidget {
-  const RecorderListPage({Key? key}) : super(key: key);
+  const RecorderListPage({super.key});
 
   @override
   State<RecorderListPage> createState() => _RecorderListPageState();
 }
 
 class _RecorderListPageState extends State<RecorderListPage> {
-  bool showFilter = false;
-  bool showSearch = false;
-  DateTime? selectedDate;
-  List<RecordItem> filteredRecords = [];
+  bool _isSearching = false;
+  final TextEditingController _searchController = TextEditingController();
+  DateTime? _selectedDate;
+  String _filterType = 'all'; // all, week, month, image, audio
 
-  final List<RecordItem> records = [
-    RecordItem(
-      id: 1,
-      title: "오늘도 힘든 하루였다",
-      content: "상사의 부당한 지시로 인해...",
-      date: "2024.01.15",
-      imageCount: 2,
-      audioCount: 1,
-    ),
-    RecordItem(
-      id: 2,
-      title: "회의 중 불쾌한 발언",
-      content: "성차별적인 발언을 들었다",
-      date: "2024.01.14",
-      imageCount: 0,
-      audioCount: 2,
-    ),
-    RecordItem(
-      id: 3,
-      title: "야근 강요 기록",
-      content: "또 다시 야근을 강요당했다. 이번이 벌써...",
-      date: "2024.01.13",
-      imageCount: 1,
-      audioCount: 0,
-    ),
-    RecordItem(
-      id: 4,
-      title: "부당한 업무 지시",
-      content: "내 업무 범위가 아닌데 계속 시킨다",
-      date: "2024.01.12",
-      imageCount: 3,
-      audioCount: 1,
-    ),
-    RecordItem(
-      id: 5,
-      title: "부당한 업무 지시",
-      content: "내 업무 범위가 아닌데 계속 시킨다",
-      date: "2024.01.12",
-      imageCount: 3,
-      audioCount: 1,
-    ),
-    RecordItem(
-      id: 6,
-      title: "야근 강요 기록",
-      content: "또 다시 야근을 강요당했다. 이번이 벌써...",
-      date: "2024.01.13",
-      imageCount: 1,
-      audioCount: 0,
-    ),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    filteredRecords = records;
-  }
-
-  void _filterRecordsByDate(DateTime? date) {
+  void _toggleSearch() {
     setState(() {
-      selectedDate = date;
-      if (date == null) {
-        filteredRecords = records;
-      } else {
-        // 선택한 날짜와 일치하는 기록만 필터링
-        String formattedDate = _formatDateToString(date);
-        filteredRecords =
-            records.where((record) => record.date == formattedDate).toList();
+      _isSearching = !_isSearching;
+      if (!_isSearching) {
+        _searchController.clear();
+        FocusScope.of(context).unfocus();
       }
     });
   }
 
-  String _formatDateToString(DateTime date) {
-    return "${date.year}.${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}";
+  void _showCalendar() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
+  }
+
+  void _showFilterMenu() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              '필터',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildFilterOption('all', '전체', Icons.all_inbox),
+            _buildFilterOption('week', '이번주', Icons.calendar_today),
+            _buildFilterOption('month', '이번달', Icons.calendar_month),
+            const SizedBox(height: 16),
+            const Divider(),
+            const SizedBox(height: 16),
+            _buildFilterOption('image', '사진 있음', CupertinoIcons.photo),
+            _buildFilterOption('audio', '음성 있음', CupertinoIcons.mic_fill),
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterOption(String value, String label, IconData icon) {
+    bool isSelected = _filterType == value;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _filterType = value;
+        });
+        Navigator.pop(context);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.grey[200]!,
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? const Color(0xFF0891B2) : Colors.grey[400],
+            ),
+            const SizedBox(width: 12),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 16,
+                color: isSelected ? const Color(0xFF0891B2) : Colors.black,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+            const Spacer(),
+            if (isSelected)
+              const Icon(
+                CupertinoIcons.checkmark_alt,
+                color: Color(0xFF0891B2),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showNotification() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const NotificationPage(),
+      ),
+    );
+  }
+
+  void _executeSearch(String query) {
+    print("기록 검색 실행: $query");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: RecorderListAppBar(
-        onFilterToggle: () {
-          setState(() {
-            showFilter = !showFilter;
-          });
-        },
-        onSearchToggle: () {
-          setState(() {
-            showSearch = !showSearch;
-          });
-        },
-        onDateSelected: _filterRecordsByDate,
-      ),
-      body: Column(
-        children: [
-          if (showSearch) const RecorderSearchBar(),
-          if (showFilter) const RecorderFilterBar(),
-          // 선택된 날짜 표시
-          if (selectedDate != null)
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${_formatDateToString(selectedDate!)} 의 기록 (${filteredRecords.length}개)',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF0891B2),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => _filterRecordsByDate(null),
-                    child: const Icon(
-                      CupertinoIcons.xmark_circle_fill,
-                      color: Color(0xFF0891B2),
-                      size: 24,
-                    ),
-                  ),
-                ],
-              ),
+      appBar: _isSearching
+          ? RecorderListSearchAppBar(
+              onCancel: _toggleSearch,
+              controller: _searchController,
+              onSubmitted: _executeSearch,
+            )
+          : RecorderListAppBar(
+              onSearchPressed: _toggleSearch,
+              onCalendarPressed: _showCalendar,
+              onFilterPressed: _showFilterMenu,
+              onNotificationPressed: _showNotification,
             ),
-          Expanded(
-            child: RecorderListBody(records: filteredRecords),
-          ),
-        ],
+      body: RecorderListBody(
+        filterType: _filterType,
+        selectedDate: _selectedDate,
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'recorder_list_fab',
         onPressed: () {
           Navigator.push(
             context,
@@ -154,7 +161,6 @@ class _RecorderListPageState extends State<RecorderListPage> {
               builder: (context) => const RecorderWritePage(),
             ),
           ).then((_) {
-            // 새로운 기록이 추가되었을 수도 있으므로 리스트 새로고침
             setState(() {});
           });
         },
@@ -164,5 +170,11 @@ class _RecorderListPageState extends State<RecorderListPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 }
