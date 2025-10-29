@@ -44,12 +44,16 @@ dependencies:
   vibration: ^1.9.0
   audioplayers: ^5.2.0
   shared_preferences: ^2.2.3
-  freezed: ^2.5.2
+  freezed_annotation: ^2.4.4 # freezed가 생성하는 코드가 의존하는 패키지
+  json_serializable: ^6.8.0
+
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  freezed: ^2.5.2
+  build_runner: ^2.4.9     # 코드 생성을 실행하는 패키지
 
   flutter_lints: ^5.0.0
 
