@@ -69,7 +69,6 @@ class _CounselorMypageListPageState extends State<CounselorMypageListPage> {
             centerTitle: true,
             elevation: 0,
             pinned: true,
-            backgroundColor: Colors.white,
             foregroundColor: Colors.black,
             actions: [
               // 오른쪽 설정 버튼
@@ -80,7 +79,6 @@ class _CounselorMypageListPageState extends State<CounselorMypageListPage> {
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(

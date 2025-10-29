@@ -1,72 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:take_breath/presentation/pages/notification/notification_page..dart';
 
 class RecorderListAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  final VoidCallback onFilterToggle;
-  final VoidCallback onSearchToggle;
-  final Function(DateTime?) onDateSelected;
+  final VoidCallback onSearchPressed;
+  final VoidCallback onCalendarPressed;
+  final VoidCallback onFilterPressed;
+  final VoidCallback onNotificationPressed;
 
   const RecorderListAppBar({
     super.key,
-    required this.onFilterToggle,
-    required this.onSearchToggle,
-    required this.onDateSelected,
+    required this.onSearchPressed,
+    required this.onCalendarPressed,
+    required this.onFilterPressed,
+    required this.onNotificationPressed,
   });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: false,
+      elevation: 0,
       title: const Text(
-        "기록실",
+        '기록실',
         style: TextStyle(
-          fontWeight: FontWeight.w500,
+          color: Colors.black,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
         ),
       ),
       actions: [
         IconButton(
-          icon: const Icon(CupertinoIcons.list_bullet),
-          onPressed: onFilterToggle,
+          icon: const Icon(CupertinoIcons.calendar, color: Colors.black),
+          onPressed: onCalendarPressed,
+          tooltip: '날짜 선택',
         ),
         IconButton(
-          icon: const Icon(CupertinoIcons.calendar),
-          onPressed: () {
-            _showDatePicker(context);
-          },
+          icon:
+              const Icon(CupertinoIcons.line_horizontal_3, color: Colors.black),
+          onPressed: onFilterPressed,
+          tooltip: '필터',
         ),
         IconButton(
-          icon: const Icon(CupertinoIcons.search),
-          onPressed: onSearchToggle,
+          icon: const Icon(Icons.search, color: Colors.black),
+          onPressed: onSearchPressed,
+          tooltip: '검색',
         ),
         IconButton(
-          icon: const Icon(CupertinoIcons.bell_fill),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const NotificationPage(),
-              ),
-            );
-          },
+          icon: const Icon(CupertinoIcons.bell, color: Colors.black),
+          onPressed: onNotificationPressed,
+          tooltip: '알림',
         ),
       ],
     );
-  }
-
-  void _showDatePicker(BuildContext context) {
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2020),
-      lastDate: DateTime.now(),
-      locale: const Locale('ko', 'KR'),
-    ).then((selectedDate) {
-      if (selectedDate != null) {
-        onDateSelected(selectedDate);
-      }
-    });
   }
 
   @override

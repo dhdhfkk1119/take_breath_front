@@ -132,7 +132,6 @@ class _UserMypageListPageState extends State<UserMypageListPage> {
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
