@@ -1,23 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/recorder/list_page/widgets/recorder_search_bar.dart';
 import '../../../notification/notification_page.dart';
 import '../write_page/recorder_write_page.dart';
+import 'models/recorder_notifier.dart';
 import 'widgets/recorder_list_app_bar.dart';
 import 'widgets/recorder_list_body.dart';
 
-class RecorderListPage extends StatefulWidget {
+class RecorderListPage extends ConsumerStatefulWidget {
   const RecorderListPage({super.key});
 
   @override
-  State<RecorderListPage> createState() => _RecorderListPageState();
+  ConsumerState<RecorderListPage> createState() => _RecorderListPageState();
 }
 
-class _RecorderListPageState extends State<RecorderListPage> {
+class _RecorderListPageState extends ConsumerState<RecorderListPage> {
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
-  DateTime? _selectedDate;
-  String _filterType = 'all';
 
   void _toggleSearch() {
     setState(() {
@@ -32,14 +32,12 @@ class _RecorderListPageState extends State<RecorderListPage> {
   void _showCalendar() async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
+      initialDate: DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
     );
     if (picked != null) {
-      setState(() {
-        _selectedDate = picked;
-      });
+      ref.read(recorderProvider.notifier).setSelectedDate(picked);
     }
   }
 
@@ -76,12 +74,12 @@ class _RecorderListPageState extends State<RecorderListPage> {
   }
 
   Widget _buildFilterOption(String value, String label, IconData icon) {
-    bool isSelected = _filterType == value;
+    final currentFilter = ref.watch(recorderProvider).filterType;
+    bool isSelected = currentFilter == value;
+
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _filterType = value;
-        });
+        ref.read(recorderProvider.notifier).setFilter(value);
         Navigator.pop(context);
       },
       child: Container(
@@ -133,6 +131,9 @@ class _RecorderListPageState extends State<RecorderListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final recorderState = ref.watch(recorderProvider);
+    final filteredRecords = ref.watch(filteredRecordsProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _isSearching
@@ -148,8 +149,7 @@ class _RecorderListPageState extends State<RecorderListPage> {
               onNotificationPressed: _showNotification,
             ),
       body: RecorderListBody(
-        filterType: _filterType,
-        selectedDate: _selectedDate,
+        records: filteredRecords,
       ),
       floatingActionButton: FloatingActionButton(
         heroTag: 'recorder_list_fab',
@@ -159,9 +159,7 @@ class _RecorderListPageState extends State<RecorderListPage> {
             MaterialPageRoute(
               builder: (context) => const RecorderWritePage(),
             ),
-          ).then((_) {
-            setState(() {});
-          });
+          ).then((_) {});
         },
         backgroundColor: const Color(0xFF0891B2),
         child: const Icon(Icons.add, color: Colors.white),
