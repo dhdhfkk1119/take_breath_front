@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/utils/snackbar_util.dart';
+import 'package:take_breath/domain/member/providers/member_login_notifier.dart';
+import 'package:take_breath/presentation/pages/auth/social/social_page.dart';
 
-class SettingsDataSection extends StatelessWidget {
+class SettingsDataSection extends ConsumerWidget {
   const SettingsDataSection({Key? key}) : super(key: key);
 
   void _showDeleteAccountDialog(BuildContext context) {
@@ -45,7 +49,8 @@ class SettingsDataSection extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final member = ref.read(memberProvider.notifier);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -76,11 +81,12 @@ class SettingsDataSection extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('로그아웃 되었습니다.')),
-                        );
-                        // 🔗 백엔드 연동: POST /api/auth/logout
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SocialPage()));
+                        SnackBarUtil.showSuccess(context, "로그아웃 하셨습니다");
+                        member.logout();
                       },
                       child: const Text(
                         '확인',

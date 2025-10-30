@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/presentation/pages/auth/social/social_page.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/community/list_page/community_list_page.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/main_screen.dart';
@@ -14,7 +15,11 @@ void main() async {
   // NotificationService 초기화
   await NotificationService().initialize();
 
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// 재사용 가능한 위젯으로 설계 하기 위함
-// 맞춤 기능을 추가 하기 위해 재 설계 한다.
 class CustomTextFormField extends StatelessWidget {
   final String? hint;
   final bool obscureText;
-  final TextEditingController controller; // 입력 받은 값을 가져올수있음
+  final TextEditingController controller; // 입력 받은 값을 가져올 수 있음
   final String? initValue; // 초기 값 - 글 쓰기
   final String? Function(String?)? validator; // 유효성 검사
   final InputDecoration? decoration;
-  final ValueChanged<String>? onChanged; // <<<--- 이 줄 추가
+  final ValueChanged<String>? onChanged;
   final bool enabled;
-  final List<TextInputFormatter>? inputFormatters; //
+  final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
 
   const CustomTextFormField({
@@ -21,18 +19,26 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText = false,
     required this.controller,
     this.initValue = "",
-    this.validator, // 선택적 매개 변수 (옵션값) - 유효성 검사
+    this.validator,
     this.decoration,
-    this.onChanged, // <<<--- 이 줄 추가
+    this.onChanged,
     this.enabled = true,
     this.inputFormatters,
-    this.keyboardType,
+    this.keyboardType, // 위젯 속성으로 키보드 타입 받기
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final TextInputType finalKeyboardType = keyboardType ?? TextInputType.text;
+
     if (initValue != null && initValue!.isNotEmpty) {
       controller.text = initValue!;
+    }
+
+    List<TextInputFormatter>? finalInputFormatters = inputFormatters;
+    if (finalKeyboardType == TextInputType.number &&
+        finalInputFormatters == null) {
+      finalInputFormatters = [FilteringTextInputFormatter.digitsOnly];
     }
 
     final defaultDecoration = InputDecoration(
@@ -66,10 +72,10 @@ class CustomTextFormField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       decoration: mergedDecoration,
-      onChanged: onChanged, // <<<--- 이 줄 추가 (TextFormField의 onChanged에 연결)
+      onChanged: onChanged,
       enabled: enabled,
-      inputFormatters: inputFormatters,
-      keyboardType: TextInputType.phone,
+      inputFormatters: finalInputFormatters,
+      keyboardType: finalKeyboardType,
     );
   }
 }

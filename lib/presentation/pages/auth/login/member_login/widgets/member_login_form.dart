@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/_core/constants/custom_text_button.dart';
 import 'package:take_breath/_core/constants/custom_text_form_field.dart';
+import 'package:take_breath/_core/utils/snackbar_util.dart';
+import 'package:take_breath/domain/member/providers/member_login_notifier.dart';
 
-class MemberLoginForm extends StatefulWidget {
+class MemberLoginForm extends ConsumerStatefulWidget {
   const MemberLoginForm({super.key});
 
   @override
-  State<MemberLoginForm> createState() => _MemberLoginFormState();
+  ConsumerState<MemberLoginForm> createState() => _MemberLoginFormState();
 }
 
-class _MemberLoginFormState extends State<MemberLoginForm> {
+class _MemberLoginFormState extends ConsumerState<MemberLoginForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isAutoLoginChecked = false;
 
   @override
   Widget build(BuildContext context) {
+    final loginNotifier = ref.read(memberProvider.notifier);
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -25,7 +30,7 @@ class _MemberLoginFormState extends State<MemberLoginForm> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           SizedBox(height: 8),
           CustomTextFormField(
-            hint: "이메일",
+            hint: "user@test.com",
             controller: _emailController,
           ),
           SizedBox(height: 20),
@@ -33,8 +38,9 @@ class _MemberLoginFormState extends State<MemberLoginForm> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           SizedBox(height: 8),
           CustomTextFormField(
-            hint: "비밀번호",
+            hint: "1234",
             controller: _passwordController,
+            obscureText: true,
           ),
           SizedBox(height: 20),
           Row(
@@ -43,7 +49,6 @@ class _MemberLoginFormState extends State<MemberLoginForm> {
                 value: _isAutoLoginChecked, // 현재 상태 변수 연결
                 onChanged: (bool? newValue) {
                   setState(() {
-                    // 체크박스 상태가 변경될 때마다 변수를 업데이트합니다.
                     _isAutoLoginChecked = newValue ?? false;
                   });
                 },
@@ -56,7 +61,22 @@ class _MemberLoginFormState extends State<MemberLoginForm> {
           ),
           CustomTextButton(
             text: "로그인",
-            click: () {},
+            click: () async {
+              try {
+                await loginNotifier.loginUser(
+                  "user@test.com",
+                  "1234",
+                  _isAutoLoginChecked,
+                );
+                if (mounted) {
+                  Navigator.pushReplacementNamed(context, '/main');
+                }
+                SnackBarUtil.showSuccessGlobally("로그인 성공");
+              } catch (e) {
+                SnackBarUtil.showErrorGlobally(
+                    "로그인에 실패했습니다 아이디 또는 비밀번호를 다시 생각해");
+              }
+            },
           ),
         ],
       ),

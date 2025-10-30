@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/domain/member/providers/member_login_notifier.dart';
 import 'package:take_breath/presentation/pages/auth/social/social_page.dart';
 import 'dart:async';
 import 'package:take_breath/presentation/pages/index_stack_page/main_screen.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _SplashScreenState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -33,28 +35,32 @@ class _SplashScreenState extends State<SplashScreen>
         _animationController.forward();
       }
     });
-
-    // 3초 후 메인 화면으로 전환
-    Timer(const Duration(milliseconds: 3000), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SocialPage(),
-          ),
-        );
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    Future.microtask(() async {
+      final notifier = ref.read(memberProvider.notifier);
+      await notifier.tryAutoLogin(); // 자동 로그인 시도
+
+      final member = ref.read(memberProvider);
+      if (!mounted) return;
+
+      // 로그인된 사용자라면 MainScreen으로 이동
+      if (member != null && member.accessToken.isNotEmpty) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const MainScreen()),
+        );
+      } else {
+        // 로그인 정보 없으면 SocialPage로 이동
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const SocialPage()),
+        );
+      }
+    });
+
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Scaffold(
@@ -64,9 +70,9 @@ class _SplashScreenState extends State<SplashScreen>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color(0xFFF0FDFA), // teal-50
-                Color(0xFFECFEFF), // cyan-50
-                Color(0xFFEFF6FF), // blue-50
+                Color(0xFFF0FDFA),
+                Color(0xFFECFEFF),
+                Color(0xFFEFF6FF),
               ],
             ),
           ),
@@ -76,11 +82,8 @@ class _SplashScreenState extends State<SplashScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // 로고
                     _buildLogo(),
                     const SizedBox(height: 32),
-
-                    // 앱 이름
                     const Text(
                       'Take a Breath',
                       style: TextStyle(
@@ -91,8 +94,6 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     ),
                     const SizedBox(height: 8),
-
-                    // 서브 텍스트
                     const Text(
                       '당신의 이야기를 들어드릴게요',
                       style: TextStyle(
@@ -101,14 +102,10 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     ),
                     const SizedBox(height: 48),
-
-                    // 로딩 애니메이션
                     _buildLoadingDots(),
                   ],
                 ),
               ),
-
-              // 하단 텍스트
               const Positioned(
                 bottom: 48,
                 left: 0,
