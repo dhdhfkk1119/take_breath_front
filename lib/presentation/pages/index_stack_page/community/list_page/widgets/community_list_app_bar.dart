@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:take_breath/_core/constants/custom_widget.dart';
-import 'package:take_breath/presentation/pages/notification/notification_page..dart';
+import 'package:take_breath/presentation/pages/notification/notification_page.dart';
 
 class CommunityListAppBar extends StatelessWidget
     implements PreferredSizeWidget {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_list/chat_list_page.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/counselor/list_page/counselor_list_page.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/mypage/list_page/user_mypage_list_page.dart';
-import 'package:take_breath/presentation/pages/index_stack_page/recoder/list_page/recoder_list_page.dart';
+import 'package:take_breath/presentation/pages/index_stack_page/recorder/list_page/recorder_list_page.dart';
 import 'community/list_page/community_list_page.dart';
 import 'mypage/list_page/counselor_mypage_list_page.dart';
 

@@ -32,7 +32,6 @@ class RecorderListItem extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // 썸네일 (100x100)
               SizedBox(
                 width: 100,
                 height: 100,
@@ -51,14 +50,11 @@ class RecorderListItem extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16.0),
-
-              // 컨텐츠
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 제목
                     Text(
                       record.title,
                       maxLines: 1,
@@ -70,8 +66,6 @@ class RecorderListItem extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-
-                    // 내용 미리보기 (2줄)
                     Text(
                       record.content,
                       maxLines: 2,
@@ -83,12 +77,9 @@ class RecorderListItem extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 6),
-
-                    // 날짜 + 첨부파일 정보 (하단)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // 날짜
                         Text(
                           record.date,
                           style: TextStyle(
@@ -96,8 +87,6 @@ class RecorderListItem extends StatelessWidget {
                             color: Colors.grey[500],
                           ),
                         ),
-
-                        // 이미지, 음성 개수
                         Row(
                           children: [
                             if (record.imageCount > 0) ...[

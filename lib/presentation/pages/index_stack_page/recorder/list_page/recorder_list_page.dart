@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:take_breath/presentation/pages/index_stack_page/recoder/list_page/widgets/recorder_search_bar.dart';
-import '../../../notification/notification_page..dart';
+import 'package:take_breath/presentation/pages/index_stack_page/recorder/list_page/widgets/recorder_search_bar.dart';
+import '../../../notification/notification_page.dart';
 import '../write_page/recorder_write_page.dart';
 import 'widgets/recorder_list_app_bar.dart';
 import 'widgets/recorder_list_body.dart';
@@ -17,7 +17,7 @@ class _RecorderListPageState extends State<RecorderListPage> {
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
   DateTime? _selectedDate;
-  String _filterType = 'all'; // all, week, month, image, audio
+  String _filterType = 'all';
 
   void _toggleSearch() {
     setState(() {
@@ -88,9 +88,7 @@ class _RecorderListPageState extends State<RecorderListPage> {
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           border: Border(
-            bottom: BorderSide(
-              color: Colors.grey[200]!,
-            ),
+            bottom: BorderSide(color: Colors.grey[200]!),
           ),
         ),
         child: Row(
@@ -136,6 +134,7 @@ class _RecorderListPageState extends State<RecorderListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: _isSearching
           ? RecorderListSearchAppBar(
               onCancel: _toggleSearch,
