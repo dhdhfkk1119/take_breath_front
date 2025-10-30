@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:take_breath/presentation/pages/index_stack_page/recoder/list_page/widgets/recorder_search_bar.dart';
 import '../../../notification/notification_page.dart';
 import '../write_page/recorder_write_page.dart';
 import 'widgets/recorder_list_app_bar.dart';
 import 'widgets/recorder_list_body.dart';
+import 'widgets/recorder_search_bar.dart';
 
 class RecorderListPage extends StatefulWidget {
   const RecorderListPage({super.key});

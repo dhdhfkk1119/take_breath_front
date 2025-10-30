@@ -4,7 +4,7 @@ import 'package:take_breath/_core/constants/custom_widget.dart';
 
 class CustomTextButton extends StatelessWidget {
   final String text;
-  final VoidCallback click;
+  final VoidCallback? click;
   final Widget? icon;
   final double? height;
   Color? color;
@@ -12,7 +12,7 @@ class CustomTextButton extends StatelessWidget {
   CustomTextButton({
     super.key,
     required this.text,
-    required this.click,
+    this.click,
     this.icon,
     this.height,
     this.color,
@@ -23,7 +23,7 @@ class CustomTextButton extends StatelessWidget {
     return Container(
       height: height ?? 50,
       decoration: BoxDecoration(
-        color: brandBackColor ?? color,
+        color: color ?? brandBackColor,
         borderRadius: BorderRadius.circular(5.0),
       ),
       width: double.infinity,

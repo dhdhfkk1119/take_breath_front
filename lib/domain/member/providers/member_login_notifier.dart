@@ -1,16 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/domain/member/models/is_email_check.dart';
 import 'package:take_breath/domain/member/models/member.dart';
 import 'package:take_breath/domain/member/repositories/member_repository.dart';
 import 'package:take_breath/domain/member/services/auth_storage.dart';
+
+import 'member_repository_provider.dart';
 
 final memberProvider =
     NotifierProvider<MemberNotifier, Member?>(MemberNotifier.new);
 
 class MemberNotifier extends Notifier<Member?> {
-  final memberRepository = MemberRepository();
+  late final MemberRepository memberRepository;
 
   @override
   Member? build() {
+    memberRepository = ref.read(memberRepositoryProvider);
     tryAutoLogin();
     return null;
   }
@@ -41,10 +45,5 @@ class MemberNotifier extends Notifier<Member?> {
   Future<void> logout() async {
     await AuthStorage.clear();
     state = null;
-  }
-
-  // 이메일 중복 체크
-  Future<bool> isEmailCheck(String email) async {
-    return await memberRepository.isEmailCheck(email);
   }
 }
