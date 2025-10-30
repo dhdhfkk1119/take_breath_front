@@ -1,23 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:take_breath/domain/member/models/member.dart';
 import 'package:take_breath/domain/member/models/term.dart';
+import 'package:take_breath/domain/member/models/terms_request.dart';
 import 'package:take_breath/domain/member/repositories/member_repository.dart';
-
 import 'member_repository_provider.dart';
 
 final termsProvider =
-    NotifierProvider<TermsNotifier, Member?>(TermsNotifier.new);
+    AsyncNotifierProvider<TermsNotifier, List<Term>>(TermsNotifier.new);
 
-class TermsNotifier extends Notifier<Member?> {
+class TermsNotifier extends AsyncNotifier<List<Term>> {
   late final MemberRepository memberRepository;
 
   @override
-  Member? build() {
+  Future<List<Term>> build() async {
     memberRepository = ref.read(memberRepositoryProvider);
-    return null;
-  }
 
-  Future<Term> getListTerms() async {
     return await memberRepository.getListTerms();
   }
 

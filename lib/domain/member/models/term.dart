@@ -9,6 +9,7 @@ class Term with _$Term {
     required int id,
     required String title,
     required String content,
+    required bool required,
   }) = _Term;
 
   factory Term.fromJson(Map<String, dynamic> json) => _$TermFromJson(json);

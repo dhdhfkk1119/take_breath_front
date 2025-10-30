@@ -23,6 +23,7 @@ mixin _$Term {
   int get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
+  bool get required => throw _privateConstructorUsedError;
 
   /// Serializes this Term to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -38,7 +39,7 @@ abstract class $TermCopyWith<$Res> {
   factory $TermCopyWith(Term value, $Res Function(Term) then) =
       _$TermCopyWithImpl<$Res, Term>;
   @useResult
-  $Res call({int id, String title, String content});
+  $Res call({int id, String title, String content, bool required});
 }
 
 /// @nodoc
@@ -59,6 +60,7 @@ class _$TermCopyWithImpl<$Res, $Val extends Term>
     Object? id = null,
     Object? title = null,
     Object? content = null,
+    Object? required = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -73,6 +75,10 @@ class _$TermCopyWithImpl<$Res, $Val extends Term>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
+      required: null == required
+          ? _value.required
+          : required // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -84,7 +90,7 @@ abstract class _$$TermImplCopyWith<$Res> implements $TermCopyWith<$Res> {
       __$$TermImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String title, String content});
+  $Res call({int id, String title, String content, bool required});
 }
 
 /// @nodoc
@@ -102,6 +108,7 @@ class __$$TermImplCopyWithImpl<$Res>
     Object? id = null,
     Object? title = null,
     Object? content = null,
+    Object? required = null,
   }) {
     return _then(_$TermImpl(
       id: null == id
@@ -116,6 +123,10 @@ class __$$TermImplCopyWithImpl<$Res>
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
               as String,
+      required: null == required
+          ? _value.required
+          : required // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -124,7 +135,10 @@ class __$$TermImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$TermImpl implements _Term {
   const _$TermImpl(
-      {required this.id, required this.title, required this.content});
+      {required this.id,
+      required this.title,
+      required this.content,
+      required this.required});
 
   factory _$TermImpl.fromJson(Map<String, dynamic> json) =>
       _$$TermImplFromJson(json);
@@ -135,10 +149,12 @@ class _$TermImpl implements _Term {
   final String title;
   @override
   final String content;
+  @override
+  final bool required;
 
   @override
   String toString() {
-    return 'Term(id: $id, title: $title, content: $content)';
+    return 'Term(id: $id, title: $title, content: $content, required: $required)';
   }
 
   @override
@@ -148,12 +164,14 @@ class _$TermImpl implements _Term {
             other is _$TermImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
-            (identical(other.content, content) || other.content == content));
+            (identical(other.content, content) || other.content == content) &&
+            (identical(other.required, required) ||
+                other.required == required));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, content);
+  int get hashCode => Object.hash(runtimeType, id, title, content, required);
 
   /// Create a copy of Term
   /// with the given fields replaced by the non-null parameter values.
@@ -175,7 +193,8 @@ abstract class _Term implements Term {
   const factory _Term(
       {required final int id,
       required final String title,
-      required final String content}) = _$TermImpl;
+      required final String content,
+      required final bool required}) = _$TermImpl;
 
   factory _Term.fromJson(Map<String, dynamic> json) = _$TermImpl.fromJson;
 
@@ -185,6 +204,8 @@ abstract class _Term implements Term {
   String get title;
   @override
   String get content;
+  @override
+  bool get required;
 
   /// Create a copy of Term
   /// with the given fields replaced by the non-null parameter values.
