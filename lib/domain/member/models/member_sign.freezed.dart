@@ -27,6 +27,7 @@ mixin _$MemberSign {
   String get phone => throw _privateConstructorUsedError;
   String get address => throw _privateConstructorUsedError;
   Role get role => throw _privateConstructorUsedError;
+  List<TermsRequest> get agreements => throw _privateConstructorUsedError;
 
   /// Serializes this MemberSign to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,7 +52,8 @@ abstract class $MemberSignCopyWith<$Res> {
       String name,
       String phone,
       String address,
-      Role role});
+      Role role,
+      List<TermsRequest> agreements});
 }
 
 /// @nodoc
@@ -76,6 +78,7 @@ class _$MemberSignCopyWithImpl<$Res, $Val extends MemberSign>
     Object? phone = null,
     Object? address = null,
     Object? role = null,
+    Object? agreements = null,
   }) {
     return _then(_value.copyWith(
       email: null == email
@@ -106,6 +109,10 @@ class _$MemberSignCopyWithImpl<$Res, $Val extends MemberSign>
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
               as Role,
+      agreements: null == agreements
+          ? _value.agreements
+          : agreements // ignore: cast_nullable_to_non_nullable
+              as List<TermsRequest>,
     ) as $Val);
   }
 }
@@ -125,7 +132,8 @@ abstract class _$$MemberSignImplCopyWith<$Res>
       String name,
       String phone,
       String address,
-      Role role});
+      Role role,
+      List<TermsRequest> agreements});
 }
 
 /// @nodoc
@@ -148,6 +156,7 @@ class __$$MemberSignImplCopyWithImpl<$Res>
     Object? phone = null,
     Object? address = null,
     Object? role = null,
+    Object? agreements = null,
   }) {
     return _then(_$MemberSignImpl(
       email: null == email
@@ -178,6 +187,10 @@ class __$$MemberSignImplCopyWithImpl<$Res>
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
               as Role,
+      agreements: null == agreements
+          ? _value._agreements
+          : agreements // ignore: cast_nullable_to_non_nullable
+              as List<TermsRequest>,
     ));
   }
 }
@@ -192,7 +205,9 @@ class _$MemberSignImpl implements _MemberSign {
       required this.name,
       required this.phone,
       required this.address,
-      this.role = Role.USER});
+      this.role = Role.USER,
+      final List<TermsRequest> agreements = const []})
+      : _agreements = agreements;
 
   factory _$MemberSignImpl.fromJson(Map<String, dynamic> json) =>
       _$$MemberSignImplFromJson(json);
@@ -212,10 +227,18 @@ class _$MemberSignImpl implements _MemberSign {
   @override
   @JsonKey()
   final Role role;
+  final List<TermsRequest> _agreements;
+  @override
+  @JsonKey()
+  List<TermsRequest> get agreements {
+    if (_agreements is EqualUnmodifiableListView) return _agreements;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_agreements);
+  }
 
   @override
   String toString() {
-    return 'MemberSign(email: $email, password: $password, confirmPassword: $confirmPassword, name: $name, phone: $phone, address: $address, role: $role)';
+    return 'MemberSign(email: $email, password: $password, confirmPassword: $confirmPassword, name: $name, phone: $phone, address: $address, role: $role, agreements: $agreements)';
   }
 
   @override
@@ -231,13 +254,23 @@ class _$MemberSignImpl implements _MemberSign {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.phone, phone) || other.phone == phone) &&
             (identical(other.address, address) || other.address == address) &&
-            (identical(other.role, role) || other.role == role));
+            (identical(other.role, role) || other.role == role) &&
+            const DeepCollectionEquality()
+                .equals(other._agreements, _agreements));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, email, password, confirmPassword,
-      name, phone, address, role);
+  int get hashCode => Object.hash(
+      runtimeType,
+      email,
+      password,
+      confirmPassword,
+      name,
+      phone,
+      address,
+      role,
+      const DeepCollectionEquality().hash(_agreements));
 
   /// Create a copy of MemberSign
   /// with the given fields replaced by the non-null parameter values.
@@ -263,7 +296,8 @@ abstract class _MemberSign implements MemberSign {
       required final String name,
       required final String phone,
       required final String address,
-      final Role role}) = _$MemberSignImpl;
+      final Role role,
+      final List<TermsRequest> agreements}) = _$MemberSignImpl;
 
   factory _MemberSign.fromJson(Map<String, dynamic> json) =
       _$MemberSignImpl.fromJson;
@@ -282,6 +316,8 @@ abstract class _MemberSign implements MemberSign {
   String get address;
   @override
   Role get role;
+  @override
+  List<TermsRequest> get agreements;
 
   /// Create a copy of MemberSign
   /// with the given fields replaced by the non-null parameter values.

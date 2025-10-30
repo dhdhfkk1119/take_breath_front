@@ -15,6 +15,10 @@ _$MemberSignImpl _$$MemberSignImplFromJson(Map<String, dynamic> json) =>
       phone: json['phone'] as String,
       address: json['address'] as String,
       role: $enumDecodeNullable(_$RoleEnumMap, json['role']) ?? Role.USER,
+      agreements: (json['agreements'] as List<dynamic>?)
+              ?.map((e) => TermsRequest.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$MemberSignImplToJson(_$MemberSignImpl instance) =>
@@ -26,6 +30,7 @@ Map<String, dynamic> _$$MemberSignImplToJson(_$MemberSignImpl instance) =>
       'phone': instance.phone,
       'address': instance.address,
       'role': _$RoleEnumMap[instance.role]!,
+      'agreements': instance.agreements,
     };
 
 const _$RoleEnumMap = {

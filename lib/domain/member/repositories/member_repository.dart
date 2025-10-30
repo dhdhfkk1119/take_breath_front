@@ -30,6 +30,9 @@ class MemberRepository {
   }
 
   Future<void> sign(MemberSign memberSign) async {
+    final List<Map<String, dynamic>> agreementsJson =
+        memberSign.agreements.map((req) => req.toJson()).toList();
+
     try {
       final response = await dio.post(
         "/members/signup",
@@ -41,6 +44,7 @@ class MemberRepository {
           "phone": memberSign.phone,
           "address": memberSign.address,
           "role": memberSign.role.name,
+          "agreements": agreementsJson,
         },
       );
 
@@ -97,11 +101,13 @@ class MemberRepository {
     }
   }
 
-  Future<Term> getListTerms() async {
+  Future<List<Term>> getListTerms() async {
     try {
       final response = await dio.get("/terms");
       if (response.statusCode == 200) {
-        return Term.fromJson(response.data);
+        final List<dynamic> jsonList = response.data as List<dynamic>;
+
+        return jsonList.map((json) => Term.fromJson(json)).toList();
       } else {
         throw Exception("서비스 이용약관 조회 실패: ${response.statusCode}");
       }
