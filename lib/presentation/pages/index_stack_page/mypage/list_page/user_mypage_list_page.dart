@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../charge_page/models/point_notifier.dart';
+import '../charge_page/point_charge_page.dart';
+import '../charge_page/point_history_page.dart';
+import '../widgets/user_activity_grid.dart';
+import '../charge_page/widgets/user_point_section.dart';
 import '../comment_page/user_comment_history_page.dart';
 import '../edit_page/user_profile_edit_page.dart';
 import '../favorite_page/user_favorite_list_page.dart';
@@ -8,22 +14,23 @@ import '../report_page/user_report_history_page.dart';
 import '../resource_page/resource_page.dart';
 import '../settings_page/settings_page.dart';
 import '../widgets/user_counseling_history_section.dart';
-import '../widgets/user_activity_section.dart';
 import '../widgets/user_profile_section.dart';
 import '../widgets/user_report_section.dart';
 import '../widgets/user_resource_section.dart';
 
-class UserMypageListPage extends StatefulWidget {
+class UserMypageListPage extends ConsumerStatefulWidget {
   const UserMypageListPage({Key? key}) : super(key: key);
 
   @override
-  State<UserMypageListPage> createState() => _UserMypageListPageState();
+  ConsumerState<UserMypageListPage> createState() => _UserMypageListPageState();
 }
 
-class _UserMypageListPageState extends State<UserMypageListPage> {
+class _UserMypageListPageState extends ConsumerState<UserMypageListPage> {
   // 설정 상태 관리
   bool _notificationEnabled = true;
   bool _isAnonymous = true;
+
+  // ========== 페이지 이동 함수들 ==========
 
   void _handleEditProfile(BuildContext context) {
     Navigator.push(
@@ -85,7 +92,6 @@ class _UserMypageListPageState extends State<UserMypageListPage> {
     );
   }
 
-  // 자료실 페이지 이동 ← 새로 추가
   void _handleResourcePage(BuildContext context) {
     Navigator.push(
       context,
@@ -95,7 +101,26 @@ class _UserMypageListPageState extends State<UserMypageListPage> {
     );
   }
 
-  // 설정 버튼 클릭
+  // ✅ 포인트 충전 페이지
+  void _handlePointCharge(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const PointChargePage(),
+      ),
+    );
+  }
+
+  // ✅ 포인트 내역 페이지
+  void _handlePointHistory(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const PointHistoryPage(),
+      ),
+    );
+  }
+
   void _showSettingsBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -118,13 +143,15 @@ class _UserMypageListPageState extends State<UserMypageListPage> {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ 포인트 상태 감시
+    final pointState = ref.watch(pointProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('프로필'),
         centerTitle: true,
         elevation: 0,
         actions: [
-          // 오른쪽 설정 버튼
           Padding(
             padding: const EdgeInsets.only(right: 12.0),
             child: GestureDetector(
@@ -148,30 +175,43 @@ class _UserMypageListPageState extends State<UserMypageListPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 프로필 섹션
+            // 1. 프로필 섹션
             UserProfileSection(
               onEditPressed: () => _handleEditProfile(context),
             ),
+            const SizedBox(height: 16),
+
+            // 2. ✅ 포인트 표시 섹션 (프로필 바로 아래)
+            UserPointSection(
+              totalPoints: pointState.totalPoints,
+              onChargePressed: () => _handlePointCharge(context),
+            ),
             const SizedBox(height: 20),
-            // 상담 이력 섹션
+
+            // 3. 상담 이력 섹션
             UserCounselingHistorySection(
               onViewMore: () => _handleViewCounselingHistory(context),
             ),
             const SizedBox(height: 20),
-            // 액티비티 섹션 (4개 버튼: 글목록, 찜목록, 댓글내역, 신고내역)
-            UserActivitySection(
+
+            // 4. ✅ 포인트 + 액티비티 그리드 (분리된 위젯)
+            UserActivityGrid(
+              onPointChargePressed: () => _handlePointCharge(context),
+              onPointHistoryPressed: () => _handlePointHistory(context),
               onPostListPressed: () => _handlePostList(context),
               onFavoriteListPressed: () => _handleFavoriteList(context),
               onCommentHistoryPressed: () => _handleCommentHistory(context),
               onReportHistoryPressed: () => _handleReportHistory(context),
             ),
             const SizedBox(height: 20),
-            // 자료실 섹션 ← 새로 추가
+
+            // 5. 자료실 섹션
             UserResourceSection(
               onResourcePressed: () => _handleResourcePage(context),
             ),
             const SizedBox(height: 20),
-            // 신고 섹션
+
+            // 6. 신고 섹션
             UserReportSection(
               onNewReport: () => _handleNewReport(context),
             ),

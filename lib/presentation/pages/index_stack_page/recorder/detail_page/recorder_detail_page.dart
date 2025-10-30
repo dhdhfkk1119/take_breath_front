@@ -136,7 +136,7 @@ class _RecorderDetailPageState extends State<RecorderDetailPage> {
         ),
       );
     } catch (e) {
-      Navigator.pop(context); // 로딩 닫기
+      Navigator.pop(context);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
