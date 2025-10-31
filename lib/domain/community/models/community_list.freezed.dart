@@ -28,12 +28,12 @@ mixin _$CommunityList {
   String get categoryName => throw _privateConstructorUsedError;
   String get preview => throw _privateConstructorUsedError;
   String get thumbnail => throw _privateConstructorUsedError;
-  int get likeCount => throw _privateConstructorUsedError;
-  int get viewCount => throw _privateConstructorUsedError;
-  int get commentCount => throw _privateConstructorUsedError;
-  String get createdAt => throw _privateConstructorUsedError;
-  bool get isModified => throw _privateConstructorUsedError;
   bool get liked => throw _privateConstructorUsedError;
+  bool get modified => throw _privateConstructorUsedError;
+  int get likeCount => throw _privateConstructorUsedError;
+  int get commentCount => throw _privateConstructorUsedError;
+  int get viewCount => throw _privateConstructorUsedError;
+  String get createdAt => throw _privateConstructorUsedError;
 
   /// Serializes this CommunityList to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -60,12 +60,12 @@ abstract class $CommunityListCopyWith<$Res> {
       String categoryName,
       String preview,
       String thumbnail,
+      bool liked,
+      bool modified,
       int likeCount,
-      int viewCount,
       int commentCount,
-      String createdAt,
-      bool isModified,
-      bool liked});
+      int viewCount,
+      String createdAt});
 }
 
 /// @nodoc
@@ -91,12 +91,12 @@ class _$CommunityListCopyWithImpl<$Res, $Val extends CommunityList>
     Object? categoryName = null,
     Object? preview = null,
     Object? thumbnail = null,
-    Object? likeCount = null,
-    Object? viewCount = null,
-    Object? commentCount = null,
-    Object? createdAt = null,
-    Object? isModified = null,
     Object? liked = null,
+    Object? modified = null,
+    Object? likeCount = null,
+    Object? commentCount = null,
+    Object? viewCount = null,
+    Object? createdAt = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -131,30 +131,30 @@ class _$CommunityListCopyWithImpl<$Res, $Val extends CommunityList>
           ? _value.thumbnail
           : thumbnail // ignore: cast_nullable_to_non_nullable
               as String,
+      liked: null == liked
+          ? _value.liked
+          : liked // ignore: cast_nullable_to_non_nullable
+              as bool,
+      modified: null == modified
+          ? _value.modified
+          : modified // ignore: cast_nullable_to_non_nullable
+              as bool,
       likeCount: null == likeCount
           ? _value.likeCount
           : likeCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      viewCount: null == viewCount
-          ? _value.viewCount
-          : viewCount // ignore: cast_nullable_to_non_nullable
               as int,
       commentCount: null == commentCount
           ? _value.commentCount
           : commentCount // ignore: cast_nullable_to_non_nullable
               as int,
+      viewCount: null == viewCount
+          ? _value.viewCount
+          : viewCount // ignore: cast_nullable_to_non_nullable
+              as int,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as String,
-      isModified: null == isModified
-          ? _value.isModified
-          : isModified // ignore: cast_nullable_to_non_nullable
-              as bool,
-      liked: null == liked
-          ? _value.liked
-          : liked // ignore: cast_nullable_to_non_nullable
-              as bool,
     ) as $Val);
   }
 }
@@ -176,12 +176,12 @@ abstract class _$$CommunityListImplCopyWith<$Res>
       String categoryName,
       String preview,
       String thumbnail,
+      bool liked,
+      bool modified,
       int likeCount,
-      int viewCount,
       int commentCount,
-      String createdAt,
-      bool isModified,
-      bool liked});
+      int viewCount,
+      String createdAt});
 }
 
 /// @nodoc
@@ -205,12 +205,12 @@ class __$$CommunityListImplCopyWithImpl<$Res>
     Object? categoryName = null,
     Object? preview = null,
     Object? thumbnail = null,
-    Object? likeCount = null,
-    Object? viewCount = null,
-    Object? commentCount = null,
-    Object? createdAt = null,
-    Object? isModified = null,
     Object? liked = null,
+    Object? modified = null,
+    Object? likeCount = null,
+    Object? commentCount = null,
+    Object? viewCount = null,
+    Object? createdAt = null,
   }) {
     return _then(_$CommunityListImpl(
       id: null == id
@@ -245,30 +245,30 @@ class __$$CommunityListImplCopyWithImpl<$Res>
           ? _value.thumbnail
           : thumbnail // ignore: cast_nullable_to_non_nullable
               as String,
+      liked: null == liked
+          ? _value.liked
+          : liked // ignore: cast_nullable_to_non_nullable
+              as bool,
+      modified: null == modified
+          ? _value.modified
+          : modified // ignore: cast_nullable_to_non_nullable
+              as bool,
       likeCount: null == likeCount
           ? _value.likeCount
           : likeCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      viewCount: null == viewCount
-          ? _value.viewCount
-          : viewCount // ignore: cast_nullable_to_non_nullable
               as int,
       commentCount: null == commentCount
           ? _value.commentCount
           : commentCount // ignore: cast_nullable_to_non_nullable
               as int,
+      viewCount: null == viewCount
+          ? _value.viewCount
+          : viewCount // ignore: cast_nullable_to_non_nullable
+              as int,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as String,
-      isModified: null == isModified
-          ? _value.isModified
-          : isModified // ignore: cast_nullable_to_non_nullable
-              as bool,
-      liked: null == liked
-          ? _value.liked
-          : liked // ignore: cast_nullable_to_non_nullable
-              as bool,
     ));
   }
 }
@@ -285,12 +285,12 @@ class _$CommunityListImpl implements _CommunityList {
       required this.categoryName,
       required this.preview,
       required this.thumbnail,
-      required this.likeCount,
-      required this.viewCount,
-      required this.commentCount,
-      required this.createdAt,
-      required this.isModified,
-      required this.liked});
+      this.liked = false,
+      this.modified = false,
+      this.likeCount = 0,
+      this.commentCount = 0,
+      this.viewCount = 0,
+      required this.createdAt});
 
   factory _$CommunityListImpl.fromJson(Map<String, dynamic> json) =>
       _$$CommunityListImplFromJson(json);
@@ -312,21 +312,26 @@ class _$CommunityListImpl implements _CommunityList {
   @override
   final String thumbnail;
   @override
+  @JsonKey()
+  final bool liked;
+  @override
+  @JsonKey()
+  final bool modified;
+  @override
+  @JsonKey()
   final int likeCount;
   @override
-  final int viewCount;
-  @override
+  @JsonKey()
   final int commentCount;
   @override
+  @JsonKey()
+  final int viewCount;
+  @override
   final String createdAt;
-  @override
-  final bool isModified;
-  @override
-  final bool liked;
 
   @override
   String toString() {
-    return 'CommunityList(id: $id, title: $title, memberId: $memberId, memberName: $memberName, categoryId: $categoryId, categoryName: $categoryName, preview: $preview, thumbnail: $thumbnail, likeCount: $likeCount, viewCount: $viewCount, commentCount: $commentCount, createdAt: $createdAt, isModified: $isModified, liked: $liked)';
+    return 'CommunityList(id: $id, title: $title, memberId: $memberId, memberName: $memberName, categoryId: $categoryId, categoryName: $categoryName, preview: $preview, thumbnail: $thumbnail, liked: $liked, modified: $modified, likeCount: $likeCount, commentCount: $commentCount, viewCount: $viewCount, createdAt: $createdAt)';
   }
 
   @override
@@ -347,17 +352,17 @@ class _$CommunityListImpl implements _CommunityList {
             (identical(other.preview, preview) || other.preview == preview) &&
             (identical(other.thumbnail, thumbnail) ||
                 other.thumbnail == thumbnail) &&
+            (identical(other.liked, liked) || other.liked == liked) &&
+            (identical(other.modified, modified) ||
+                other.modified == modified) &&
             (identical(other.likeCount, likeCount) ||
                 other.likeCount == likeCount) &&
-            (identical(other.viewCount, viewCount) ||
-                other.viewCount == viewCount) &&
             (identical(other.commentCount, commentCount) ||
                 other.commentCount == commentCount) &&
+            (identical(other.viewCount, viewCount) ||
+                other.viewCount == viewCount) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.isModified, isModified) ||
-                other.isModified == isModified) &&
-            (identical(other.liked, liked) || other.liked == liked));
+                other.createdAt == createdAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -372,12 +377,12 @@ class _$CommunityListImpl implements _CommunityList {
       categoryName,
       preview,
       thumbnail,
+      liked,
+      modified,
       likeCount,
-      viewCount,
       commentCount,
-      createdAt,
-      isModified,
-      liked);
+      viewCount,
+      createdAt);
 
   /// Create a copy of CommunityList
   /// with the given fields replaced by the non-null parameter values.
@@ -405,12 +410,12 @@ abstract class _CommunityList implements CommunityList {
       required final String categoryName,
       required final String preview,
       required final String thumbnail,
-      required final int likeCount,
-      required final int viewCount,
-      required final int commentCount,
-      required final String createdAt,
-      required final bool isModified,
-      required final bool liked}) = _$CommunityListImpl;
+      final bool liked,
+      final bool modified,
+      final int likeCount,
+      final int commentCount,
+      final int viewCount,
+      required final String createdAt}) = _$CommunityListImpl;
 
   factory _CommunityList.fromJson(Map<String, dynamic> json) =
       _$CommunityListImpl.fromJson;
@@ -432,17 +437,17 @@ abstract class _CommunityList implements CommunityList {
   @override
   String get thumbnail;
   @override
-  int get likeCount;
+  bool get liked;
   @override
-  int get viewCount;
+  bool get modified;
+  @override
+  int get likeCount;
   @override
   int get commentCount;
   @override
+  int get viewCount;
+  @override
   String get createdAt;
-  @override
-  bool get isModified;
-  @override
-  bool get liked;
 
   /// Create a copy of CommunityList
   /// with the given fields replaced by the non-null parameter values.

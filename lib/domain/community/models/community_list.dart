@@ -14,12 +14,12 @@ class CommunityList with _$CommunityList {
     required String categoryName,
     required String preview,
     required String thumbnail,
-    required int likeCount,
-    required int viewCount,
-    required int commentCount,
+    @Default(false) bool liked,
+    @Default(false) bool modified,
+    @Default(0) int likeCount,
+    @Default(0) int commentCount,
+    @Default(0) int viewCount,
     required String createdAt,
-    required bool isModified,
-    required bool liked,
   }) = _CommunityList;
 
   factory CommunityList.fromJson(Map<String, dynamic> json) =>

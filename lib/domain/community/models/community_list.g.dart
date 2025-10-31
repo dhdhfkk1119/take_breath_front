@@ -16,12 +16,12 @@ _$CommunityListImpl _$$CommunityListImplFromJson(Map<String, dynamic> json) =>
       categoryName: json['categoryName'] as String,
       preview: json['preview'] as String,
       thumbnail: json['thumbnail'] as String,
-      likeCount: (json['likeCount'] as num).toInt(),
-      viewCount: (json['viewCount'] as num).toInt(),
-      commentCount: (json['commentCount'] as num).toInt(),
+      liked: json['liked'] as bool? ?? false,
+      modified: json['modified'] as bool? ?? false,
+      likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
+      commentCount: (json['commentCount'] as num?)?.toInt() ?? 0,
+      viewCount: (json['viewCount'] as num?)?.toInt() ?? 0,
       createdAt: json['createdAt'] as String,
-      isModified: json['isModified'] as bool,
-      liked: json['liked'] as bool,
     );
 
 Map<String, dynamic> _$$CommunityListImplToJson(_$CommunityListImpl instance) =>
@@ -34,10 +34,10 @@ Map<String, dynamic> _$$CommunityListImplToJson(_$CommunityListImpl instance) =>
       'categoryName': instance.categoryName,
       'preview': instance.preview,
       'thumbnail': instance.thumbnail,
-      'likeCount': instance.likeCount,
-      'viewCount': instance.viewCount,
-      'commentCount': instance.commentCount,
-      'createdAt': instance.createdAt,
-      'isModified': instance.isModified,
       'liked': instance.liked,
+      'modified': instance.modified,
+      'likeCount': instance.likeCount,
+      'commentCount': instance.commentCount,
+      'viewCount': instance.viewCount,
+      'createdAt': instance.createdAt,
     };
