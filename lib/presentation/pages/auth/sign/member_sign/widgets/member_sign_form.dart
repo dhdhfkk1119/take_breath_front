@@ -5,13 +5,14 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:take_breath/_core/constants/custom_color.dart';
 import 'package:take_breath/_core/constants/custom_text_button.dart';
 import 'package:take_breath/_core/constants/custom_text_form_field.dart';
+import 'package:take_breath/_core/utils/email_valid_action_util.dart';
 import 'package:take_breath/_core/utils/snackbar_util.dart';
 import 'package:take_breath/domain/member/models/email.dart';
 // import 'package:take_breath/domain/member/providers/member_login_notifier.dart'; // 사용되지 않음
 import 'package:take_breath/domain/member/providers/member_repository_provider.dart';
 import 'package:take_breath/domain/member/providers/member_sign_notifier.dart';
 import 'package:take_breath/presentation/pages/auth/terms/terms_page.dart';
-import 'package:take_breath/domain/member/models/terms_request.dart'; // ⭐️ TermsRequest 모델 Import
+import 'package:take_breath/domain/member/models/terms_request.dart';
 
 class MemberSignForm extends ConsumerStatefulWidget {
   const MemberSignForm({super.key});
@@ -53,12 +54,7 @@ class _MemberSignFormState extends ConsumerState<MemberSignForm> {
 
   @override
   Widget build(BuildContext context) {
-    // MemberRepository 대신 Notifier를 통해 이메일 인증/중복 검사를 수행합니다.
-    // 이는 Notifier에 해당 로직을 포함시키기로 했기 때문입니다.
     final memberSignNotifier = ref.read(memberSignProvider.notifier);
-
-    // Notifier 상태를 watch하여 비밀번호 검증 등의 추가 로직을 구현할 수 있습니다.
-    // final memberSignState = ref.watch(memberSignProvider);
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -75,7 +71,7 @@ class _MemberSignFormState extends ConsumerState<MemberSignForm> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  // 이메일 입력창
+                  // 이메일 입력창 (기존 코드 유지)
                   Expanded(
                     child: CustomTextFormField(
                       hint: "이메일을 입력하세요",
@@ -88,8 +84,14 @@ class _MemberSignFormState extends ConsumerState<MemberSignForm> {
                   // 인증 버튼
                   ElevatedButton(
                     onPressed: () async {
-                      final result = await memberSignNotifier
-                          .isEmailCheck(emailController.text);
+                      final inputEmail = emailController.text;
+                      if (!EmailValidationUtil.isValidEmail(inputEmail)) {
+                        SnackBarUtil.showError(context, "올바른 이메일 형식이 아닙니다.");
+                        return; // 유효하지 않으면 여기서 로직 종료
+                      }
+
+                      final result =
+                          await memberSignNotifier.isEmailCheck(inputEmail);
                       if (result.check) {
                         SnackBarUtil.showWarning(context, result.message);
                         setState(() {
@@ -102,7 +104,7 @@ class _MemberSignFormState extends ConsumerState<MemberSignForm> {
                           isEmailEnabled = true;
                         });
 
-                        await memberSignNotifier.sendCode(emailController.text);
+                        await memberSignNotifier.sendCode(inputEmail);
 
                         SnackBarUtil.showSuccess(
                             context, "인증 코드가 이메일로 전송되었습니다.");

@@ -1,23 +1,34 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:take_breath/_core/constants/custom_color.dart';
 import 'package:take_breath/_core/constants/custom_text_button.dart';
 import 'package:take_breath/_core/constants/custom_text_form_field.dart';
+import 'package:take_breath/_core/utils/email_valid_action_util.dart';
+import 'package:take_breath/_core/utils/snackbar_util.dart';
+import 'package:take_breath/domain/counselor/models/counselor_license_request.dart';
+import 'package:take_breath/domain/counselor/providers/counselor_repository_provider.dart';
+import 'package:take_breath/domain/counselor/providers/counselor_sign_notifier.dart';
+import 'package:take_breath/domain/member/models/email.dart';
+import 'package:take_breath/domain/member/models/terms_request.dart';
+import 'package:take_breath/domain/member/providers/member_sign_notifier.dart';
 import 'package:take_breath/presentation/pages/auth/terms/terms_page.dart';
 
 import 'counselor_info_form_body.dart';
 
-class CounselorSignBody extends StatefulWidget {
+class CounselorSignBody extends ConsumerStatefulWidget {
   const CounselorSignBody({super.key});
 
   @override
-  State<CounselorSignBody> createState() => _CounselorSignBodyState();
+  ConsumerState<CounselorSignBody> createState() => _CounselorSignBodyState();
 }
 
-class _CounselorSignBodyState extends State<CounselorSignBody> {
+class _CounselorSignBodyState extends ConsumerState<CounselorSignBody> {
+  int _nextLicenseId = 1;
+
   // 컨트롤러들
   final phoneMaskFormatter = MaskTextInputFormatter(
     mask: '###-####-####',
@@ -26,17 +37,20 @@ class _CounselorSignBodyState extends State<CounselorSignBody> {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController codeController = TextEditingController();
-  final TextEditingController nicknameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController passwordCheckController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
+  final TextEditingController specialtyController = TextEditingController();
+  final TextEditingController introductionController = TextEditingController();
+  final TextEditingController hashtagsController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  bool isCodeEnabled = false;
+  bool isEmailEnabled = false;
 
-  bool isCodeEnabled = false; // 인증 코드 입력 활성화 여부
   String? selectedGender; // 성별 선택 (남 or 여)
-  File? _profileImage; // 로컬에서 선택한 이미지 파일
-  final List<CounselorInfoFormBody> _licenseForms = [];
+  File? _profileImage;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
@@ -45,12 +59,56 @@ class _CounselorSignBodyState extends State<CounselorSignBody> {
     if (pickedFile != null) {
       setState(() {
         _profileImage = File(pickedFile.path);
+        ref.read(counselorSignProvider.notifier).updateForm(
+              profileImage: pickedFile.path,
+            );
       });
     }
   }
 
+  void _addLicenseForm() {
+    final newId = _nextLicenseId++; // 고유 아이디 값 증가 로컬에서
+    final counselorSignNotifier = ref.read(counselorSignProvider.notifier);
+    final newLicense = CounselorLicenseRequest(
+      id: newId,
+      licenseName: '',
+      licenseNumber: '',
+      licenseRegiNumber: '',
+      licenseImage: '',
+    );
+
+    counselorSignNotifier.addLicense(newLicense);
+  }
+
+  void _removeLicenseForm(int licenseId) {
+    ref.read(counselorSignProvider.notifier).removeLicense(licenseId);
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    codeController.dispose();
+    passwordController.dispose();
+    passwordCheckController.dispose();
+    nameController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    specialtyController.dispose();
+    introductionController.dispose();
+    hashtagsController.dispose();
+    priceController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final memberSignNotifier = ref.read(memberSignProvider.notifier);
+    final counselorSignNotifier = ref.read(counselorSignProvider.notifier);
+
+    // 상태 관리 수시로
+    final licenses =
+        ref.watch(counselorSignProvider.select((state) => state.licenses));
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: ListView(
@@ -74,50 +132,73 @@ class _CounselorSignBodyState extends State<CounselorSignBody> {
             ),
           ),
           const SizedBox(height: 20),
-          _buildEmailField(),
-          buildTextFormField("인증코드", codeController, enabled: isCodeEnabled),
-          buildTextFormField("상담사 닉네임", nicknameController),
-          buildTextFormField("비밀번호", passwordController, obscureText: true),
-          buildTextFormField("비밀번호 확인", passwordCheckController,
-              obscureText: true),
-          buildTextFormField("이름", nameController),
+          _buildEmailField(counselorSignNotifier, memberSignNotifier),
+          _buildCodeField(memberSignNotifier),
+          buildTextFormField(
+            "이름",
+            nameController,
+            onChanged: (value) => counselorSignNotifier.updateForm(name: value),
+          ),
+          buildTextFormField(
+            "비밀번호",
+            passwordController,
+            obscureText: true,
+            onChanged: (value) =>
+                counselorSignNotifier.updateForm(password: value),
+          ),
+          buildTextFormField(
+            "비밀번호 확인",
+            passwordCheckController,
+            obscureText: true,
+            onChanged: (value) =>
+                counselorSignNotifier.updateForm(confirmPassword: value),
+          ),
           buildTextFormField(
             "핸드폰 번호",
             phoneController,
             inputFormatters: [phoneMaskFormatter],
             keyboardType: TextInputType.phone,
+            onChanged: (value) =>
+                counselorSignNotifier.updateForm(phone: value),
           ),
-          buildTextFormField("주소", addressController),
+          buildTextFormField(
+            "주소",
+            addressController,
+            onChanged: (value) =>
+                counselorSignNotifier.updateForm(address: value),
+          ),
           const SizedBox(height: 12),
           const Text(
             "성별",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          Row(
-            children: [
-              Expanded(
-                child: CheckboxListTile(
-                  title: const Text("남성"),
-                  value: selectedGender == "남성",
-                  onChanged: (value) {
-                    setState(() {
-                      selectedGender = value! ? "남성" : null;
-                    });
-                  },
-                ),
-              ),
-              Expanded(
-                child: CheckboxListTile(
-                  title: const Text("여성"),
-                  value: selectedGender == "여성",
-                  onChanged: (value) {
-                    setState(() {
-                      selectedGender = value! ? "여성" : null;
-                    });
-                  },
-                ),
-              ),
-            ],
+          _buildGenderField(counselorSignNotifier),
+          buildTextFormField(
+            "분야",
+            specialtyController,
+            onChanged: (value) =>
+                counselorSignNotifier.updateForm(specialty: value),
+          ),
+          buildTextFormField(
+            "한줄 소개",
+            introductionController,
+            onChanged: (value) =>
+                counselorSignNotifier.updateForm(introduction: value),
+          ),
+          buildTextFormField(
+            "해시태그",
+            hashtagsController,
+            onChanged: (value) =>
+                counselorSignNotifier.updateForm(hashtags: value),
+          ),
+          buildTextFormField(
+            "기격",
+            priceController,
+            onChanged: (value) =>
+                counselorSignNotifier.updateForm(price: value as int),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,34 +209,56 @@ class _CounselorSignBodyState extends State<CounselorSignBody> {
               ),
               IconButton(
                 icon: const Icon(Icons.add),
-                onPressed: () {
-                  final UniqueKey newKey = UniqueKey();
-
-                  setState(() {
-                    final newForm = CounselorInfoFormBody(
-                      key: newKey,
-                      onRemove: () {
-                        setState(() {
-                          _licenseForms.removeWhere((element) =>
-                              element.key == newKey); // Key로 해당 요소를 찾습니다.
-                        });
-                      },
-                    );
-                    _licenseForms.add(newForm);
-                  });
-                },
+                onPressed: _addLicenseForm,
               )
             ],
           ),
-          Column(children: _licenseForms),
+          Column(
+            children: licenses.map((license) {
+              return CounselorInfoFormBody(
+                key: ValueKey(license.id),
+                license: license,
+                onRemove: () => _removeLicenseForm(license.id),
+              );
+            }).toList(),
+          ),
           CustomTextButton(
             text: "회원가입",
-            click: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const TermsPage()),
-              );
-            },
+            click: (isCodeEnabled && isEmailEnabled)
+                ? () async {
+                    if (passwordController.text !=
+                        passwordCheckController.text) {
+                      SnackBarUtil.showError(context, "비밀번호가 일치하지 않습니다.");
+                      return;
+                    }
+
+                    final agreements = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const TermsPage()));
+
+                    if (agreements != null &&
+                        agreements is List<TermsRequest>) {
+                      counselorSignNotifier.setAgreements(agreements);
+
+                      try {
+                        await counselorSignNotifier.sign();
+
+                        SnackBarUtil.showSuccess(
+                            context, "회원가입이 완료되었습니다! 로그인해 주세요.");
+                        Navigator.pop(context);
+                      } catch (e) {
+                        SnackBarUtil.showError(
+                            context, "회원가입 실패: ${e.toString()}");
+                      }
+                    } else {
+                      SnackBarUtil.showWarning(context, "약관 동의가 필요합니다.");
+                    }
+                  }
+                : null,
+            color: (isCodeEnabled && isEmailEnabled)
+                ? brandBackColor
+                : Colors.grey,
           ),
         ],
       ),
@@ -163,7 +266,8 @@ class _CounselorSignBodyState extends State<CounselorSignBody> {
   }
 
   // 이메일 필드 + 인증 버튼
-  Widget _buildEmailField() {
+  Widget _buildEmailField(CounselorSignNotifier counselorSignNotifier,
+      MemberSignNotifier memberSignNotifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -178,24 +282,118 @@ class _CounselorSignBodyState extends State<CounselorSignBody> {
               child: CustomTextFormField(
                 hint: "이메일을 입력하세요",
                 controller: emailController,
+                onChanged: (value) =>
+                    counselorSignNotifier.updateForm(email: value),
               ),
             ),
             const SizedBox(width: 8),
             ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  isCodeEnabled = true;
-                });
+              onPressed: () async {
+                final inputEmail = emailController.text;
+                if (!EmailValidationUtil.isValidEmail(inputEmail)) {
+                  SnackBarUtil.showError(context, "올바른 이메일 형식이 아닙니다.");
+                  return; // 유효하지 않으면 여기서 로직 종료
+                }
+
+                final result =
+                    await memberSignNotifier.isEmailCheck(inputEmail);
+                if (result.check) {
+                  SnackBarUtil.showWarning(context, result.message);
+                  setState(() {
+                    isEmailEnabled = false;
+                  });
+                } else {
+                  SnackBarUtil.showSuccess(context, result.message);
+
+                  setState(() {
+                    isEmailEnabled = true;
+                  });
+
+                  await memberSignNotifier.sendCode(inputEmail);
+
+                  SnackBarUtil.showSuccess(context, "인증 코드가 이메일로 전송되었습니다.");
+                }
               },
               style: ElevatedButton.styleFrom(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
               ),
-              child: const Text("이메일 인증"),
+              child: const Text("중복 확인"),
             ),
           ],
         ),
         const SizedBox(height: 8),
+      ],
+    );
+  }
+
+  Widget _buildCodeField(MemberSignNotifier memberSignNotifier) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: CustomTextFormField(
+              hint: "인증코드",
+              controller: codeController,
+              enabled: isEmailEnabled),
+        ),
+        const SizedBox(width: 8),
+        ElevatedButton(
+          onPressed: () async {
+            final result = await memberSignNotifier.verifyCode(
+              Email(
+                email: emailController.text,
+                code: codeController.text,
+              ),
+            );
+            if (result) {
+              SnackBarUtil.showSuccess(context, "인증 성공");
+              setState(() {
+                isCodeEnabled = true;
+              });
+            } else {
+              SnackBarUtil.showError(context, "인증 실패");
+              setState(() {
+                isCodeEnabled = false;
+              });
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+          ),
+          child: const Text("코드 확인"),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGenderField(CounselorSignNotifier counselorSignNotifier) {
+    return Row(
+      children: [
+        Expanded(
+          child: CheckboxListTile(
+            title: const Text("남성"),
+            value: selectedGender == "남성",
+            onChanged: (value) {
+              setState(() {
+                selectedGender = value! ? "남성" : null;
+                counselorSignNotifier.updateForm(gender: selectedGender);
+              });
+            },
+          ),
+        ),
+        Expanded(
+          child: CheckboxListTile(
+            title: const Text("여성"),
+            value: selectedGender == "여성",
+            onChanged: (value) {
+              setState(() {
+                selectedGender = value! ? "여성" : null;
+                counselorSignNotifier.updateForm(gender: selectedGender);
+              });
+            },
+          ),
+        ),
       ],
     );
   }
@@ -208,6 +406,7 @@ class _CounselorSignBodyState extends State<CounselorSignBody> {
     bool enabled = true,
     List<TextInputFormatter>? inputFormatters,
     TextInputType? keyboardType,
+    ValueChanged<String>? onChanged,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,6 +423,7 @@ class _CounselorSignBodyState extends State<CounselorSignBody> {
           enabled: enabled,
           inputFormatters: inputFormatters,
           keyboardType: keyboardType,
+          onChanged: onChanged,
         ),
         const SizedBox(height: 8),
       ],

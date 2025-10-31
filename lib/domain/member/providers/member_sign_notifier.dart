@@ -28,6 +28,7 @@ class MemberSignNotifier extends Notifier<MemberSign> {
     );
   }
 
+  // 회원가입 상태값 저장
   void updateForm({
     String? email,
     String? password,
@@ -46,6 +47,7 @@ class MemberSignNotifier extends Notifier<MemberSign> {
     );
   }
 
+  // 약관 상태 값 저장
   void setAgreements(List<TermsRequest> agreements) {
     state = state.copyWith(agreements: agreements);
   }
