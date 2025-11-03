@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import '../../list_page/models/record_item.dart';
+import '../../../../../../domain/recorder/models/record_item.dart';
 
 class RecorderDetailHeader extends StatelessWidget {
   final RecordItem record;
