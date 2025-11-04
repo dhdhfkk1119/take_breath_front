@@ -1,37 +1,40 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:take_breath/domain/provider/image_picker_list_provider.dart';
 
-class ImagePickerList extends StatefulWidget {
+class ImagePickerList extends ConsumerStatefulWidget {
   const ImagePickerList({super.key});
 
   @override
-  State<ImagePickerList> createState() => _CommunityWriteImageListState();
+  ConsumerState<ImagePickerList> createState() =>
+      _CommunityWriteImageListState();
 }
 
-class _CommunityWriteImageListState extends State<ImagePickerList> {
+class _CommunityWriteImageListState extends ConsumerState<ImagePickerList> {
   final ImagePicker _picker = ImagePicker();
-  List<XFile> _images = [];
-
-  Future<void> _pickImage() async {
-    if (_images.length >= 10) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('이미지는 최대 10개까지만 등록할 수 있습니다.')),
-      );
-      return;
-    }
-
-    final List<XFile> pickedFiles = await _picker.pickMultiImage();
-    if (pickedFiles.isNotEmpty) {
-      setState(() {
-        _images = [..._images, ...pickedFiles].take(10).toList();
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    final notifier = ref.read(imagePickerListProvider.notifier);
+    final images = ref.watch(imagePickerListProvider);
+
+    Future<void> _pickImage() async {
+      if (images.length >= 10) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('이미지는 최대 10개까지만 등록할 수 있습니다.')),
+        );
+        return;
+      }
+
+      final pickedFiles = await _picker.pickMultiImage();
+      if (pickedFiles.isNotEmpty) {
+        notifier.addImages(pickedFiles);
+      }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -56,7 +59,7 @@ class _CommunityWriteImageListState extends State<ImagePickerList> {
                     color: Colors.grey,
                   ),
                   Text(
-                    "${_images.length}/10",
+                    "${images.length}/10",
                     style: const TextStyle(
                       color: Colors.black87,
                       fontWeight: FontWeight.bold,
@@ -69,12 +72,12 @@ class _CommunityWriteImageListState extends State<ImagePickerList> {
         ),
 
         // 이미지 미리보기
-        if (_images.isNotEmpty)
+        if (images.isNotEmpty)
           SizedBox(
             height: 100,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: _images.length,
+              itemCount: images.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.only(right: 8.0),
@@ -94,7 +97,7 @@ class _CommunityWriteImageListState extends State<ImagePickerList> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
                           child: Image.file(
-                            File(_images[index].path),
+                            File(images[index].path),
                             width: 75,
                             height: 75,
                             fit: BoxFit.cover,
@@ -108,7 +111,7 @@ class _CommunityWriteImageListState extends State<ImagePickerList> {
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              _images.removeAt(index);
+                              images.removeAt(index);
                             });
                           },
                           child: Container(

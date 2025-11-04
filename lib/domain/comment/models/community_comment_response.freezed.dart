@@ -27,8 +27,8 @@ mixin _$CommunityCommentResponse {
   String get memberName => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
   String get updatedAt => throw _privateConstructorUsedError;
-  bool get isModified => throw _privateConstructorUsedError;
-  bool get isDeleted => throw _privateConstructorUsedError;
+  bool get deleted => throw _privateConstructorUsedError;
+  bool get modified => throw _privateConstructorUsedError;
 
   /// Serializes this CommunityCommentResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -53,8 +53,8 @@ abstract class $CommunityCommentResponseCopyWith<$Res> {
       String memberName,
       String createdAt,
       String updatedAt,
-      bool isModified,
-      bool isDeleted});
+      bool deleted,
+      bool modified});
 }
 
 /// @nodoc
@@ -79,8 +79,8 @@ class _$CommunityCommentResponseCopyWithImpl<$Res,
     Object? memberName = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? isModified = null,
-    Object? isDeleted = null,
+    Object? deleted = null,
+    Object? modified = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -107,13 +107,13 @@ class _$CommunityCommentResponseCopyWithImpl<$Res,
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as String,
-      isModified: null == isModified
-          ? _value.isModified
-          : isModified // ignore: cast_nullable_to_non_nullable
+      deleted: null == deleted
+          ? _value.deleted
+          : deleted // ignore: cast_nullable_to_non_nullable
               as bool,
-      isDeleted: null == isDeleted
-          ? _value.isDeleted
-          : isDeleted // ignore: cast_nullable_to_non_nullable
+      modified: null == modified
+          ? _value.modified
+          : modified // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -135,8 +135,8 @@ abstract class _$$CommunityCommentResponseImplCopyWith<$Res>
       String memberName,
       String createdAt,
       String updatedAt,
-      bool isModified,
-      bool isDeleted});
+      bool deleted,
+      bool modified});
 }
 
 /// @nodoc
@@ -160,8 +160,8 @@ class __$$CommunityCommentResponseImplCopyWithImpl<$Res>
     Object? memberName = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? isModified = null,
-    Object? isDeleted = null,
+    Object? deleted = null,
+    Object? modified = null,
   }) {
     return _then(_$CommunityCommentResponseImpl(
       id: null == id
@@ -188,13 +188,13 @@ class __$$CommunityCommentResponseImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as String,
-      isModified: null == isModified
-          ? _value.isModified
-          : isModified // ignore: cast_nullable_to_non_nullable
+      deleted: null == deleted
+          ? _value.deleted
+          : deleted // ignore: cast_nullable_to_non_nullable
               as bool,
-      isDeleted: null == isDeleted
-          ? _value.isDeleted
-          : isDeleted // ignore: cast_nullable_to_non_nullable
+      modified: null == modified
+          ? _value.modified
+          : modified // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -210,8 +210,8 @@ class _$CommunityCommentResponseImpl implements _CommunityCommentResponse {
       required this.memberName,
       required this.createdAt,
       required this.updatedAt,
-      required this.isModified,
-      required this.isDeleted});
+      required this.deleted,
+      required this.modified});
 
   factory _$CommunityCommentResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$CommunityCommentResponseImplFromJson(json);
@@ -229,13 +229,13 @@ class _$CommunityCommentResponseImpl implements _CommunityCommentResponse {
   @override
   final String updatedAt;
   @override
-  final bool isModified;
+  final bool deleted;
   @override
-  final bool isDeleted;
+  final bool modified;
 
   @override
   String toString() {
-    return 'CommunityCommentResponse(id: $id, content: $content, memberId: $memberId, memberName: $memberName, createdAt: $createdAt, updatedAt: $updatedAt, isModified: $isModified, isDeleted: $isDeleted)';
+    return 'CommunityCommentResponse(id: $id, content: $content, memberId: $memberId, memberName: $memberName, createdAt: $createdAt, updatedAt: $updatedAt, deleted: $deleted, modified: $modified)';
   }
 
   @override
@@ -253,16 +253,15 @@ class _$CommunityCommentResponseImpl implements _CommunityCommentResponse {
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
-            (identical(other.isModified, isModified) ||
-                other.isModified == isModified) &&
-            (identical(other.isDeleted, isDeleted) ||
-                other.isDeleted == isDeleted));
+            (identical(other.deleted, deleted) || other.deleted == deleted) &&
+            (identical(other.modified, modified) ||
+                other.modified == modified));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, content, memberId,
-      memberName, createdAt, updatedAt, isModified, isDeleted);
+      memberName, createdAt, updatedAt, deleted, modified);
 
   /// Create a copy of CommunityCommentResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -289,8 +288,8 @@ abstract class _CommunityCommentResponse implements CommunityCommentResponse {
       required final String memberName,
       required final String createdAt,
       required final String updatedAt,
-      required final bool isModified,
-      required final bool isDeleted}) = _$CommunityCommentResponseImpl;
+      required final bool deleted,
+      required final bool modified}) = _$CommunityCommentResponseImpl;
 
   factory _CommunityCommentResponse.fromJson(Map<String, dynamic> json) =
       _$CommunityCommentResponseImpl.fromJson;
@@ -308,9 +307,9 @@ abstract class _CommunityCommentResponse implements CommunityCommentResponse {
   @override
   String get updatedAt;
   @override
-  bool get isModified;
+  bool get deleted;
   @override
-  bool get isDeleted;
+  bool get modified;
 
   /// Create a copy of CommunityCommentResponse
   /// with the given fields replaced by the non-null parameter values.

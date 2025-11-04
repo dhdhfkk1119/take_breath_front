@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/utils/thumbnail_image.dart';
 import 'package:take_breath/domain/community/models/community_list.dart';
+import 'package:take_breath/presentation/pages/index_stack_page/community/detail_page/community_detail_page.dart';
 
 class CommunityListItem extends ConsumerWidget {
   final CommunityList post;
@@ -11,23 +13,31 @@ class CommunityListItem extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        // 게시물 상세 페이지로 이동
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CommunityDetailPage(
+              id: post.id,
+            ),
+          ),
+        );
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
         child: Row(
           children: [
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: post.thumbnail != null
-                  ? Image.network(post.thumbnail!, fit: BoxFit.cover)
-                  : Container(color: Colors.grey[300]),
-            ),
+            ThumbnailImage(url: post.thumbnail, width: 100, height: 100),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    '1시간',
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
                   Text(
                     post.title,
                     maxLines: 2,

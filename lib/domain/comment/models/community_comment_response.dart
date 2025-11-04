@@ -12,8 +12,8 @@ class CommunityCommentResponse with _$CommunityCommentResponse {
     required String memberName,
     required String createdAt,
     required String updatedAt,
-    required bool isModified,
-    required bool isDeleted,
+    required bool deleted,
+    required bool modified,
   }) = _CommunityCommentResponse;
 
   factory CommunityCommentResponse.fromJson(Map<String, dynamic> json) =>
