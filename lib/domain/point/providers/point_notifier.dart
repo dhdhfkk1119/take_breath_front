@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'point_model.dart';
+import '../models/point_model.dart';
 
 class PointNotifier extends StateNotifier<PointState> {
   PointNotifier() : super(PointState.initial()) {
