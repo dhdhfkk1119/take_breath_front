@@ -1,8 +1,13 @@
-import 'package:dio/dio.dart';
-import 'package:take_breath/_core/utils/my_http.dart';
+
+import 'package:take_breath/_core/utils/api_service.dart';
 import 'package:take_breath/domain/payment/models/payment_model.dart';
 
 class PaymentRepository {
+  final ApiService _api;
+
+  PaymentRepository(this._api);
+
+  // 결제 준비
   Future<PaymentPrepare> prepare({
     required int amount,
     required String orderName,
@@ -10,48 +15,43 @@ class PaymentRepository {
     required String buyerEmail,
     required String buyerTel,
   }) async {
-    try {
-      final response = await dio.post(
-        "/payments/prepare",
-        data: {
-          "amount": amount,
-          "orderName": orderName,
-          "buyerName": buyerName,
-          "buyerEmail": buyerEmail,
-          "buyerTel": buyerTel,
-        },
-      );
+    final data = await _api.post('/payments/prepare', {
+      'amount': amount,
+      'orderName': orderName,
+      'buyerName': buyerName,
+      'buyerEmail': buyerEmail,
+      'buyerTel': buyerTel,
+    });
 
-      if (response.statusCode == 200 && response.data != null) {
-        return PaymentPrepare.fromJson(response.data['response']);
-      } else {
-        throw Exception("결제 준비 실패: ${response.statusCode}");
-      }
-    } catch (e) {
-      throw Exception("서버가 연결되어 있지 않습니다: $e");
-    }
+    print('결제 준비 성공: $data');
+    return PaymentPrepare.fromJson(data);
   }
 
+  // 결제 검증
   Future<PaymentResult> verify({
     required String impUid,
     required String merchantUid,
   }) async {
-    try {
-      final response = await dio.post(
-        "/payments/verify",
-        data: {
-          "impUid": impUid,
-          "merchantUid": merchantUid,
-        },
-      );
+    final data = await _api.post('/payments/verify', {
+      'impUid': impUid,
+      'merchantUid': merchantUid,
+    });
 
-      if (response.statusCode == 200 && response.data != null) {
-        return PaymentResult.fromJson(response.data['response']);
-      } else {
-        throw Exception("결제 검증 실패: ${response.statusCode}");
-      }
-    } catch (e) {
-      throw Exception("서버가 연결되어 있지 않습니다: $e");
-    }
+    print('결제 검증 성공: $data');
+    return PaymentResult.fromJson(data);
+  }
+
+  // 결제 내역 조회
+  Future<List<PaymentResult>> getPaymentHistory({
+    int page = 0,
+    int size = 10,
+  }) async {
+    final data = await _api.get(
+      '/payments/mine',
+      queryParameters: {'page': page, 'size': size},
+    );
+
+    final List<dynamic> payments = data['content'];
+    return payments.map((json) => PaymentResult.fromJson(json)).toList();
   }
 }

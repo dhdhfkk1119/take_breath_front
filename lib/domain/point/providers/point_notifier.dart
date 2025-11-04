@@ -1,77 +1,33 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/domain/point/providers/point_repository_provider.dart';
 import '../models/point_model.dart';
+import '../repositories/point_repository.dart';
 
 class PointNotifier extends StateNotifier<PointState> {
-  PointNotifier() : super(PointState.initial()) {
-    _loadPoints();
+  final PointRepository pointRepository;
+
+  PointNotifier(this.pointRepository) : super(PointState.initial()) {
+    refreshPoints();
   }
 
-  void _loadPoints() {
-    // 테스트 데이터
-    final testTransactions = [
-      PointTransaction(
-        id: 1,
-        amount: 5000,
-        type: 'charge',
-        dateTime: DateTime(2024, 1, 15, 10, 30),
-        description: '포인트 충전',
-      ),
-      PointTransaction(
-        id: 2,
-        amount: 1000,
-        type: 'use',
-        dateTime: DateTime(2024, 1, 14, 14, 20),
-        description: '상담 예약',
-      ),
-      PointTransaction(
-        id: 3,
-        amount: 10000,
-        type: 'charge',
-        dateTime: DateTime(2024, 1, 13, 9, 0),
-        description: '포인트 충전',
-      ),
-    ];
-
-    // 총 포인트 계산
-    int totalPoints = 0;
-    for (var transaction in testTransactions) {
-      if (transaction.type == 'charge') {
-        totalPoints += transaction.amount;
-      } else {
-        totalPoints -= transaction.amount;
-      }
-    }
-
-    state = state.copyWith(
-      totalPoints: totalPoints,
-      transactions: testTransactions,
-    );
-  }
-
-  // 포인트 충전
-  Future<void> chargePoints(int amount) async {
+  // 포인트 조회
+  Future<void> refreshPoints() async {
     state = state.copyWith(isLoading: true);
+
     try {
-      await Future.delayed(const Duration(milliseconds: 800));
-      // 결제 시뮬레이션
-
-      final newTransaction = PointTransaction(
-        id: state.transactions.length + 1,
-        amount: amount,
-        type: 'charge',
-        dateTime: DateTime.now(),
-        description: '포인트 충전',
-      );
-
-      final updatedTransactions = [newTransaction, ...state.transactions];
-      final updatedPoints = state.totalPoints + amount;
+      final balance = await pointRepository.getBalance();
+      final history = await pointRepository.getHistory();
 
       state = state.copyWith(
-        totalPoints: updatedPoints,
-        transactions: updatedTransactions,
+        totalPoints: balance,
+        transactions: history,
         isLoading: false,
+        error: null,
       );
+
+      print('포인트 조회 성공: ${balance}P, 내역: ${history.length}건');
     } catch (e) {
+      print('포인트 조회 실패: $e');
       state = state.copyWith(
         error: e.toString(),
         isLoading: false,
@@ -110,7 +66,7 @@ class PointNotifier extends StateNotifier<PointState> {
   }
 }
 
-// Riverpod Provider
 final pointProvider = StateNotifierProvider<PointNotifier, PointState>((ref) {
-  return PointNotifier();
+  final pointRepository = ref.read(pointRepositoryProvider);
+  return PointNotifier(pointRepository);
 });

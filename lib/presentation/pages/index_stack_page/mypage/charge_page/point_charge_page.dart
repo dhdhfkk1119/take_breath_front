@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:take_breath/domain/member/services/auth_storage.dart';
 import 'package:take_breath/domain/payment/providers/payment_notifier.dart';
 import 'package:take_breath/domain/point/providers/point_notifier.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/mypage/payment_page/payment_webview_page.dart';
@@ -19,9 +18,9 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
   bool _isProcessing = false;
 
   final List<Map<String, dynamic>> chargeOptions = [
-    {'amount': 1000, 'label': '1,000P', 'price': '1,100원'},
     {'amount': 5000, 'label': '5,000P', 'price': '5,500원'},
     {'amount': 10000, 'label': '10,000P', 'price': '11,000원'},
+    {'amount': 30000, 'label': '30,000P', 'price': '33,000원'},
     {'amount': 50000, 'label': '50,000P', 'price': '55,000원'},
   ];
 
@@ -50,27 +49,40 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
         buyerTel: '010-0000-0000',
       );
 
-      if (mounted) {
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => PaymentWebviewPage(prepareData: prepareData),
+      if (!mounted) return;
+
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => PaymentWebviewPage(prepareData: prepareData),
+        ),
+      );
+
+      // 결제 완료 후 포인트 새로고침
+      if (result == true && mounted) {
+        // 포인트 재조회
+        ref.read(pointProvider.notifier).refreshPoints();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('포인트 충전이 완료되었습니다!'),
+            backgroundColor: Colors.teal,
           ),
         );
+
+        Navigator.pop(context);
       }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('결제 준비 실패: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isProcessing = false);
-      }
+      setState(() => _isProcessing = false);
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('결제 준비 실패: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 

@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'payment_model.freezed.dart';
 part 'payment_model.g.dart';
 
+// 결제 준비 응답
 @freezed
 class PaymentPrepare with _$PaymentPrepare {
   const factory PaymentPrepare({
@@ -20,6 +21,7 @@ class PaymentPrepare with _$PaymentPrepare {
       _$PaymentPrepareFromJson(json);
 }
 
+// 결제 검증
 @freezed
 class PaymentVerify with _$PaymentVerify {
   const factory PaymentVerify({
@@ -31,6 +33,7 @@ class PaymentVerify with _$PaymentVerify {
       _$PaymentVerifyFromJson(json);
 }
 
+// 결제 결과
 @freezed
 class PaymentResult with _$PaymentResult {
   const factory PaymentResult({

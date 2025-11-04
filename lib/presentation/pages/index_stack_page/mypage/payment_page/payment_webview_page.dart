@@ -59,15 +59,15 @@ class _PaymentWebviewPageState extends ConsumerState<PaymentWebviewPage> {
       /* [필수입력] 콜백 함수 */
       callback: (Map<String, String> result) async {
 
-        // TODO - 삭제 디버깅 : 콜백 데이터 전체 출력
+        /// 디버깅 : 콜백 데이터 전체 출력
         print('=' * 60);
-        print('🔥 결제 콜백 원본 데이터:');
+        print('결제 콜백 원본 데이터:');
         result.forEach((key, value) {
           print('  $key: $value');
         });
         print('=' * 60);
 
-        final success = result['success'] == 'true';
+        final success = result['imp_success'] == 'true';
         final impUid = result['imp_uid'];
         final merchantUid = result['merchant_uid'];
         final errorMsg = result['error_msg'];
@@ -118,6 +118,7 @@ class _PaymentWebviewPageState extends ConsumerState<PaymentWebviewPage> {
               ),
             ),
           );
+          Navigator.pushNamed(context,"/main");
           print('결과 페이지로 이동 완료');
         } catch (e) {
           print('페이지 이동 실패: $e');
