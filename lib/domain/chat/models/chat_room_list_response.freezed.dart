@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'chat_room.dart';
+part of 'chat_room_list_response.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-ChatRoom _$ChatRoomFromJson(Map<String, dynamic> json) {
-  return _ChatRoom.fromJson(json);
+ChatRoomListResponse _$ChatRoomListResponseFromJson(Map<String, dynamic> json) {
+  return _ChatRoomListResponse.fromJson(json);
 }
 
 /// @nodoc
-mixin _$ChatRoom {
+mixin _$ChatRoomListResponse {
   int get roomId => throw _privateConstructorUsedError;
   String get roomName => throw _privateConstructorUsedError;
   int get unreadCount => throw _privateConstructorUsedError;
@@ -28,20 +28,21 @@ mixin _$ChatRoom {
   int get otherMemberId => throw _privateConstructorUsedError;
   String get otherMemberName => throw _privateConstructorUsedError;
 
-  /// Serializes this ChatRoom to a JSON map.
+  /// Serializes this ChatRoomListResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of ChatRoom
+  /// Create a copy of ChatRoomListResponse
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $ChatRoomCopyWith<ChatRoom> get copyWith =>
+  $ChatRoomListResponseCopyWith<ChatRoomListResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ChatRoomCopyWith<$Res> {
-  factory $ChatRoomCopyWith(ChatRoom value, $Res Function(ChatRoom) then) =
-      _$ChatRoomCopyWithImpl<$Res, ChatRoom>;
+abstract class $ChatRoomListResponseCopyWith<$Res> {
+  factory $ChatRoomListResponseCopyWith(ChatRoomListResponse value,
+          $Res Function(ChatRoomListResponse) then) =
+      _$ChatRoomListResponseCopyWithImpl<$Res, ChatRoomListResponse>;
   @useResult
   $Res call(
       {int roomId,
@@ -54,16 +55,17 @@ abstract class $ChatRoomCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ChatRoomCopyWithImpl<$Res, $Val extends ChatRoom>
-    implements $ChatRoomCopyWith<$Res> {
-  _$ChatRoomCopyWithImpl(this._value, this._then);
+class _$ChatRoomListResponseCopyWithImpl<$Res,
+        $Val extends ChatRoomListResponse>
+    implements $ChatRoomListResponseCopyWith<$Res> {
+  _$ChatRoomListResponseCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ChatRoom
+  /// Create a copy of ChatRoomListResponse
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -110,11 +112,11 @@ class _$ChatRoomCopyWithImpl<$Res, $Val extends ChatRoom>
 }
 
 /// @nodoc
-abstract class _$$ChatRoomImplCopyWith<$Res>
-    implements $ChatRoomCopyWith<$Res> {
-  factory _$$ChatRoomImplCopyWith(
-          _$ChatRoomImpl value, $Res Function(_$ChatRoomImpl) then) =
-      __$$ChatRoomImplCopyWithImpl<$Res>;
+abstract class _$$ChatRoomListResponseImplCopyWith<$Res>
+    implements $ChatRoomListResponseCopyWith<$Res> {
+  factory _$$ChatRoomListResponseImplCopyWith(_$ChatRoomListResponseImpl value,
+          $Res Function(_$ChatRoomListResponseImpl) then) =
+      __$$ChatRoomListResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -128,14 +130,14 @@ abstract class _$$ChatRoomImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$ChatRoomImplCopyWithImpl<$Res>
-    extends _$ChatRoomCopyWithImpl<$Res, _$ChatRoomImpl>
-    implements _$$ChatRoomImplCopyWith<$Res> {
-  __$$ChatRoomImplCopyWithImpl(
-      _$ChatRoomImpl _value, $Res Function(_$ChatRoomImpl) _then)
+class __$$ChatRoomListResponseImplCopyWithImpl<$Res>
+    extends _$ChatRoomListResponseCopyWithImpl<$Res, _$ChatRoomListResponseImpl>
+    implements _$$ChatRoomListResponseImplCopyWith<$Res> {
+  __$$ChatRoomListResponseImplCopyWithImpl(_$ChatRoomListResponseImpl _value,
+      $Res Function(_$ChatRoomListResponseImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ChatRoom
+  /// Create a copy of ChatRoomListResponse
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -148,7 +150,7 @@ class __$$ChatRoomImplCopyWithImpl<$Res>
     Object? otherMemberId = null,
     Object? otherMemberName = null,
   }) {
-    return _then(_$ChatRoomImpl(
+    return _then(_$ChatRoomListResponseImpl(
       roomId: null == roomId
           ? _value.roomId
           : roomId // ignore: cast_nullable_to_non_nullable
@@ -183,8 +185,8 @@ class __$$ChatRoomImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ChatRoomImpl implements _ChatRoom {
-  const _$ChatRoomImpl(
+class _$ChatRoomListResponseImpl implements _ChatRoomListResponse {
+  const _$ChatRoomListResponseImpl(
       {required this.roomId,
       required this.roomName,
       required this.unreadCount,
@@ -193,8 +195,8 @@ class _$ChatRoomImpl implements _ChatRoom {
       required this.otherMemberId,
       required this.otherMemberName});
 
-  factory _$ChatRoomImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ChatRoomImplFromJson(json);
+  factory _$ChatRoomListResponseImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ChatRoomListResponseImplFromJson(json);
 
   @override
   final int roomId;
@@ -213,14 +215,14 @@ class _$ChatRoomImpl implements _ChatRoom {
 
   @override
   String toString() {
-    return 'ChatRoom(roomId: $roomId, roomName: $roomName, unreadCount: $unreadCount, lastMessage: $lastMessage, lastMessageTime: $lastMessageTime, otherMemberId: $otherMemberId, otherMemberName: $otherMemberName)';
+    return 'ChatRoomListResponse(roomId: $roomId, roomName: $roomName, unreadCount: $unreadCount, lastMessage: $lastMessage, lastMessageTime: $lastMessageTime, otherMemberId: $otherMemberId, otherMemberName: $otherMemberName)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ChatRoomImpl &&
+            other is _$ChatRoomListResponseImpl &&
             (identical(other.roomId, roomId) || other.roomId == roomId) &&
             (identical(other.roomName, roomName) ||
                 other.roomName == roomName) &&
@@ -241,34 +243,36 @@ class _$ChatRoomImpl implements _ChatRoom {
   int get hashCode => Object.hash(runtimeType, roomId, roomName, unreadCount,
       lastMessage, lastMessageTime, otherMemberId, otherMemberName);
 
-  /// Create a copy of ChatRoom
+  /// Create a copy of ChatRoomListResponse
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$ChatRoomImplCopyWith<_$ChatRoomImpl> get copyWith =>
-      __$$ChatRoomImplCopyWithImpl<_$ChatRoomImpl>(this, _$identity);
+  _$$ChatRoomListResponseImplCopyWith<_$ChatRoomListResponseImpl>
+      get copyWith =>
+          __$$ChatRoomListResponseImplCopyWithImpl<_$ChatRoomListResponseImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ChatRoomImplToJson(
+    return _$$ChatRoomListResponseImplToJson(
       this,
     );
   }
 }
 
-abstract class _ChatRoom implements ChatRoom {
-  const factory _ChatRoom(
+abstract class _ChatRoomListResponse implements ChatRoomListResponse {
+  const factory _ChatRoomListResponse(
       {required final int roomId,
       required final String roomName,
       required final int unreadCount,
       required final String lastMessage,
       required final String lastMessageTime,
       required final int otherMemberId,
-      required final String otherMemberName}) = _$ChatRoomImpl;
+      required final String otherMemberName}) = _$ChatRoomListResponseImpl;
 
-  factory _ChatRoom.fromJson(Map<String, dynamic> json) =
-      _$ChatRoomImpl.fromJson;
+  factory _ChatRoomListResponse.fromJson(Map<String, dynamic> json) =
+      _$ChatRoomListResponseImpl.fromJson;
 
   @override
   int get roomId;
@@ -285,10 +289,10 @@ abstract class _ChatRoom implements ChatRoom {
   @override
   String get otherMemberName;
 
-  /// Create a copy of ChatRoom
+  /// Create a copy of ChatRoomListResponse
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$ChatRoomImplCopyWith<_$ChatRoomImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$ChatRoomListResponseImplCopyWith<_$ChatRoomListResponseImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

@@ -64,32 +64,39 @@ class _ChatListBodyState extends ConsumerState<ChatListBody> {
                 return ListView.separated(
                   itemCount: filteredRooms.length,
                   separatorBuilder: (context, index) =>
-                      const SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final chatRoom = filteredRooms[index];
                     return ChatListItem();
                   },
                 );
               },
-              loading: () => const Center(
+              loading: () =>
+              const Center(
                 child: CircularProgressIndicator(),
               ),
-              error: (error, stackTrace) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.error_outline,
-                        size: 48, color: Colors.grey),
-                    const SizedBox(height: 16),
-                    Text(
-                      "채팅 목록을 불러올 수 없습니다",
-                      style: TextStyle(color: Colors.grey),
+              error: (error, stackTrace) =>
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.error_outline,
+                            size: 48, color: Colors.grey),
+                        const SizedBox(height: 16),
+                        Text(
+                          "채팅 목록을 불러올 수 없습니다",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        const SizedBox(height: 8),
+                        TextButton(
+                            onPressed: () {
+                              ref.invalidate(chatRoomListProvider);
+                            },
+                            child: const Text("다시 시도")
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 8),
-                    TextButton(onPressed: onPressed, child: child)
-                  ],
-                ),
-              ),
+                  ),
             ),
           ),
           ChatListItem(),

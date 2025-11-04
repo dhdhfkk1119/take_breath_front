@@ -1,9 +1,9 @@
 import 'package:take_breath/_core/utils/my_http.dart';
-import 'package:take_breath/domain/chat/models/chat_room.dart';
+import 'package:take_breath/domain/chat/models/chat_room_list_response.dart';
 
-class ChatRepository {
+class ChatRoomRepository {
   // 채팅방 목록 조회
-  Future<List<ChatRoom>> getChatRoomList(int memberId) async {
+  Future<List<ChatRoomListResponse>> getChatRoomList(int memberId) async {
     try {
       final response = await dio.get(
         "chat/rooms",
@@ -15,7 +15,7 @@ class ChatRepository {
 
         if (data['success'] == true) {
           final List<dynamic> roomsJson = data['response'];
-          return roomsJson.map((json) => ChatRoom.fromJson(json)).toList();
+          return roomsJson.map((json) => ChatRoomListResponse.fromJson(json)).toList();
         } else {
           throw Exception("채팅방 목록 조회 실패: ${data['error']}");
         }

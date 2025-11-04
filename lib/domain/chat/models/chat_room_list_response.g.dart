@@ -1,13 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'chat_room.dart';
+part of 'chat_room_list_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ChatRoomImpl _$$ChatRoomImplFromJson(Map<String, dynamic> json) =>
-    _$ChatRoomImpl(
+_$ChatRoomListResponseImpl _$$ChatRoomListResponseImplFromJson(
+        Map<String, dynamic> json) =>
+    _$ChatRoomListResponseImpl(
       roomId: (json['roomId'] as num).toInt(),
       roomName: json['roomName'] as String,
       unreadCount: (json['unreadCount'] as num).toInt(),
@@ -17,7 +18,8 @@ _$ChatRoomImpl _$$ChatRoomImplFromJson(Map<String, dynamic> json) =>
       otherMemberName: json['otherMemberName'] as String,
     );
 
-Map<String, dynamic> _$$ChatRoomImplToJson(_$ChatRoomImpl instance) =>
+Map<String, dynamic> _$$ChatRoomListResponseImplToJson(
+        _$ChatRoomListResponseImpl instance) =>
     <String, dynamic>{
       'roomId': instance.roomId,
       'roomName': instance.roomName,
