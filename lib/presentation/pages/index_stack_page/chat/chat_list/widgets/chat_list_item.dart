@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:take_breath/_core/constants/custom_color.dart';
+import 'package:take_breath/domain/chat/models/chat_room_list_response.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_detail/chat_detail_page.dart';
 
 class ChatListItem extends StatefulWidget {
-  const ChatListItem({super.key});
+  final ChatRoomListResponse chatRoomListResponse;
+
+  const ChatListItem({
+    super.key,
+    required this.chatRoomListResponse,
+  });
 
   @override
   State<ChatListItem> createState() => _ChatListItemState();
@@ -16,6 +22,14 @@ class _ChatListItemState extends State<ChatListItem> {
       onTap: () {
         Navigator.push(
           context,
+          /*
+          MaterialPageRoute(
+            builder: (context) => ChatDetailPage(
+              roomId: widget.chatRoom.roomId,
+              roomName: widget.chatRoom.roomName,
+            ),
+          ),
+          */
           MaterialPageRoute(
             builder: (context) => ChatDetailPage(),
           ),
@@ -25,6 +39,7 @@ class _ChatListItemState extends State<ChatListItem> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 프로필 이미지
           Container(
             width: 50,
             height: 50,
@@ -40,39 +55,72 @@ class _ChatListItemState extends State<ChatListItem> {
               ),
             ),
           ),
-          SizedBox(
-            width: 8,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "상담사 이름",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+          SizedBox(width: 8),
+          // 이름 & 마지막 메세지
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.chatRoomListResponse.otherMemberName,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              Text("마지막 메세지 내용"),
-            ],
+                Text(
+                  widget.chatRoomListResponse.lastMessage ?? "",
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 14,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ],
+            ),
           ),
-          Spacer(),
+          const SizedBox(width: 8),
+
+          // 시간 & 읽지 않은 메세지 갯수
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text("오전 1시 10분"),
-              Container(
-                width: 20,
-                height: 20,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: brandBackColor,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Text(
-                  "7",
-                  style: TextStyle(color: Colors.white),
+              Text(
+                widget.chatRoomListResponse.lastMessageTime ?? "",
+                style: TextStyle(
+                  color: Colors.grey[500],
+                  fontSize: 12,
                 ),
               ),
+              const SizedBox(height: 4),
+
+              // 읽지 않은 메세지가 있을 때만 표시
+              if (widget.chatRoomListResponse.unreadCount > 0)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  constraints: const BoxConstraints(
+                    minWidth: 20,
+                    minHeight: 20,
+                  ),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: brandBackColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    widget.chatRoomListResponse.unreadCount > 999
+                        ? "999+"
+                        : "${widget.chatRoomListResponse.unreadCount}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
             ],
           )
         ],

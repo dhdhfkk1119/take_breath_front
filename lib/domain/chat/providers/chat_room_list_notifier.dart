@@ -13,7 +13,7 @@ class ChatRoomListNotifier extends AsyncNotifier<List<ChatRoomListResponse>> {
   @override
   Future<List<ChatRoomListResponse>> build() {
     final repo = ref.read(chatRoomRepositoryProvider); // Repository 주입받음
-    return repo.getChatRoomList(1); // API 호출 → 상태 자동 저장됨
+    return repo.getChatRoomList(); // API 호출 → 상태 자동 저장됨
   }
 
   // 새로고침 기능
@@ -21,7 +21,7 @@ class ChatRoomListNotifier extends AsyncNotifier<List<ChatRoomListResponse>> {
     state = const AsyncLoading(); // 로딩 상태
     state = await AsyncValue.guard(() async {
       final repo = ref.read(chatRoomRepositoryProvider);
-      return repo.getChatRoomList(1);
+      return repo.getChatRoomList();
     });
   }
 }

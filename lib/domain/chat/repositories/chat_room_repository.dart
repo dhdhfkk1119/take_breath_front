@@ -3,11 +3,10 @@ import 'package:take_breath/domain/chat/models/chat_room_list_response.dart';
 
 class ChatRoomRepository {
   // 채팅방 목록 조회
-  Future<List<ChatRoomListResponse>> getChatRoomList(int memberId) async {
+  Future<List<ChatRoomListResponse>> getChatRoomList() async {
     try {
       final response = await dio.get(
-        "chat/rooms",
-        queryParameters: {"memberId": memberId},
+        "/chat/rooms",
       );
 
       if (response.statusCode == 200) {

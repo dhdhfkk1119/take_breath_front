@@ -23,8 +23,8 @@ mixin _$ChatRoomListResponse {
   int get roomId => throw _privateConstructorUsedError;
   String get roomName => throw _privateConstructorUsedError;
   int get unreadCount => throw _privateConstructorUsedError;
-  String get lastMessage => throw _privateConstructorUsedError;
-  String get lastMessageTime => throw _privateConstructorUsedError;
+  String? get lastMessage => throw _privateConstructorUsedError;
+  String? get lastMessageTime => throw _privateConstructorUsedError;
   int get otherMemberId => throw _privateConstructorUsedError;
   String get otherMemberName => throw _privateConstructorUsedError;
 
@@ -48,8 +48,8 @@ abstract class $ChatRoomListResponseCopyWith<$Res> {
       {int roomId,
       String roomName,
       int unreadCount,
-      String lastMessage,
-      String lastMessageTime,
+      String? lastMessage,
+      String? lastMessageTime,
       int otherMemberId,
       String otherMemberName});
 }
@@ -73,8 +73,8 @@ class _$ChatRoomListResponseCopyWithImpl<$Res,
     Object? roomId = null,
     Object? roomName = null,
     Object? unreadCount = null,
-    Object? lastMessage = null,
-    Object? lastMessageTime = null,
+    Object? lastMessage = freezed,
+    Object? lastMessageTime = freezed,
     Object? otherMemberId = null,
     Object? otherMemberName = null,
   }) {
@@ -91,14 +91,14 @@ class _$ChatRoomListResponseCopyWithImpl<$Res,
           ? _value.unreadCount
           : unreadCount // ignore: cast_nullable_to_non_nullable
               as int,
-      lastMessage: null == lastMessage
+      lastMessage: freezed == lastMessage
           ? _value.lastMessage
           : lastMessage // ignore: cast_nullable_to_non_nullable
-              as String,
-      lastMessageTime: null == lastMessageTime
+              as String?,
+      lastMessageTime: freezed == lastMessageTime
           ? _value.lastMessageTime
           : lastMessageTime // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       otherMemberId: null == otherMemberId
           ? _value.otherMemberId
           : otherMemberId // ignore: cast_nullable_to_non_nullable
@@ -123,8 +123,8 @@ abstract class _$$ChatRoomListResponseImplCopyWith<$Res>
       {int roomId,
       String roomName,
       int unreadCount,
-      String lastMessage,
-      String lastMessageTime,
+      String? lastMessage,
+      String? lastMessageTime,
       int otherMemberId,
       String otherMemberName});
 }
@@ -145,8 +145,8 @@ class __$$ChatRoomListResponseImplCopyWithImpl<$Res>
     Object? roomId = null,
     Object? roomName = null,
     Object? unreadCount = null,
-    Object? lastMessage = null,
-    Object? lastMessageTime = null,
+    Object? lastMessage = freezed,
+    Object? lastMessageTime = freezed,
     Object? otherMemberId = null,
     Object? otherMemberName = null,
   }) {
@@ -163,14 +163,14 @@ class __$$ChatRoomListResponseImplCopyWithImpl<$Res>
           ? _value.unreadCount
           : unreadCount // ignore: cast_nullable_to_non_nullable
               as int,
-      lastMessage: null == lastMessage
+      lastMessage: freezed == lastMessage
           ? _value.lastMessage
           : lastMessage // ignore: cast_nullable_to_non_nullable
-              as String,
-      lastMessageTime: null == lastMessageTime
+              as String?,
+      lastMessageTime: freezed == lastMessageTime
           ? _value.lastMessageTime
           : lastMessageTime // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       otherMemberId: null == otherMemberId
           ? _value.otherMemberId
           : otherMemberId // ignore: cast_nullable_to_non_nullable
@@ -205,9 +205,9 @@ class _$ChatRoomListResponseImpl implements _ChatRoomListResponse {
   @override
   final int unreadCount;
   @override
-  final String lastMessage;
+  final String? lastMessage;
   @override
-  final String lastMessageTime;
+  final String? lastMessageTime;
   @override
   final int otherMemberId;
   @override
@@ -266,8 +266,8 @@ abstract class _ChatRoomListResponse implements ChatRoomListResponse {
       {required final int roomId,
       required final String roomName,
       required final int unreadCount,
-      required final String lastMessage,
-      required final String lastMessageTime,
+      required final String? lastMessage,
+      required final String? lastMessageTime,
       required final int otherMemberId,
       required final String otherMemberName}) = _$ChatRoomListResponseImpl;
 
@@ -281,9 +281,9 @@ abstract class _ChatRoomListResponse implements ChatRoomListResponse {
   @override
   int get unreadCount;
   @override
-  String get lastMessage;
+  String? get lastMessage;
   @override
-  String get lastMessageTime;
+  String? get lastMessageTime;
   @override
   int get otherMemberId;
   @override

@@ -12,8 +12,8 @@ _$ChatRoomListResponseImpl _$$ChatRoomListResponseImplFromJson(
       roomId: (json['roomId'] as num).toInt(),
       roomName: json['roomName'] as String,
       unreadCount: (json['unreadCount'] as num).toInt(),
-      lastMessage: json['lastMessage'] as String,
-      lastMessageTime: json['lastMessageTime'] as String,
+      lastMessage: json['lastMessage'] as String?,
+      lastMessageTime: json['lastMessageTime'] as String?,
       otherMemberId: (json['otherMemberId'] as num).toInt(),
       otherMemberName: json['otherMemberName'] as String,
     );

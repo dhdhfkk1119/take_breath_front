@@ -42,64 +42,67 @@ class _ChatListBodyState extends ConsumerState<ChatListBody> {
           ),
           SizedBox(height: 16),
           Expanded(
-            child: chatListState.when(
-              data: (chatRooms) {
-                // 필터링
-                final filteredRooms = selected == "안 읽음"
-                    ? chatRooms.where((room) => room.unreadCount > 0).toList()
-                    : chatRooms;
-
-                if (filteredRooms.isEmpty) {
-                  return Center(
-                    child: Text(
-                      selected == "안 읽음" ? "읽지 않은 채팅이 없습니다" : "채팅이 없습니다",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
-                      ),
-                    ),
-                  );
-                }
-
-                return ListView.separated(
-                  itemCount: filteredRooms.length,
-                  separatorBuilder: (context, index) =>
-                  const SizedBox(height: 8),
-                  itemBuilder: (context, index) {
-                    final chatRoom = filteredRooms[index];
-                    return ChatListItem();
-                  },
-                );
+            child: RefreshIndicator(
+              onRefresh: () async {
+                ref.invalidate(chatRoomListProvider); // provider 무효화
+                await ref.read(chatRoomListProvider.future); // 새로고침이 완료될 때까지 대기
               },
-              loading: () =>
-              const Center(
-                child: CircularProgressIndicator(),
-              ),
-              error: (error, stackTrace) =>
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.error_outline,
-                            size: 48, color: Colors.grey),
-                        const SizedBox(height: 16),
-                        Text(
-                          "채팅 목록을 불러올 수 없습니다",
-                          style: TextStyle(color: Colors.grey),
+              child: chatListState.when(
+                data: (chatRooms) {
+                  // 필터링
+                  final filteredRooms = selected == "안 읽음"
+                      ? chatRooms.where((room) => room.unreadCount > 0).toList()
+                      : chatRooms;
+
+                  if (filteredRooms.isEmpty) {
+                    return Center(
+                      child: Text(
+                        selected == "안 읽음" ? "읽지 않은 채팅이 없습니다" : "채팅이 없습니다",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
                         ),
+                      ),
+                    );
+                  }
+
+                  return ListView.separated(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemCount: filteredRooms.length,
+                    separatorBuilder: (context, index) =>
                         const SizedBox(height: 8),
-                        TextButton(
-                            onPressed: () {
-                              ref.invalidate(chatRoomListProvider);
-                            },
-                            child: const Text("다시 시도")
-                        ),
-                      ],
-                    ),
+                    itemBuilder: (context, index) {
+                      final chatRoom = filteredRooms[index];
+                      return ChatListItem(chatRoomListResponse: chatRoom);
+                    },
+                  );
+                },
+                loading: () => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                error: (error, stackTrace) => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline,
+                          size: 48, color: Colors.grey),
+                      const SizedBox(height: 16),
+                      Text(
+                        "채팅 목록을 불러올 수 없습니다",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      const SizedBox(height: 8),
+                      TextButton(
+                          onPressed: () {
+                            ref.invalidate(chatRoomListProvider);
+                          },
+                          child: const Text("다시 시도")),
+                    ],
                   ),
+                ),
+              ),
             ),
           ),
-          ChatListItem(),
           SizedBox(height: 8),
         ],
       ),
