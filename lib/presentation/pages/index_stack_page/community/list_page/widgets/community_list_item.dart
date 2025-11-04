@@ -38,6 +38,9 @@ class CommunityListItem extends ConsumerWidget {
                     '1시간',
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
+                  SizedBox(
+                    height: 8,
+                  ),
                   Text(
                     post.title,
                     maxLines: 2,
@@ -50,12 +53,46 @@ class CommunityListItem extends ConsumerWidget {
                     '${post.memberName} | ${post.createdAt}',
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      likeCount(post),
+                      const SizedBox(width: 4),
+                      commentCount(post),
+                    ],
+                  )
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget likeCount(CommunityList post) {
+    return Row(
+      children: [
+        post.liked
+            ? Icon(CupertinoIcons.heart_fill, size: 14, color: Colors.redAccent)
+            : Icon(CupertinoIcons.heart, size: 14, color: Colors.redAccent),
+        const SizedBox(width: 2),
+        Text('${post.likeCount}',
+            style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+      ],
+    );
+  }
+
+  Widget commentCount(CommunityList detail) {
+    return Row(
+      children: [
+        Icon(CupertinoIcons.chat_bubble_text_fill,
+            size: 14, color: Colors.grey[600]),
+        const SizedBox(width: 2),
+        Text('${detail.commentCount}',
+            style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+      ],
     );
   }
 }

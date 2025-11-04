@@ -9,9 +9,9 @@ import 'package:take_breath/_core/constants/custom_text_form_field.dart';
 import 'package:take_breath/_core/utils/closable_info_box.dart';
 import 'package:take_breath/_core/utils/image_picker_list.dart';
 import 'package:take_breath/domain/community/models/community_write.dart';
+import 'package:take_breath/domain/community/providers/community_list_notifier.dart';
 import 'package:take_breath/domain/community/providers/community_write_notifier.dart';
 import 'package:take_breath/domain/provider/image_picker_list_provider.dart';
-import 'package:take_breath/presentation/pages/index_stack_page/community/list_page/community_list_page.dart';
 
 class CommunityWriteBody extends ConsumerStatefulWidget {
   const CommunityWriteBody({super.key});
@@ -86,12 +86,11 @@ class _CommunityWriteBodyState extends ConsumerState<CommunityWriteBody> {
                             const SnackBar(content: Text("게시물 작성 성공")),
                           );
                           Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CommunityListPage(),
-                            ),
-                          );
+                          Navigator.pushNamed(context, "/main");
+                          await ref
+                              .read(communityListProvider.notifier)
+                              .refreshList();
+                          imageListNotifier.clear();
                         }
                       },
               ),
