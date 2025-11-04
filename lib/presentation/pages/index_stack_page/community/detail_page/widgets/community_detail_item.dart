@@ -197,8 +197,9 @@ class _CommunityDetailItemState extends State<CommunityDetailItem> {
   Widget likeCount(CommunityDetail detail) {
     return Row(
       children: [
-        const Icon(CupertinoIcons.heart_fill,
-            size: 18, color: Colors.redAccent),
+        detail.liked
+            ? Icon(CupertinoIcons.heart_fill, size: 18, color: Colors.redAccent)
+            : Icon(CupertinoIcons.heart, size: 18, color: Colors.redAccent),
         const SizedBox(width: 2),
         Text('${detail.likeCount}',
             style: TextStyle(color: Colors.grey[600], fontSize: 13)),

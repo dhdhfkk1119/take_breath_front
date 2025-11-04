@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/_core/constants/custom_widget.dart';
 
 import '../../../../../../_core/constants/custom_color.dart';
 
-class CommunityListFilter extends StatelessWidget {
+class CommunityListFilter extends ConsumerStatefulWidget {
   const CommunityListFilter({super.key});
+
+  @override
+  ConsumerState<CommunityListFilter> createState() =>
+      _CommunityListFilterState();
+}
+
+class _CommunityListFilterState extends ConsumerState<CommunityListFilter> {
+  final ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +43,12 @@ class CommunityListFilter extends StatelessWidget {
         ListTile(
           title: const Text('전체'),
           onTap: () {
-            // 필터링 로직 구현
-            Navigator.pop(context); // Drawer 닫기
+            Navigator.pop(context);
           },
         ),
         ListTile(
           title: const Text('자유 게시판'),
           onTap: () {
-            // 필터링 로직 구현
             Navigator.pop(context);
           },
         ),

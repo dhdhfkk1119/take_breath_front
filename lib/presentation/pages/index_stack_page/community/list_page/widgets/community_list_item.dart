@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/utils/formatTime.dart';
 import 'package:take_breath/_core/utils/thumbnail_image.dart';
 import 'package:take_breath/domain/community/models/community_list.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/community/detail_page/community_detail_page.dart';
@@ -35,8 +36,11 @@ class CommunityListItem extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '1시간',
+                    FormatTime.beforeFormat(post.createdAt),
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  SizedBox(
+                    height: 8,
                   ),
                   Text(
                     post.title,
@@ -47,15 +51,49 @@ class CommunityListItem extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${post.memberName} | ${post.createdAt}',
+                    '${post.memberName} | ${FormatTime.createFormat(post.createdAt)}',
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      likeCount(post),
+                      const SizedBox(width: 4),
+                      commentCount(post),
+                    ],
+                  )
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget likeCount(CommunityList post) {
+    return Row(
+      children: [
+        post.liked
+            ? Icon(CupertinoIcons.heart_fill, size: 14, color: Colors.redAccent)
+            : Icon(CupertinoIcons.heart, size: 14, color: Colors.redAccent),
+        const SizedBox(width: 2),
+        Text('${post.likeCount}',
+            style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+      ],
+    );
+  }
+
+  Widget commentCount(CommunityList detail) {
+    return Row(
+      children: [
+        Icon(CupertinoIcons.chat_bubble_text_fill,
+            size: 14, color: Colors.grey[600]),
+        const SizedBox(width: 2),
+        Text('${detail.commentCount}',
+            style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+      ],
     );
   }
 }
