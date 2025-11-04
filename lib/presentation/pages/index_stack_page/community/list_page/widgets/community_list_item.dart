@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/utils/formatTime.dart';
 import 'package:take_breath/_core/utils/thumbnail_image.dart';
 import 'package:take_breath/domain/community/models/community_list.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/community/detail_page/community_detail_page.dart';
@@ -35,7 +36,7 @@ class CommunityListItem extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '1시간',
+                    FormatTime.beforeFormat(post.createdAt),
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   SizedBox(
@@ -50,7 +51,7 @@ class CommunityListItem extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${post.memberName} | ${post.createdAt}',
+                    '${post.memberName} | ${FormatTime.createFormat(post.createdAt)}',
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   const SizedBox(height: 4),

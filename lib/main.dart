@@ -2,20 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/presentation/pages/auth/social/social_page.dart';
-import 'package:take_breath/presentation/pages/index_stack_page/community/list_page/community_list_page.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/main_screen.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/service/notification_service.dart';
 import 'package:take_breath/presentation/pages/splash/splash_screen.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized(); // Flutter 엔진 초기화
+
+  timeago.setLocaleMessages('ko', timeago.KoMessages());
+  timeago.setDefaultLocale('ko');
 
   // NotificationService 초기화
-  await NotificationService().initialize();
+  await NotificationService().initialize(); // 알람 기능 초기화
 
   runApp(
+    // 전체에 리버팟 사용 가능 앱
     const ProviderScope(
       child: MyApp(),
     ),
