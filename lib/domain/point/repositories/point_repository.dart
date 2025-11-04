@@ -1,6 +1,7 @@
 import 'package:take_breath/domain/point/models/point_model.dart';
 
 import '../../../_core/utils/api_service.dart';
+import '../../../_core/utils/formatTime.dart';
 
 class PointRepository {
   final ApiService _api;
@@ -30,7 +31,7 @@ class PointRepository {
         id: json['id'],
         amount: json['amount'],
         type: json['type'] == 'CHARGE' ? 'charge' : 'use',
-        dateTime: DateTime.parse(json['createdAt']),
+        dateTime: FormatTime.parseKoreanFormat(json['createdAt']),
         description: json['description'] ?? '포인트 내역',
       );
     }).toList();

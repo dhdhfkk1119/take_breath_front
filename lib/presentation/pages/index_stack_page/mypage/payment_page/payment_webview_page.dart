@@ -118,7 +118,6 @@ class _PaymentWebviewPageState extends ConsumerState<PaymentWebviewPage> {
               ),
             ),
           );
-          Navigator.pushNamed(context,"/main");
           print('결과 페이지로 이동 완료');
         } catch (e) {
           print('페이지 이동 실패: $e');

@@ -92,7 +92,7 @@ class PaymentResultPage extends ConsumerWidget {
                       ref.invalidate(pointProvider);
                     }
                     ref.read(paymentProvider.notifier).reset();
-                    Navigator.popUntil(context, (route) => route.isFirst);
+                    Navigator.popUntil(context, ModalRoute.withName('/main'));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
