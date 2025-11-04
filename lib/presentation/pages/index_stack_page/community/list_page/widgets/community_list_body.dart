@@ -29,27 +29,35 @@ class _CommunityListBodyState extends ConsumerState<CommunityListBody> {
   @override
   Widget build(BuildContext context) {
     final communityState = ref.watch(communityListProvider);
-
     return communityState.when(
-      data: (posts) => RefreshIndicator(
-        onRefresh: () async {
-          await ref.read(communityListProvider.notifier).refreshList();
-        },
-        child: ListView.builder(
-          controller: _scrollController,
-          itemCount: posts.length + 1,
-          itemBuilder: (context, index) {
-            if (index < posts.length) {
-              return CommunityListItem(post: posts[index]);
-            } else {
-              return const Padding(
-                padding: EdgeInsets.all(16),
-                child: Center(child: CircularProgressIndicator()),
-              );
-            }
+      data: (posts) {
+        if (posts.isEmpty) {
+          return const Center(
+            child: Text('아직 등록된 데이터가 없습니다'),
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            await ref.read(communityListProvider.notifier).refreshList();
           },
-        ),
-      ),
+          child: ListView.builder(
+            itemCount: posts.length +
+                (ref.read(communityListProvider.notifier).hasNextPage ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index < posts.length) {
+                return CommunityListItem(post: posts[index]);
+              } else {
+                // 마지막 항목은 로딩 인디케이터
+                return const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+            },
+          ),
+        );
+      },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, _) => Center(child: Text('오류 발생: $err')),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../detail_page/recorder_detail_page.dart';
-import '../models/record_item.dart';
+import '../../../presentation/pages/index_stack_page/recorder/detail_page/recorder_detail_page.dart';
+import 'record_item.dart';
 
 class RecorderListItem extends StatelessWidget {
   final RecordItem record;

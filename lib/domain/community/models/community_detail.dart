@@ -9,20 +9,20 @@ class CommunityDetail with _$CommunityDetail {
   const factory CommunityDetail({
     required int id,
     required String title,
-    required int content,
-    required int memberId,
-    required String memberName,
-    required String categoryName,
-    required int categoryId,
-    required int likeCount,
-    required int viewCount,
-    required int commentCount,
+    required String content,
+    int? memberId, // nullable
+    String? memberName, // nullable
+    String? categoryName, // nullable
+    int? categoryId, // nullable
+    @Default(0) int likeCount,
+    @Default(0) int viewCount,
+    @Default(0) int commentCount,
     required String createdAt,
     required String updatedAt,
-    required bool isModified,
-    required bool liked,
-    required List<String> imageUrls,
-    required List<CommunityCommentResponse> comments,
+    @JsonKey(name: 'modified') required bool isModified,
+    @Default(false) bool liked,
+    @Default([]) List<String> imageUrls,
+    @Default([]) List<CommunityCommentResponse> comments,
   }) = _CommunityDetail;
 
   factory CommunityDetail.fromJson(Map<String, dynamic> json) =>

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:take_breath/_core/utils/closable_info_box.dart';
 import 'package:take_breath/_core/utils/image_picker_list.dart';
-import '../list_page/models/record_item.dart';
+import '../../../../../domain/recorder/models/record_item.dart';
 import 'widgets/recorder_write_app_bar.dart';
 import 'widgets/recorder_write_title_field.dart';
 import 'widgets/recorder_write_content_field.dart';

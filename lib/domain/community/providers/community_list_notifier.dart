@@ -8,6 +8,8 @@ class CommunityListNotifier extends AsyncNotifier<List<CommunityList>> {
   bool _hasNextPage = true;
   bool _isLoading = false;
 
+  bool get hasNextPage => _hasNextPage;
+
   @override
   Future<List<CommunityList>> build() async {
     return _fetchPosts(reset: true);

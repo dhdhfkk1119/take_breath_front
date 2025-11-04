@@ -22,16 +22,17 @@ CommunityDetail _$CommunityDetailFromJson(Map<String, dynamic> json) {
 mixin _$CommunityDetail {
   int get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
-  int get content => throw _privateConstructorUsedError;
-  int get memberId => throw _privateConstructorUsedError;
-  String get memberName => throw _privateConstructorUsedError;
-  String get categoryName => throw _privateConstructorUsedError;
-  int get categoryId => throw _privateConstructorUsedError;
+  String get content => throw _privateConstructorUsedError;
+  int? get memberId => throw _privateConstructorUsedError; // nullable
+  String? get memberName => throw _privateConstructorUsedError; // nullable
+  String? get categoryName => throw _privateConstructorUsedError; // nullable
+  int? get categoryId => throw _privateConstructorUsedError; // nullable
   int get likeCount => throw _privateConstructorUsedError;
   int get viewCount => throw _privateConstructorUsedError;
   int get commentCount => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
   String get updatedAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'modified')
   bool get isModified => throw _privateConstructorUsedError;
   bool get liked => throw _privateConstructorUsedError;
   List<String> get imageUrls => throw _privateConstructorUsedError;
@@ -57,17 +58,17 @@ abstract class $CommunityDetailCopyWith<$Res> {
   $Res call(
       {int id,
       String title,
-      int content,
-      int memberId,
-      String memberName,
-      String categoryName,
-      int categoryId,
+      String content,
+      int? memberId,
+      String? memberName,
+      String? categoryName,
+      int? categoryId,
       int likeCount,
       int viewCount,
       int commentCount,
       String createdAt,
       String updatedAt,
-      bool isModified,
+      @JsonKey(name: 'modified') bool isModified,
       bool liked,
       List<String> imageUrls,
       List<CommunityCommentResponse> comments});
@@ -91,10 +92,10 @@ class _$CommunityDetailCopyWithImpl<$Res, $Val extends CommunityDetail>
     Object? id = null,
     Object? title = null,
     Object? content = null,
-    Object? memberId = null,
-    Object? memberName = null,
-    Object? categoryName = null,
-    Object? categoryId = null,
+    Object? memberId = freezed,
+    Object? memberName = freezed,
+    Object? categoryName = freezed,
+    Object? categoryId = freezed,
     Object? likeCount = null,
     Object? viewCount = null,
     Object? commentCount = null,
@@ -117,23 +118,23 @@ class _$CommunityDetailCopyWithImpl<$Res, $Val extends CommunityDetail>
       content: null == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
-              as int,
-      memberId: null == memberId
+              as String,
+      memberId: freezed == memberId
           ? _value.memberId
           : memberId // ignore: cast_nullable_to_non_nullable
-              as int,
-      memberName: null == memberName
+              as int?,
+      memberName: freezed == memberName
           ? _value.memberName
           : memberName // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryName: null == categoryName
+              as String?,
+      categoryName: freezed == categoryName
           ? _value.categoryName
           : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryId: null == categoryId
+              as String?,
+      categoryId: freezed == categoryId
           ? _value.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       likeCount: null == likeCount
           ? _value.likeCount
           : likeCount // ignore: cast_nullable_to_non_nullable
@@ -185,17 +186,17 @@ abstract class _$$CommunityDetailImplCopyWith<$Res>
   $Res call(
       {int id,
       String title,
-      int content,
-      int memberId,
-      String memberName,
-      String categoryName,
-      int categoryId,
+      String content,
+      int? memberId,
+      String? memberName,
+      String? categoryName,
+      int? categoryId,
       int likeCount,
       int viewCount,
       int commentCount,
       String createdAt,
       String updatedAt,
-      bool isModified,
+      @JsonKey(name: 'modified') bool isModified,
       bool liked,
       List<String> imageUrls,
       List<CommunityCommentResponse> comments});
@@ -217,10 +218,10 @@ class __$$CommunityDetailImplCopyWithImpl<$Res>
     Object? id = null,
     Object? title = null,
     Object? content = null,
-    Object? memberId = null,
-    Object? memberName = null,
-    Object? categoryName = null,
-    Object? categoryId = null,
+    Object? memberId = freezed,
+    Object? memberName = freezed,
+    Object? categoryName = freezed,
+    Object? categoryId = freezed,
     Object? likeCount = null,
     Object? viewCount = null,
     Object? commentCount = null,
@@ -243,23 +244,23 @@ class __$$CommunityDetailImplCopyWithImpl<$Res>
       content: null == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
-              as int,
-      memberId: null == memberId
+              as String,
+      memberId: freezed == memberId
           ? _value.memberId
           : memberId // ignore: cast_nullable_to_non_nullable
-              as int,
-      memberName: null == memberName
+              as int?,
+      memberName: freezed == memberName
           ? _value.memberName
           : memberName // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryName: null == categoryName
+              as String?,
+      categoryName: freezed == categoryName
           ? _value.categoryName
           : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryId: null == categoryId
+              as String?,
+      categoryId: freezed == categoryId
           ? _value.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       likeCount: null == likeCount
           ? _value.likeCount
           : likeCount // ignore: cast_nullable_to_non_nullable
@@ -307,19 +308,19 @@ class _$CommunityDetailImpl implements _CommunityDetail {
       {required this.id,
       required this.title,
       required this.content,
-      required this.memberId,
-      required this.memberName,
-      required this.categoryName,
-      required this.categoryId,
-      required this.likeCount,
-      required this.viewCount,
-      required this.commentCount,
+      this.memberId,
+      this.memberName,
+      this.categoryName,
+      this.categoryId,
+      this.likeCount = 0,
+      this.viewCount = 0,
+      this.commentCount = 0,
       required this.createdAt,
       required this.updatedAt,
-      required this.isModified,
-      required this.liked,
-      required final List<String> imageUrls,
-      required final List<CommunityCommentResponse> comments})
+      @JsonKey(name: 'modified') required this.isModified,
+      this.liked = false,
+      final List<String> imageUrls = const [],
+      final List<CommunityCommentResponse> comments = const []})
       : _imageUrls = imageUrls,
         _comments = comments;
 
@@ -331,31 +332,41 @@ class _$CommunityDetailImpl implements _CommunityDetail {
   @override
   final String title;
   @override
-  final int content;
+  final String content;
   @override
-  final int memberId;
+  final int? memberId;
+// nullable
   @override
-  final String memberName;
+  final String? memberName;
+// nullable
   @override
-  final String categoryName;
+  final String? categoryName;
+// nullable
   @override
-  final int categoryId;
+  final int? categoryId;
+// nullable
   @override
+  @JsonKey()
   final int likeCount;
   @override
+  @JsonKey()
   final int viewCount;
   @override
+  @JsonKey()
   final int commentCount;
   @override
   final String createdAt;
   @override
   final String updatedAt;
   @override
+  @JsonKey(name: 'modified')
   final bool isModified;
   @override
+  @JsonKey()
   final bool liked;
   final List<String> _imageUrls;
   @override
+  @JsonKey()
   List<String> get imageUrls {
     if (_imageUrls is EqualUnmodifiableListView) return _imageUrls;
     // ignore: implicit_dynamic_type
@@ -364,6 +375,7 @@ class _$CommunityDetailImpl implements _CommunityDetail {
 
   final List<CommunityCommentResponse> _comments;
   @override
+  @JsonKey()
   List<CommunityCommentResponse> get comments {
     if (_comments is EqualUnmodifiableListView) return _comments;
     // ignore: implicit_dynamic_type
@@ -449,23 +461,22 @@ class _$CommunityDetailImpl implements _CommunityDetail {
 
 abstract class _CommunityDetail implements CommunityDetail {
   const factory _CommunityDetail(
-          {required final int id,
-          required final String title,
-          required final int content,
-          required final int memberId,
-          required final String memberName,
-          required final String categoryName,
-          required final int categoryId,
-          required final int likeCount,
-          required final int viewCount,
-          required final int commentCount,
-          required final String createdAt,
-          required final String updatedAt,
-          required final bool isModified,
-          required final bool liked,
-          required final List<String> imageUrls,
-          required final List<CommunityCommentResponse> comments}) =
-      _$CommunityDetailImpl;
+      {required final int id,
+      required final String title,
+      required final String content,
+      final int? memberId,
+      final String? memberName,
+      final String? categoryName,
+      final int? categoryId,
+      final int likeCount,
+      final int viewCount,
+      final int commentCount,
+      required final String createdAt,
+      required final String updatedAt,
+      @JsonKey(name: 'modified') required final bool isModified,
+      final bool liked,
+      final List<String> imageUrls,
+      final List<CommunityCommentResponse> comments}) = _$CommunityDetailImpl;
 
   factory _CommunityDetail.fromJson(Map<String, dynamic> json) =
       _$CommunityDetailImpl.fromJson;
@@ -475,15 +486,15 @@ abstract class _CommunityDetail implements CommunityDetail {
   @override
   String get title;
   @override
-  int get content;
+  String get content;
   @override
-  int get memberId;
+  int? get memberId; // nullable
   @override
-  String get memberName;
+  String? get memberName; // nullable
   @override
-  String get categoryName;
+  String? get categoryName; // nullable
   @override
-  int get categoryId;
+  int? get categoryId; // nullable
   @override
   int get likeCount;
   @override
@@ -495,6 +506,7 @@ abstract class _CommunityDetail implements CommunityDetail {
   @override
   String get updatedAt;
   @override
+  @JsonKey(name: 'modified')
   bool get isModified;
   @override
   bool get liked;

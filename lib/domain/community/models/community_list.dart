@@ -13,7 +13,7 @@ class CommunityList with _$CommunityList {
     required int categoryId,
     required String categoryName,
     required String preview,
-    required String thumbnail,
+    @Default("") String thumbnail,
     @Default(false) bool liked,
     @Default(false) bool modified,
     @Default(0) int likeCount,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'recorder_list_item.dart';
-import '../models/record_item.dart';
+import '../../../../../../domain/recorder/models/recorder_list_item.dart';
+import '../../../../../../domain/recorder/models/record_item.dart';
 
 class RecorderListBody extends StatelessWidget {
   final List<RecordItem> records; // ✅ 직접 받기
