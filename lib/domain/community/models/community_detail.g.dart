@@ -11,24 +11,27 @@ _$CommunityDetailImpl _$$CommunityDetailImplFromJson(
     _$CommunityDetailImpl(
       id: (json['id'] as num).toInt(),
       title: json['title'] as String,
-      content: (json['content'] as num).toInt(),
-      memberId: (json['memberId'] as num).toInt(),
-      memberName: json['memberName'] as String,
-      categoryName: json['categoryName'] as String,
-      categoryId: (json['categoryId'] as num).toInt(),
-      likeCount: (json['likeCount'] as num).toInt(),
-      viewCount: (json['viewCount'] as num).toInt(),
-      commentCount: (json['commentCount'] as num).toInt(),
+      content: json['content'] as String,
+      memberId: (json['memberId'] as num?)?.toInt(),
+      memberName: json['memberName'] as String?,
+      categoryName: json['categoryName'] as String?,
+      categoryId: (json['categoryId'] as num?)?.toInt(),
+      likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
+      viewCount: (json['viewCount'] as num?)?.toInt() ?? 0,
+      commentCount: (json['commentCount'] as num?)?.toInt() ?? 0,
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
-      isModified: json['isModified'] as bool,
-      liked: json['liked'] as bool,
-      imageUrls:
-          (json['imageUrls'] as List<dynamic>).map((e) => e as String).toList(),
-      comments: (json['comments'] as List<dynamic>)
-          .map((e) =>
-              CommunityCommentResponse.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      isModified: json['modified'] as bool,
+      liked: json['liked'] as bool? ?? false,
+      imageUrls: (json['imageUrls'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      comments: (json['comments'] as List<dynamic>?)
+              ?.map((e) =>
+                  CommunityCommentResponse.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$CommunityDetailImplToJson(
@@ -46,7 +49,7 @@ Map<String, dynamic> _$$CommunityDetailImplToJson(
       'commentCount': instance.commentCount,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
-      'isModified': instance.isModified,
+      'modified': instance.isModified,
       'liked': instance.liked,
       'imageUrls': instance.imageUrls,
       'comments': instance.comments,

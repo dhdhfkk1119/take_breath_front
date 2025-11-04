@@ -15,7 +15,7 @@ _$CommunityListImpl _$$CommunityListImplFromJson(Map<String, dynamic> json) =>
       categoryId: (json['categoryId'] as num).toInt(),
       categoryName: json['categoryName'] as String,
       preview: json['preview'] as String,
-      thumbnail: json['thumbnail'] as String,
+      thumbnail: json['thumbnail'] as String? ?? "",
       liked: json['liked'] as bool? ?? false,
       modified: json['modified'] as bool? ?? false,
       likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
