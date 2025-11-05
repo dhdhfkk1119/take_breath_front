@@ -19,7 +19,6 @@ class RecorderListAppBar extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
       elevation: 0,
       title: const Text(
         '기록실',
