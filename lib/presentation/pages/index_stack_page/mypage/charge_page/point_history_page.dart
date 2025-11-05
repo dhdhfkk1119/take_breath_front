@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'models/point_notifier.dart';
+import '../../../../../domain/point/providers/point_notifier.dart';
 
 class PointHistoryPage extends ConsumerWidget {
   const PointHistoryPage({super.key});

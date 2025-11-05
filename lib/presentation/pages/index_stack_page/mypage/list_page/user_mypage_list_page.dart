@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../charge_page/models/point_notifier.dart';
+import '../../../../../domain/point/providers/point_notifier.dart';
 import '../charge_page/point_charge_page.dart';
 import '../charge_page/point_history_page.dart';
 import '../widgets/user_activity_grid.dart';
