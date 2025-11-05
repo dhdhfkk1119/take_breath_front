@@ -22,16 +22,10 @@ class _ChatListItemState extends State<ChatListItem> {
       onTap: () {
         Navigator.push(
           context,
-          /*
           MaterialPageRoute(
             builder: (context) => ChatDetailPage(
-              roomId: widget.chatRoom.roomId,
-              roomName: widget.chatRoom.roomName,
+              roomId: widget.chatRoomListResponse.roomId,
             ),
-          ),
-          */
-          MaterialPageRoute(
-            builder: (context) => ChatDetailPage(),
           ),
         );
       },
@@ -62,7 +56,8 @@ class _ChatListItemState extends State<ChatListItem> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.chatRoomListResponse.otherMemberName,
+                  // widget.chatRoomListResponse.otherMemberName,
+                  widget.chatRoomListResponse.roomName,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

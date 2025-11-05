@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:take_breath/domain/member/services/auth_interceptor.dart';
 
-const baseUrl = "http://192.168.0.87:8080/api";
+// const baseUrl = "http://192.168.0.87:8080/api";
+const baseUrl = "http://10.0.2.2:8080/api";
 
 final dio = Dio(
   BaseOptions(

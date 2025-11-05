@@ -1,30 +1,24 @@
 import 'package:flutter/material.dart';
+
 import 'chat_detail_item.dart';
 
-class ChatDetailBody extends StatefulWidget {
-  const ChatDetailBody({super.key});
+class ChatDetailBody extends StatelessWidget {
+  final List<Map<String, dynamic>> messages;
 
-  @override
-  State<ChatDetailBody> createState() => _ChatDetailBodyState();
-}
+  const ChatDetailBody({super.key, required this.messages});
 
-class _ChatDetailBodyState extends State<ChatDetailBody> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return ListView.builder(
       padding: const EdgeInsets.all(16.0),
-      child: ListView(
-        children: [
-          ChatDetailItem(
-            message:
-                '첫번쨰 메세지입니다첫번쨰 메세지입니다첫번쨰 메세지입니다첫번쨰 메세지입니다첫번쨰 메세지입니다첫번쨰 메세지입니다첫번쨰 메세지입니다첫번쨰 메세지입니다',
-          ),
-          ChatDetailItem(
-            message: '두번째 메세지입니다asdasdsadsadsadasdsadadasdsadasdsad',
-            isMe: true,
-          ),
-        ],
-      ),
+      itemCount: messages.length,
+      itemBuilder: (context, index) {
+        final msg = messages[index];
+        return ChatDetailItem(
+          message: msg['message'] ?? '',
+          isMe: msg['isMe'] ?? false,
+        );
+      },
     );
   }
 }

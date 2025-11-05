@@ -31,9 +31,7 @@ class ChatDetailItem extends StatelessWidget {
                 ),
               ),
             ),
-          SizedBox(
-            width: 8,
-          ),
+          const SizedBox(width: 8),
           Container(
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width * 0.6,
@@ -46,7 +44,9 @@ class ChatDetailItem extends StatelessWidget {
             child: Text(
               message,
               style: TextStyle(
-                  color: isMe ? Colors.white : Colors.black, fontSize: 16),
+                color: isMe ? Colors.white : Colors.black,
+                fontSize: 16,
+              ),
             ),
           ),
         ],

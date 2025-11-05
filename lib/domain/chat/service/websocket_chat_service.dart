@@ -8,29 +8,33 @@ import 'package:take_breath/domain/chat/models/chat_message_response.dart';
 import 'package:take_breath/domain/chat/models/connection_state.dart';
 import 'package:take_breath/domain/member/services/auth_storage.dart';
 
-class StompChatService {
+class WebSocketChatService {
   StompClient? _stompClient;
   String? _currentRoomId;
 
   // 메세지 스트림
   final _messageController = StreamController<ChatMessageResponse>.broadcast();
-
   Stream<ChatMessageResponse> get messageStream => _messageController.stream;
 
   // 읽음 알림 Stream
   final _readStatusController = StreamController<String>.broadcast();
-
   Stream<String> get readStatusStream => _readStatusController.stream;
 
   // 연결 상태 Stream
   final _connectionController = StreamController<ConnectionState>.broadcast();
-
   Stream<ConnectionState> get connectionStream => _connectionController.stream;
 
   // 현재 연결 상태
   ConnectionState _connectionState = ConnectionState.disconnected;
-
   ConnectionState get connectionState => _connectionState;
+
+  int _reconnectAttempts = 0;
+  Timer? _reconnectTimer;
+  final _authErrorController = StreamController<bool>.broadcast();
+  final _pointErrorController = StreamController<String>.broadcast();
+
+  Stream<bool> get authErrorStream => _authErrorController.stream;
+  Stream<String> get pointErrorStream => _pointErrorController.stream;
 
   // STOMP 연결
   Future<void> connect({required String roomId}) async {
@@ -160,20 +164,15 @@ class StompChatService {
 
   // 메세지 보내기
   void sendMessage({
-    required String roomId,
-    required int chatRoomId,
-    required int senderId,
+    required String roomId, // destination용
     required String content,
     String messageType = 'TEXT',
   }) {
     if (_stompClient == null || !_stompClient!.connected) {
-      print('STOMP 연결되지 않음');
-      return;
+      throw Exception('WebSocket이 연결되지 않았습니다');
     }
 
     final messageData = {
-      'chatRoomId': chatRoomId,
-      'senderId': senderId,
       'content': content,
       'messageType': messageType,
     };
@@ -182,25 +181,18 @@ class StompChatService {
       destination: '/app/chat.sendMessage.$roomId',
       body: jsonEncode(messageData),
     );
-
-    print('메세지 전송: $content');
   }
 
   // 읽음 처리
   void markAsRead({
     required String roomId,
-    required int chatRoomId,
-    required int memberId,
     required int lastMessageId,
   }) {
     if (_stompClient == null || !_stompClient!.connected) {
-      print('STOMP 연결되지 않음');
       return;
     }
 
     final readData = {
-      'chatRoomId': chatRoomId,
-      'memberId': memberId,
       'lastMessageId': lastMessageId,
     };
 
@@ -208,8 +200,6 @@ class StompChatService {
       destination: '/app/chat.markAsRead.$roomId',
       body: jsonEncode(readData),
     );
-
-    print('읽음 처리: message $lastMessageId');
   }
 
   // 연결 해제
