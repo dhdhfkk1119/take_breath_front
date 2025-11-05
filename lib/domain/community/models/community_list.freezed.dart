@@ -284,7 +284,7 @@ class _$CommunityListImpl implements _CommunityList {
       required this.categoryId,
       required this.categoryName,
       required this.preview,
-      required this.thumbnail,
+      this.thumbnail = "",
       this.liked = false,
       this.modified = false,
       this.likeCount = 0,
@@ -310,6 +310,7 @@ class _$CommunityListImpl implements _CommunityList {
   @override
   final String preview;
   @override
+  @JsonKey()
   final String thumbnail;
   @override
   @JsonKey()
@@ -409,7 +410,7 @@ abstract class _CommunityList implements CommunityList {
       required final int categoryId,
       required final String categoryName,
       required final String preview,
-      required final String thumbnail,
+      final String thumbnail,
       final bool liked,
       final bool modified,
       final int likeCount,

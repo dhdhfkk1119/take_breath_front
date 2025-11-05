@@ -27,6 +27,7 @@ class AuthStorage {
     await prefs.setString('profileImageUrl', member.profileImageUrl ?? "");
     await prefs.setString('role', member.role);
     await prefs.setString('status', member.status);
+    await prefs.setString('phone', member.phone);
     await prefs.setString('accessToken', member.accessToken);
     await prefs.setString('refreshToken', member.refreshToken ?? "");
   }
@@ -43,6 +44,7 @@ class AuthStorage {
       profileImageUrl: prefs.getString('profileImageUrl') ?? '',
       role: prefs.getString('role') ?? '',
       status: prefs.getString('status') ?? '',
+      phone: prefs.getString('phone') ?? '',
       accessToken: prefs.getString('accessToken') ?? '',
       refreshToken: prefs.getString('refreshToken') ?? '',
     );
@@ -58,5 +60,6 @@ class AuthStorage {
     await prefs.remove('profileImageUrl');
     await prefs.remove('role');
     await prefs.remove('status');
+    await prefs.remove('phone');
   }
 }

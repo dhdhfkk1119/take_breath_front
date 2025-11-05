@@ -14,6 +14,7 @@ class Member with _$Member {
     String? profileImageUrl, // nullable 처리
     required String role,
     required String status,
+    required String phone,
     int? daysLeft,
   }) = _Member;
 

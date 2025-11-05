@@ -1,14 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:take_breath/_core/constants/custom_color.dart';
-import 'package:take_breath/_core/constants/custom_text_form_field.dart';
 import 'package:take_breath/_core/constants/custom_widget.dart';
 import 'package:take_breath/_core/constants/expandableText.dart';
+import 'package:take_breath/domain/comment/models/community_comment_response.dart';
+import 'package:take_breath/domain/community/models/community_detail.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/community/detail_page/widgets/full_screen_image.dart';
 
 class CommunityDetailItem extends StatefulWidget {
-  const CommunityDetailItem({super.key});
+  final CommunityDetail communityDetail;
+
+  CommunityDetailItem({super.key, required this.communityDetail});
 
   @override
   State<CommunityDetailItem> createState() => _CommunityDetailItemState();
@@ -110,11 +112,10 @@ class _CommunityDetailItemState extends State<CommunityDetailItem> {
                     color: Colors.grey[600],
                   ),
                 ),
-                CustomWidget.buildTitle("텍스트 제목입니다", size: 24),
+                CustomWidget.buildTitle(widget.communityDetail.title, size: 24),
                 const SizedBox(height: 4),
                 ExpandableText(
-                  text:
-                      "텍스트 제목입니다텍스트 제목입니다텍스트 제목입니다텍스텍스트 제목입니다텍스트 제목입니다텍스트 제목입니다텍스텍스트 제목입니다텍스트 제목입니다텍스트 제목입니다텍스텍스트 제목입니다텍스트 제목입니다텍스트 제목입니다텍스텍스트 제목입니다텍스트 제목입니다텍스트 제목입니다텍스텍스트 제목입니다텍스트 제목입니다텍스트 제목입니다텍스텍스트 제목입니다텍스트 제목입니다텍스트 제목입니다텍스텍스트 제목입니다텍스트 제목입니다텍스트 제목입니다텍스텍스트 제목입니다텍스트 제목입니다텍스트 제목입니다텍스텍스트 제목입니다텍스트 제목입니다텍스트 제목입니다텍스",
+                  text: widget.communityDetail.content,
                   size: 12,
                   textLength: 500,
                 ),
@@ -122,18 +123,41 @@ class _CommunityDetailItemState extends State<CommunityDetailItem> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    likeCount(),
+                    likeCount(widget.communityDetail),
                     const SizedBox(width: 10),
-                    commentCount(),
+                    commentCount(widget.communityDetail),
                   ],
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                   child: Divider(height: 1, color: Colors.black12),
                 ),
-                if (isComment) ...[
-                  commentInfo(),
-                ],
+                if (isComment)
+                  SizedBox(
+                    height: 200, // 원하는 높이
+                    child: widget.communityDetail.comments.isEmpty
+                        ? const Center(
+                            child: Text('아직 등록된 댓글 내역이 없습니다.'),
+                          )
+                        : ListView.builder(
+                            itemCount: widget.communityDetail.comments.length,
+                            itemBuilder: (context, index) {
+                              return commentInfo(
+                                  widget.communityDetail.comments[index]);
+                            },
+                          ),
+                  ),
+                if (!isComment)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "댓글을 눌러서 확인 하세요",
+                        style: TextStyle(color: brandFontColor, fontSize: 16),
+                      ),
+                    ),
+                  ),
                 const SizedBox(height: 6),
               ],
             ),
@@ -143,7 +167,7 @@ class _CommunityDetailItemState extends State<CommunityDetailItem> {
     );
   }
 
-  Widget commentInfo() {
+  Widget commentInfo(CommunityCommentResponse comment) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.05),
@@ -158,9 +182,9 @@ class _CommunityDetailItemState extends State<CommunityDetailItem> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomWidget.buildTitle("익명"),
+          CustomWidget.buildTitle("${comment.memberName}"),
           ExpandableText(
-            text: "텍스트 제목입니다텍스트 제목입니다텍스트 제목입니다텍스트 제목입니다텍스트 제목입니다텍스트 제목입니다텍스트 ",
+            text: "${comment.content} ",
             size: 12,
             textLength: 100,
           ),
@@ -170,18 +194,20 @@ class _CommunityDetailItemState extends State<CommunityDetailItem> {
     );
   }
 
-  Widget likeCount() {
+  Widget likeCount(CommunityDetail detail) {
     return Row(
       children: [
-        const Icon(CupertinoIcons.heart_fill,
-            size: 18, color: Colors.redAccent),
+        detail.liked
+            ? Icon(CupertinoIcons.heart_fill, size: 18, color: Colors.redAccent)
+            : Icon(CupertinoIcons.heart, size: 18, color: Colors.redAccent),
         const SizedBox(width: 2),
-        Text('0', style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+        Text('${detail.likeCount}',
+            style: TextStyle(color: Colors.grey[600], fontSize: 13)),
       ],
     );
   }
 
-  Widget commentCount() {
+  Widget commentCount(CommunityDetail detail) {
     return InkWell(
       onTap: () {
         setState(() {
@@ -193,7 +219,8 @@ class _CommunityDetailItemState extends State<CommunityDetailItem> {
           Icon(CupertinoIcons.chat_bubble_text_fill,
               size: 18, color: brandBackColor),
           const SizedBox(width: 2),
-          Text('0', style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+          Text('${detail.commentCount}',
+              style: TextStyle(color: Colors.grey[600], fontSize: 13)),
         ],
       ),
     );
