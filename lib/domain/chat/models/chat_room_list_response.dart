@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'chat_room_list_response.freezed.dart';

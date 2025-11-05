@@ -12,3 +12,4 @@ final dio = Dio(
     listFormat: ListFormat.multi,
   ),
 )..interceptors.add(AuthInterceptor());
+
