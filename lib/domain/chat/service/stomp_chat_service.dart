@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:stomp_dart_client/stomp_dart_client.dart';
+import 'package:take_breath/_core/constants/api_config.dart';
 import 'package:take_breath/_core/utils/models/api_response.dart';
 import 'package:take_breath/domain/chat/models/chat_message_response.dart';
 import 'package:take_breath/domain/chat/models/connection_state.dart';
+import 'package:take_breath/domain/member/services/auth_storage.dart';
 
 class StompChatService {
   StompClient? _stompClient;
@@ -31,14 +33,18 @@ class StompChatService {
   ConnectionState get connectionState => _connectionState;
 
   // STOMP 연결
-  Future<void> connect({
-    required String serverUrl,
-    required String roomId,
-    required String jwtToken,
-  }) async {
+  Future<void> connect({required String roomId}) async {
     if (_stompClient != null && _stompClient!.connected) {
       print("이미 연결되어 있습니다");
       return;
+    }
+
+    // AuthStorage에서 자동으로 JWT 토큰 가져오기
+    final jwtToken = await AuthStorage.getAccessToken();
+    if (jwtToken == null) {
+      print("JWT 토큰이 없습니다. 로그인이 필요합니다.");
+      _updateConnectionState(ConnectionState.error);
+      throw Exception('인증 토큰이 없습니다');
     }
 
     _currentRoomId = roomId;
@@ -46,13 +52,10 @@ class StompChatService {
 
     // STOMP 클라이언트 설정
     _stompClient = StompClient(
-      config: StompConfig(
-        // WebSocket URL(SockJs 사용)
-        url: '$serverUrl/ws-chat',
+      config: StompConfig.sockJS(
+        url: ApiConfig.webSocketEndpoint,
 
-        // 연결 헤더(JWT 토큰 전달)
         stompConnectHeaders: {'Authorization': 'Bearer $jwtToken'},
-        // 웹소켓 헤더
         webSocketConnectHeaders: {'Authorization': 'Bearer $jwtToken'},
 
         // 재연결 설정
@@ -86,7 +89,6 @@ class StompChatService {
           print('연결 해제됨');
           _updateConnectionState(ConnectionState.disconnected);
         },
-
       ),
     );
 
