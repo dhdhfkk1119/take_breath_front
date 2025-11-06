@@ -9,7 +9,11 @@ class BaseState<T> {
     this.data,
   });
 
-  factory BaseState.initial() => const BaseState(isLoading: false);
+  factory BaseState.initial() => BaseState<T>(
+        isLoading: false,
+        error: null,
+        data: [] as T, // 리스트 타입이면 안전하게 처리
+      );
 
   BaseState<T> copyWith({
     bool? isLoading,
@@ -22,4 +26,9 @@ class BaseState<T> {
       data: data ?? this.data,
     );
   }
+
+  BaseState<T> loading() => copyWith(isLoading: true, error: null);
+  BaseState<T> success(T data) => copyWith(isLoading: false, data: data);
+  BaseState<T> failure(String error) =>
+      copyWith(isLoading: false, error: error);
 }

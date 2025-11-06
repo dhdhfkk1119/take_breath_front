@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:take_breath/domain/comment/models/community_comment_response.dart';
 
+import 'community_image.dart';
+
 part 'community_detail.freezed.dart';
 part 'community_detail.g.dart';
 
@@ -21,7 +23,7 @@ class CommunityDetail with _$CommunityDetail {
     required String updatedAt,
     @JsonKey(name: 'modified') required bool isModified,
     @Default(false) bool liked,
-    @Default([]) List<String> imageUrls,
+    @Default([]) List<CommunityImage> imageUrls,
     @Default([]) List<CommunityCommentResponse> comments,
   }) = _CommunityDetail;
 

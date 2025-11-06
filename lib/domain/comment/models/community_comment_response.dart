@@ -11,9 +11,9 @@ class CommunityCommentResponse with _$CommunityCommentResponse {
     required int memberId,
     required String memberName,
     required String createdAt,
-    required String updatedAt,
-    required bool deleted,
-    required bool modified,
+    @Default("") String updatedAt,
+    @Default(false) bool modified,
+    @Default(false) bool deleted,
   }) = _CommunityCommentResponse;
 
   factory CommunityCommentResponse.fromJson(Map<String, dynamic> json) =>

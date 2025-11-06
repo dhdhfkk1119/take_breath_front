@@ -19,8 +19,8 @@ mixin _$CommunityUpdate {
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   int? get categoryId => throw _privateConstructorUsedError;
+  List<File>? get images => throw _privateConstructorUsedError;
   List<int> get deleteImageIds => throw _privateConstructorUsedError;
-  List<File>? get addFiles => throw _privateConstructorUsedError;
 
   /// Create a copy of CommunityUpdate
   /// with the given fields replaced by the non-null parameter values.
@@ -39,8 +39,8 @@ abstract class $CommunityUpdateCopyWith<$Res> {
       {String title,
       String content,
       int? categoryId,
-      List<int> deleteImageIds,
-      List<File>? addFiles});
+      List<File>? images,
+      List<int> deleteImageIds});
 }
 
 /// @nodoc
@@ -61,8 +61,8 @@ class _$CommunityUpdateCopyWithImpl<$Res, $Val extends CommunityUpdate>
     Object? title = null,
     Object? content = null,
     Object? categoryId = freezed,
+    Object? images = freezed,
     Object? deleteImageIds = null,
-    Object? addFiles = freezed,
   }) {
     return _then(_value.copyWith(
       title: null == title
@@ -77,14 +77,14 @@ class _$CommunityUpdateCopyWithImpl<$Res, $Val extends CommunityUpdate>
           ? _value.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
               as int?,
+      images: freezed == images
+          ? _value.images
+          : images // ignore: cast_nullable_to_non_nullable
+              as List<File>?,
       deleteImageIds: null == deleteImageIds
           ? _value.deleteImageIds
           : deleteImageIds // ignore: cast_nullable_to_non_nullable
               as List<int>,
-      addFiles: freezed == addFiles
-          ? _value.addFiles
-          : addFiles // ignore: cast_nullable_to_non_nullable
-              as List<File>?,
     ) as $Val);
   }
 }
@@ -101,8 +101,8 @@ abstract class _$$CommunityUpdateImplCopyWith<$Res>
       {String title,
       String content,
       int? categoryId,
-      List<int> deleteImageIds,
-      List<File>? addFiles});
+      List<File>? images,
+      List<int> deleteImageIds});
 }
 
 /// @nodoc
@@ -121,8 +121,8 @@ class __$$CommunityUpdateImplCopyWithImpl<$Res>
     Object? title = null,
     Object? content = null,
     Object? categoryId = freezed,
+    Object? images = freezed,
     Object? deleteImageIds = null,
-    Object? addFiles = freezed,
   }) {
     return _then(_$CommunityUpdateImpl(
       title: null == title
@@ -137,14 +137,14 @@ class __$$CommunityUpdateImplCopyWithImpl<$Res>
           ? _value.categoryId
           : categoryId // ignore: cast_nullable_to_non_nullable
               as int?,
+      images: freezed == images
+          ? _value._images
+          : images // ignore: cast_nullable_to_non_nullable
+              as List<File>?,
       deleteImageIds: null == deleteImageIds
           ? _value._deleteImageIds
           : deleteImageIds // ignore: cast_nullable_to_non_nullable
               as List<int>,
-      addFiles: freezed == addFiles
-          ? _value._addFiles
-          : addFiles // ignore: cast_nullable_to_non_nullable
-              as List<File>?,
     ));
   }
 }
@@ -156,10 +156,10 @@ class _$CommunityUpdateImpl implements _CommunityUpdate {
       {required this.title,
       required this.content,
       this.categoryId = null,
-      final List<int> deleteImageIds = const [],
-      final List<File>? addFiles = null})
-      : _deleteImageIds = deleteImageIds,
-        _addFiles = addFiles;
+      final List<File>? images = null,
+      final List<int> deleteImageIds = const []})
+      : _images = images,
+        _deleteImageIds = deleteImageIds;
 
   @override
   final String title;
@@ -168,6 +168,17 @@ class _$CommunityUpdateImpl implements _CommunityUpdate {
   @override
   @JsonKey()
   final int? categoryId;
+  final List<File>? _images;
+  @override
+  @JsonKey()
+  List<File>? get images {
+    final value = _images;
+    if (value == null) return null;
+    if (_images is EqualUnmodifiableListView) return _images;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   final List<int> _deleteImageIds;
   @override
   @JsonKey()
@@ -177,20 +188,9 @@ class _$CommunityUpdateImpl implements _CommunityUpdate {
     return EqualUnmodifiableListView(_deleteImageIds);
   }
 
-  final List<File>? _addFiles;
-  @override
-  @JsonKey()
-  List<File>? get addFiles {
-    final value = _addFiles;
-    if (value == null) return null;
-    if (_addFiles is EqualUnmodifiableListView) return _addFiles;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
   @override
   String toString() {
-    return 'CommunityUpdate(title: $title, content: $content, categoryId: $categoryId, deleteImageIds: $deleteImageIds, addFiles: $addFiles)';
+    return 'CommunityUpdate(title: $title, content: $content, categoryId: $categoryId, images: $images, deleteImageIds: $deleteImageIds)';
   }
 
   @override
@@ -202,9 +202,9 @@ class _$CommunityUpdateImpl implements _CommunityUpdate {
             (identical(other.content, content) || other.content == content) &&
             (identical(other.categoryId, categoryId) ||
                 other.categoryId == categoryId) &&
+            const DeepCollectionEquality().equals(other._images, _images) &&
             const DeepCollectionEquality()
-                .equals(other._deleteImageIds, _deleteImageIds) &&
-            const DeepCollectionEquality().equals(other._addFiles, _addFiles));
+                .equals(other._deleteImageIds, _deleteImageIds));
   }
 
   @override
@@ -213,8 +213,8 @@ class _$CommunityUpdateImpl implements _CommunityUpdate {
       title,
       content,
       categoryId,
-      const DeepCollectionEquality().hash(_deleteImageIds),
-      const DeepCollectionEquality().hash(_addFiles));
+      const DeepCollectionEquality().hash(_images),
+      const DeepCollectionEquality().hash(_deleteImageIds));
 
   /// Create a copy of CommunityUpdate
   /// with the given fields replaced by the non-null parameter values.
@@ -231,8 +231,8 @@ abstract class _CommunityUpdate implements CommunityUpdate {
       {required final String title,
       required final String content,
       final int? categoryId,
-      final List<int> deleteImageIds,
-      final List<File>? addFiles}) = _$CommunityUpdateImpl;
+      final List<File>? images,
+      final List<int> deleteImageIds}) = _$CommunityUpdateImpl;
 
   @override
   String get title;
@@ -241,9 +241,9 @@ abstract class _CommunityUpdate implements CommunityUpdate {
   @override
   int? get categoryId;
   @override
-  List<int> get deleteImageIds;
+  List<File>? get images;
   @override
-  List<File>? get addFiles;
+  List<int> get deleteImageIds;
 
   /// Create a copy of CommunityUpdate
   /// with the given fields replaced by the non-null parameter values.

@@ -10,7 +10,7 @@ class CommunityUpdate with _$CommunityUpdate {
     required String title,
     required String content,
     @Default(null) int? categoryId,
+    @Default(null) List<File>? images,
     @Default(const []) List<int> deleteImageIds,
-    @Default(null) List<File>? addFiles,
   }) = _CommunityUpdate;
 }

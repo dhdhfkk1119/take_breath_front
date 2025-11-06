@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/_core/utils/formatTime.dart';
+import 'package:take_breath/_core/utils/my_http.dart';
 import 'package:take_breath/_core/utils/thumbnail_image.dart';
 import 'package:take_breath/domain/community/models/community_list.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/community/detail_page/community_detail_page.dart';
@@ -15,7 +16,6 @@ class CommunityListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () {
-        // 게시물 상세 페이지로 이동
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -29,7 +29,8 @@ class CommunityListItem extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
         child: Row(
           children: [
-            ThumbnailImage(url: post.thumbnail, width: 100, height: 100),
+            ThumbnailImage(
+                url: imageLocalUrl + post.thumbnail, width: 100, height: 100),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -61,6 +62,8 @@ class CommunityListItem extends ConsumerWidget {
                       likeCount(post),
                       const SizedBox(width: 4),
                       commentCount(post),
+                      const SizedBox(width: 4),
+                      viewCount(post),
                     ],
                   )
                 ],
@@ -92,6 +95,17 @@ class CommunityListItem extends ConsumerWidget {
             size: 14, color: Colors.grey[600]),
         const SizedBox(width: 2),
         Text('${detail.commentCount}',
+            style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+      ],
+    );
+  }
+
+  Widget viewCount(CommunityList detail) {
+    return Row(
+      children: [
+        Icon(CupertinoIcons.eye, size: 14, color: Colors.grey[600]),
+        const SizedBox(width: 2),
+        Text('${detail.viewCount}',
             style: TextStyle(color: Colors.grey[600], fontSize: 13)),
       ],
     );

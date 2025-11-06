@@ -6,6 +6,7 @@ import 'package:take_breath/_core/utils/filesToMultipart.dart';
 import 'package:take_breath/_core/utils/my_http.dart';
 import 'package:take_breath/domain/community/models/community_detail.dart';
 import 'package:take_breath/domain/community/models/community_list.dart';
+import 'package:take_breath/domain/community/models/community_update.dart';
 import 'package:take_breath/domain/community/models/community_write.dart';
 import 'package:take_breath/domain/community/models/search_dto.dart';
 import 'package:take_breath/domain/community/providers/search_dto_provider.dart';
@@ -109,6 +110,51 @@ class CommunityRepository {
       }
     } catch (e) {
       throw Exception("서버가 연결되어있지 않습니다 : $e");
+    }
+  }
+
+  Future<void> update(CommunityUpdate communityUpdate, int id) async {
+    List<MultipartFile> files =
+        await filesToMultipartFiles(communityUpdate.images);
+
+    FormData formData = FormData.fromMap({
+      "updateDTO": jsonEncode({
+        "title": communityUpdate.title,
+        "content": communityUpdate.content,
+        "categoryId": communityUpdate.categoryId,
+        "deleteImageIds": communityUpdate.deleteImageIds,
+      }),
+      "files": files,
+    });
+
+    try {
+      final response = await dio.put(
+        "/community/posts/$id",
+        data: formData,
+      );
+      if (response.statusCode == 200) {
+        print("게시물 수정 성공 : ${response}");
+      } else {
+        throw Exception("작성실패 : ${response.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("서버가 연결되어있지 않습니다 : $e");
+    }
+  }
+
+  Future<String> deletePost(int id) async {
+    try {
+      final response = await dio.delete(
+        '/community/posts/$id',
+      );
+      if (response.statusCode == 200) {
+        print("커뮤니티 삭제 : ${response.data}");
+        return response.data;
+      } else {
+        throw Exception("게시물 리스트 조회 실패: ${response.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("서버가 연결되어 있지 않습니다: $e");
     }
   }
 }

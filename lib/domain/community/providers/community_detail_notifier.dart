@@ -24,4 +24,16 @@ class CommunityDetailNotifier extends AsyncNotifier<CommunityDetail?> {
       state = AsyncValue.error(s, st);
     }
   }
+
+  Future<String> deletePost(int id) async {
+    state = const AsyncValue.loading();
+    try {
+      final repository = ref.read(communityRepositoryProvider);
+      final resultMessage = await repository.deletePost(id);
+      state = const AsyncValue.data(null);
+      return resultMessage;
+    } catch (s) {
+      return throw Exception("삭제중 오류 발생 ${s}");
+    }
+  }
 }
