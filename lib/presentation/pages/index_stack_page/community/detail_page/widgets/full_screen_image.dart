@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart'; // Gallery를 위해 추가
+import 'package:photo_view/photo_view_gallery.dart';
+import 'package:take_breath/_core/utils/my_http.dart';
+import 'package:take_breath/domain/community/models/community_image.dart'; // Gallery를 위해 추가
 
 class FullScreenImage extends StatefulWidget {
-  final List<String> imageUrls; // 이미지 URL 목록으로 변경
+  final List<CommunityImage> imageUrls; // 이미지 URL 목록으로 변경
   final int initialIndex; // 처음 보여줄 이미지의 인덱스
 
   const FullScreenImage({
@@ -46,7 +48,8 @@ class _FullScreenImageState extends State<FullScreenImage> {
             itemCount: widget.imageUrls.length,
             builder: (context, index) {
               return PhotoViewGalleryPageOptions(
-                imageProvider: NetworkImage(widget.imageUrls[index]),
+                imageProvider: NetworkImage(
+                    imageLocalUrl + widget.imageUrls[index].imageUrl),
                 minScale: PhotoViewComputedScale.contained * 0.8, // 최소 줌 스케일
                 maxScale: PhotoViewComputedScale.covered * 2, // 최대 줌 스케일
                 heroAttributes: PhotoViewHeroAttributes(

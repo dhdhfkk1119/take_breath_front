@@ -35,7 +35,7 @@ mixin _$CommunityDetail {
   @JsonKey(name: 'modified')
   bool get isModified => throw _privateConstructorUsedError;
   bool get liked => throw _privateConstructorUsedError;
-  List<String> get imageUrls => throw _privateConstructorUsedError;
+  List<CommunityImage> get imageUrls => throw _privateConstructorUsedError;
   List<CommunityCommentResponse> get comments =>
       throw _privateConstructorUsedError;
 
@@ -70,7 +70,7 @@ abstract class $CommunityDetailCopyWith<$Res> {
       String updatedAt,
       @JsonKey(name: 'modified') bool isModified,
       bool liked,
-      List<String> imageUrls,
+      List<CommunityImage> imageUrls,
       List<CommunityCommentResponse> comments});
 }
 
@@ -166,7 +166,7 @@ class _$CommunityDetailCopyWithImpl<$Res, $Val extends CommunityDetail>
       imageUrls: null == imageUrls
           ? _value.imageUrls
           : imageUrls // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<CommunityImage>,
       comments: null == comments
           ? _value.comments
           : comments // ignore: cast_nullable_to_non_nullable
@@ -198,7 +198,7 @@ abstract class _$$CommunityDetailImplCopyWith<$Res>
       String updatedAt,
       @JsonKey(name: 'modified') bool isModified,
       bool liked,
-      List<String> imageUrls,
+      List<CommunityImage> imageUrls,
       List<CommunityCommentResponse> comments});
 }
 
@@ -292,7 +292,7 @@ class __$$CommunityDetailImplCopyWithImpl<$Res>
       imageUrls: null == imageUrls
           ? _value._imageUrls
           : imageUrls // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<CommunityImage>,
       comments: null == comments
           ? _value._comments
           : comments // ignore: cast_nullable_to_non_nullable
@@ -319,7 +319,7 @@ class _$CommunityDetailImpl implements _CommunityDetail {
       required this.updatedAt,
       @JsonKey(name: 'modified') required this.isModified,
       this.liked = false,
-      final List<String> imageUrls = const [],
+      final List<CommunityImage> imageUrls = const [],
       final List<CommunityCommentResponse> comments = const []})
       : _imageUrls = imageUrls,
         _comments = comments;
@@ -364,10 +364,10 @@ class _$CommunityDetailImpl implements _CommunityDetail {
   @override
   @JsonKey()
   final bool liked;
-  final List<String> _imageUrls;
+  final List<CommunityImage> _imageUrls;
   @override
   @JsonKey()
-  List<String> get imageUrls {
+  List<CommunityImage> get imageUrls {
     if (_imageUrls is EqualUnmodifiableListView) return _imageUrls;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_imageUrls);
@@ -475,7 +475,7 @@ abstract class _CommunityDetail implements CommunityDetail {
       required final String updatedAt,
       @JsonKey(name: 'modified') required final bool isModified,
       final bool liked,
-      final List<String> imageUrls,
+      final List<CommunityImage> imageUrls,
       final List<CommunityCommentResponse> comments}) = _$CommunityDetailImpl;
 
   factory _CommunityDetail.fromJson(Map<String, dynamic> json) =
@@ -511,7 +511,7 @@ abstract class _CommunityDetail implements CommunityDetail {
   @override
   bool get liked;
   @override
-  List<String> get imageUrls;
+  List<CommunityImage> get imageUrls;
   @override
   List<CommunityCommentResponse> get comments;
 

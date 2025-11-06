@@ -44,7 +44,7 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
       final prepareData = await ref.read(paymentProvider.notifier).prepare(
         amount: _selectedAmount!,
         orderName: '$_selectedAmount P',
-        buyerName: member.nickName,
+        buyerName: member.name,
         buyerEmail: member.email,
         buyerTel: member.phone,
       );

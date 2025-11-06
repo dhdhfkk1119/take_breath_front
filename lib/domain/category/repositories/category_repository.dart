@@ -7,8 +7,11 @@ class CategoryRepository {
       final response = await dio.get('/community/categories');
       if (response.statusCode == 200) {
         final List<Category> categories =
-            (response.data).map((json) => Category.fromJson(json)).toList();
+            (response.data['response'] as List<dynamic>)
+                .map((json) => Category.fromJson(json))
+                .toList();
 
+        print("카테고리 리스트 : ${categories}");
         return categories;
       } else {
         throw Exception('카테고리 조회 실패');

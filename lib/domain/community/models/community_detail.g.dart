@@ -24,7 +24,7 @@ _$CommunityDetailImpl _$$CommunityDetailImplFromJson(
       isModified: json['modified'] as bool,
       liked: json['liked'] as bool? ?? false,
       imageUrls: (json['imageUrls'] as List<dynamic>?)
-              ?.map((e) => e as String)
+              ?.map((e) => CommunityImage.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       comments: (json['comments'] as List<dynamic>?)

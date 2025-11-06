@@ -74,3 +74,48 @@ Map<String, dynamic> _$$PaymentResultImplToJson(_$PaymentResultImpl instance) =>
       'createdAt': instance.createdAt,
       'paidAt': instance.paidAt,
     };
+
+_$PaymentHistoryImpl _$$PaymentHistoryImplFromJson(Map<String, dynamic> json) =>
+    _$PaymentHistoryImpl(
+      id: (json['id'] as num).toInt(),
+      impUid: json['impUid'] as String,
+      merchantUid: json['merchantUid'] as String,
+      amount: (json['amount'] as num).toInt(),
+      pointAmount: (json['pointAmount'] as num).toInt(),
+      feeAmount: (json['feeAmount'] as num).toInt(),
+      feeRate: (json['feeRate'] as num).toDouble(),
+      status: json['status'] as String,
+      payMethod: json['payMethod'] as String,
+      orderName: json['orderName'] as String,
+      createdAt: json['createdAt'] as String,
+      paidAt: json['paidAt'] as String?,
+      refundId: (json['refundId'] as num?)?.toInt(),
+      refundAmount: (json['refundAmount'] as num?)?.toInt(),
+      refundStatus: json['refundStatus'] as String?,
+      refundedAt: json['refundedAt'] as String?,
+      canRefund: json['canRefund'] as bool,
+      daysUntilRefundExpiry: (json['daysUntilRefundExpiry'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$PaymentHistoryImplToJson(
+        _$PaymentHistoryImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'impUid': instance.impUid,
+      'merchantUid': instance.merchantUid,
+      'amount': instance.amount,
+      'pointAmount': instance.pointAmount,
+      'feeAmount': instance.feeAmount,
+      'feeRate': instance.feeRate,
+      'status': instance.status,
+      'payMethod': instance.payMethod,
+      'orderName': instance.orderName,
+      'createdAt': instance.createdAt,
+      'paidAt': instance.paidAt,
+      'refundId': instance.refundId,
+      'refundAmount': instance.refundAmount,
+      'refundStatus': instance.refundStatus,
+      'refundedAt': instance.refundedAt,
+      'canRefund': instance.canRefund,
+      'daysUntilRefundExpiry': instance.daysUntilRefundExpiry,
+    };

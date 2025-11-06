@@ -54,7 +54,7 @@ class _CommunityListPageState extends State<CommunityListPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const CommunityWritePage(),
+              builder: (context) => CommunityWritePage(),
             ),
           ).then((_) {
             setState(() {});

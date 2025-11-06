@@ -41,8 +41,8 @@ class PaymentRepository {
     return PaymentResult.fromJson(data);
   }
 
-  // 결제 내역 조회
-  Future<List<PaymentResult>> getPaymentHistory({
+  // 결제+환불 통합 내역 조회 (페이징)
+  Future<List<PaymentHistory>> getPaymentHistory({
     int page = 0,
     int size = 10,
   }) async {
@@ -52,6 +52,17 @@ class PaymentRepository {
     );
 
     final List<dynamic> payments = data['content'];
-    return payments.map((json) => PaymentResult.fromJson(json)).toList();
+    return payments.map((json) => PaymentHistory.fromJson(json)).toList();
+  }
+
+  // 환불 요청
+  Future<void> requestRefund({
+    required int paymentId,
+    required String reason,
+  }) async {
+    await _api.post('/refunds', {
+      'paymentId': paymentId,
+      'reason': reason,
+    });
   }
 }

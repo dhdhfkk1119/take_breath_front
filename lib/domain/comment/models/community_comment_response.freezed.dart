@@ -27,8 +27,8 @@ mixin _$CommunityCommentResponse {
   String get memberName => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
   String get updatedAt => throw _privateConstructorUsedError;
-  bool get deleted => throw _privateConstructorUsedError;
   bool get modified => throw _privateConstructorUsedError;
+  bool get deleted => throw _privateConstructorUsedError;
 
   /// Serializes this CommunityCommentResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -53,8 +53,8 @@ abstract class $CommunityCommentResponseCopyWith<$Res> {
       String memberName,
       String createdAt,
       String updatedAt,
-      bool deleted,
-      bool modified});
+      bool modified,
+      bool deleted});
 }
 
 /// @nodoc
@@ -79,8 +79,8 @@ class _$CommunityCommentResponseCopyWithImpl<$Res,
     Object? memberName = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? deleted = null,
     Object? modified = null,
+    Object? deleted = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -107,13 +107,13 @@ class _$CommunityCommentResponseCopyWithImpl<$Res,
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as String,
-      deleted: null == deleted
-          ? _value.deleted
-          : deleted // ignore: cast_nullable_to_non_nullable
-              as bool,
       modified: null == modified
           ? _value.modified
           : modified // ignore: cast_nullable_to_non_nullable
+              as bool,
+      deleted: null == deleted
+          ? _value.deleted
+          : deleted // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -135,8 +135,8 @@ abstract class _$$CommunityCommentResponseImplCopyWith<$Res>
       String memberName,
       String createdAt,
       String updatedAt,
-      bool deleted,
-      bool modified});
+      bool modified,
+      bool deleted});
 }
 
 /// @nodoc
@@ -160,8 +160,8 @@ class __$$CommunityCommentResponseImplCopyWithImpl<$Res>
     Object? memberName = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? deleted = null,
     Object? modified = null,
+    Object? deleted = null,
   }) {
     return _then(_$CommunityCommentResponseImpl(
       id: null == id
@@ -188,13 +188,13 @@ class __$$CommunityCommentResponseImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as String,
-      deleted: null == deleted
-          ? _value.deleted
-          : deleted // ignore: cast_nullable_to_non_nullable
-              as bool,
       modified: null == modified
           ? _value.modified
           : modified // ignore: cast_nullable_to_non_nullable
+              as bool,
+      deleted: null == deleted
+          ? _value.deleted
+          : deleted // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -209,9 +209,9 @@ class _$CommunityCommentResponseImpl implements _CommunityCommentResponse {
       required this.memberId,
       required this.memberName,
       required this.createdAt,
-      required this.updatedAt,
-      required this.deleted,
-      required this.modified});
+      this.updatedAt = "",
+      this.modified = false,
+      this.deleted = false});
 
   factory _$CommunityCommentResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$CommunityCommentResponseImplFromJson(json);
@@ -227,15 +227,18 @@ class _$CommunityCommentResponseImpl implements _CommunityCommentResponse {
   @override
   final String createdAt;
   @override
+  @JsonKey()
   final String updatedAt;
   @override
-  final bool deleted;
-  @override
+  @JsonKey()
   final bool modified;
+  @override
+  @JsonKey()
+  final bool deleted;
 
   @override
   String toString() {
-    return 'CommunityCommentResponse(id: $id, content: $content, memberId: $memberId, memberName: $memberName, createdAt: $createdAt, updatedAt: $updatedAt, deleted: $deleted, modified: $modified)';
+    return 'CommunityCommentResponse(id: $id, content: $content, memberId: $memberId, memberName: $memberName, createdAt: $createdAt, updatedAt: $updatedAt, modified: $modified, deleted: $deleted)';
   }
 
   @override
@@ -253,15 +256,15 @@ class _$CommunityCommentResponseImpl implements _CommunityCommentResponse {
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
-            (identical(other.deleted, deleted) || other.deleted == deleted) &&
             (identical(other.modified, modified) ||
-                other.modified == modified));
+                other.modified == modified) &&
+            (identical(other.deleted, deleted) || other.deleted == deleted));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, content, memberId,
-      memberName, createdAt, updatedAt, deleted, modified);
+      memberName, createdAt, updatedAt, modified, deleted);
 
   /// Create a copy of CommunityCommentResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -287,9 +290,9 @@ abstract class _CommunityCommentResponse implements CommunityCommentResponse {
       required final int memberId,
       required final String memberName,
       required final String createdAt,
-      required final String updatedAt,
-      required final bool deleted,
-      required final bool modified}) = _$CommunityCommentResponseImpl;
+      final String updatedAt,
+      final bool modified,
+      final bool deleted}) = _$CommunityCommentResponseImpl;
 
   factory _CommunityCommentResponse.fromJson(Map<String, dynamic> json) =
       _$CommunityCommentResponseImpl.fromJson;
@@ -307,9 +310,9 @@ abstract class _CommunityCommentResponse implements CommunityCommentResponse {
   @override
   String get updatedAt;
   @override
-  bool get deleted;
-  @override
   bool get modified;
+  @override
+  bool get deleted;
 
   /// Create a copy of CommunityCommentResponse
   /// with the given fields replaced by the non-null parameter values.
