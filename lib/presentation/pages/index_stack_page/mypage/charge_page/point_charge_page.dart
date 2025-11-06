@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'models/point_notifier.dart';
+import 'package:take_breath/domain/payment/providers/payment_notifier.dart';
+import 'package:take_breath/domain/point/providers/point_notifier.dart';
+import 'package:take_breath/presentation/pages/index_stack_page/mypage/payment_page/payment_webview_page.dart';
+
+import '../../../../../domain/member/providers/member_login_notifier.dart';
 
 class PointChargePage extends ConsumerStatefulWidget {
   const PointChargePage({super.key});
@@ -14,10 +18,10 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
   bool _isProcessing = false;
 
   final List<Map<String, dynamic>> chargeOptions = [
-    {'amount': 1000, 'label': '1,000P', 'price': '1,000원'},
-    {'amount': 5000, 'label': '5,000P', 'price': '5,000원'},
-    {'amount': 10000, 'label': '10,000P', 'price': '10,000원'},
-    {'amount': 50000, 'label': '50,000P', 'price': '50,000원'},
+    {'amount': 5000, 'label': '5,000P', 'price': '5,500원'},
+    {'amount': 10000, 'label': '10,000P', 'price': '11,000원'},
+    {'amount': 30000, 'label': '30,000P', 'price': '33,000원'},
+    {'amount': 50000, 'label': '50,000P', 'price': '55,000원'},
   ];
 
   Future<void> _processPayment() async {
@@ -30,25 +34,55 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
 
     setState(() => _isProcessing = true);
 
-    // 포인트 충전 실행
-    await ref.read(pointProvider.notifier).chargePoints(_selectedAmount!);
+    try {
+      final member = ref.read(memberProvider);
+      debugPrint('저장된 사용자 정보: $member');
+      if (member == null) {
+        throw Exception('로그인이 필요합니다');
+      }
 
-    setState(() => _isProcessing = false);
+      final prepareData = await ref.read(paymentProvider.notifier).prepare(
+        amount: _selectedAmount!,
+        orderName: '$_selectedAmount P',
+        buyerName: member.name,
+        buyerEmail: member.email,
+        buyerTel: member.phone,
+      );
 
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${_selectedAmount}P 충전 완료!'),
-          backgroundColor: Colors.teal,
+      if (!mounted) return;
+
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => PaymentWebviewPage(prepareData: prepareData),
         ),
       );
 
-      // 2초 후 이전 페이지로 이동
-      Future.delayed(const Duration(seconds: 1), () {
-        if (mounted) {
-          Navigator.pop(context);
-        }
-      });
+      // 결제 완료 후 포인트 새로고침
+      if (result == true && mounted) {
+        // 포인트 재조회
+        ref.read(pointProvider.notifier).refreshPoints();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('포인트 충전이 완료되었습니다!'),
+            backgroundColor: Colors.teal,
+          ),
+        );
+
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      setState(() => _isProcessing = false);
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('결제 준비 실패: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -73,7 +107,6 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 현재 포인트 표시
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -102,8 +135,6 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
                 ),
               ),
               const SizedBox(height: 32),
-
-              // 충전 금액 선택
               const Text(
                 '충전 금액 선택',
                 style: TextStyle(
@@ -112,7 +143,6 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
                 ),
               ),
               const SizedBox(height: 16),
-
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -170,8 +200,6 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
                 },
               ),
               const SizedBox(height: 32),
-
-              // 유의사항
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -190,7 +218,7 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '• 충전된 포인트는 환불되지 않습니다.\n• 포인트는 1년 후 자동 소멸됩니다.\n• 결제 후 즉시 반영됩니다.',
+                      '• 수수료 10%가 포함된 금액입니다.\n• 충전된 포인트는 환불되지 않습니다.\n• 포인트는 1년 후 자동 소멸됩니다.',
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.grey[700],
@@ -201,8 +229,6 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
                 ),
               ),
               const SizedBox(height: 32),
-
-              // 충전 버튼
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -217,22 +243,22 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
                   ),
                   child: _isProcessing
                       ? const SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor:
+                      AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
                       : const Text(
-                          '충전하기',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
+                    '결제하기',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ],

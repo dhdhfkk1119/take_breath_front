@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 
 class RecorderListFilter extends StatefulWidget {
-  const RecorderListFilter({super.key});
+  final Function(String) onFilterApplied;
+  final String initialCategory;
+
+  const RecorderListFilter({
+    super.key,
+    required this.onFilterApplied,
+    this.initialCategory = 'all',
+  });
 
   @override
   State<RecorderListFilter> createState() => _RecorderListFilterState();
 }
 
 class _RecorderListFilterState extends State<RecorderListFilter> {
-  DateTime? _selectedDate;
-  String _selectedCategory = 'all';
+  late String _selectedCategory;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCategory = widget.initialCategory;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,38 +35,7 @@ class _RecorderListFilterState extends State<RecorderListFilter> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // 날짜 필터
-          const Text(
-            '날짜',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          OutlinedButton(
-            onPressed: () async {
-              final DateTime? picked = await showDatePicker(
-                context: context,
-                initialDate: _selectedDate ?? DateTime.now(),
-                firstDate: DateTime(2020),
-                lastDate: DateTime.now(),
-              );
-              if (picked != null) {
-                setState(() {
-                  _selectedDate = picked;
-                });
-              }
-            },
-            child: Text(
-              _selectedDate != null
-                  ? '${_selectedDate!.year}.${_selectedDate!.month.toString().padLeft(2, '0')}.${_selectedDate!.day.toString().padLeft(2, '0')}'
-                  : '날짜 선택',
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // 카테고리 필터
+          // 유형 필터
           const Text(
             '유형',
             style: TextStyle(
@@ -72,7 +53,6 @@ class _RecorderListFilterState extends State<RecorderListFilter> {
           ElevatedButton(
             onPressed: () {
               setState(() {
-                _selectedDate = null;
                 _selectedCategory = 'all';
               });
             },
@@ -81,6 +61,19 @@ class _RecorderListFilterState extends State<RecorderListFilter> {
               foregroundColor: Colors.black,
             ),
             child: const Text('초기화'),
+          ),
+          const SizedBox(height: 16),
+
+          // 적용 버튼
+          ElevatedButton(
+            onPressed: () {
+              widget.onFilterApplied(_selectedCategory);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF0891B2),
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('적용'),
           ),
         ],
       ),

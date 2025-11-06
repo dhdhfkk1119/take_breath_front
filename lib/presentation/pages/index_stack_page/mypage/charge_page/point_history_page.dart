@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'models/point_notifier.dart';
+import '../../../../../domain/point/providers/point_notifier.dart';
 
 class PointHistoryPage extends ConsumerWidget {
   const PointHistoryPage({super.key});
@@ -126,7 +126,7 @@ class PointHistoryPage extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            '${isCharge ? '+' : '-'}${transaction.amount}P',
+                            '${isCharge ? '+' : ''}${transaction.amount}P',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,

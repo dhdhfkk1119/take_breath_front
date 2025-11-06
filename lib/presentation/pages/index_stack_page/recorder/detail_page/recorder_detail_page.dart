@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/presentation/pages/index_stack_page/recorder/detail_page/widgets/recorder_detail_app_bar.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
 import '../../../../../domain/recorder/providers/recorder_provider.dart';
 import '../../../../../domain/recorder/models/record_item.dart';
+import 'widgets/recorder_detail_content.dart';
+import 'widgets/recorder_edit_page.dart';
 
 class RecorderDetailPage extends ConsumerWidget {
   final RecordItem record;
@@ -16,118 +22,138 @@ class RecorderDetailPage extends ConsumerWidget {
     final recordDetail = ref.watch(recordDetailProvider(record.id));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('기록 상세')),
+      appBar: RecorderDetailAppBar(
+        onEdit: () => _showEditPage(context, ref, recordDetail),
+        onExport: () => _downloadPdf(context, ref),
+        onDelete: () => _showDeleteConfirmDialog(context, ref, record.id),
+      ),
       body: recordDetail.when(
-        data: (data) {
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    data['title'] ?? '제목 없음',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    data['recordDate'] ?? '',
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(data['content'] ?? '내용 없음'),
-                  const SizedBox(height: 24),
-                  if ((data['imageFiles'] as List?)?.isNotEmpty ?? false) ...[
-                    const Text(
-                      '이미지',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      height: 100,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: data['imageFiles'].length,
-                        itemBuilder: (context, index) {
-                          final image = data['imageFiles'][index];
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                image['url'],
-                                fit: BoxFit.cover,
-                                width: 100,
-                                height: 100,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    width: 100,
-                                    height: 100,
-                                    color: Colors.grey[300],
-                                    child:
-                                        const Icon(Icons.image_not_supported),
-                                  );
-                                },
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                  if ((data['audioFiles'] as List?)?.isNotEmpty ?? false) ...[
-                    const Text(
-                      '음성 녹음',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: data['audioFiles'].length,
-                      itemBuilder: (context, index) {
-                        final audio = data['audioFiles'][index];
-                        return ListTile(
-                          leading: const Icon(Icons.audio_file),
-                          title: Text(audio['originalName'] ?? '음성 파일'),
-                          subtitle: Text('${(audio['size'] ?? 0) ~/ 1024} KB'),
-                          trailing: const Icon(Icons.play_arrow),
-                          onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('음성 재생 기능 준비 중입니다')),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          );
-        },
+        data: (data) => RecorderDetailContent(data: data),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error, size: 64, color: Colors.red),
-              const SizedBox(height: 16),
-              Text('오류 발생\n$error'),
-            ],
+        error: (error, stack) => _buildErrorWidget(error),
+      ),
+    );
+  }
+
+  Widget _buildErrorWidget(Object error) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error, size: 64, color: Colors.red),
+          const SizedBox(height: 16),
+          Text('오류 발생\n$error'),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _downloadPdf(BuildContext context, WidgetRef ref) async {
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('PDF 다운로드 중...')),
+      );
+
+      final repository = ref.read(recordRepositoryProvider);
+      final pdfBytes = await repository.downloadRecordPdf(id: record.id);
+
+      final directory = Directory('/storage/emulated/0/Download');
+
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
+
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final fileName = 'record_${record.id}_$timestamp.pdf';
+      final filePath = '${directory.path}/$fileName';
+
+      final file = File(filePath);
+      await file.writeAsBytes(pdfBytes);
+
+      bool exists = await file.exists();
+
+      if (exists) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('다운로드 완료: $fileName'),
+            duration: const Duration(seconds: 3),
           ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('파일 저장 실패')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('다운로드 실패: $e')),
+      );
+    }
+  }
+
+  void _showEditPage(
+    BuildContext context,
+    WidgetRef ref,
+    AsyncValue<Map<String, dynamic>> recordDetail,
+  ) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RecorderEditPage(
+          recordId: record.id,
+          recordDetail: recordDetail,
+          onSaved: () {
+            ref.refresh(recordListProvider(0));
+            ref.refresh(recordDetailProvider(record.id));
+          },
         ),
       ),
     );
+  }
+
+  void _showDeleteConfirmDialog(
+    BuildContext context,
+    WidgetRef ref,
+    int recordId,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('기록 삭제'),
+        content: const Text('이 기록을 삭제하시겠습니까? 삭제된 기록은 복구할 수 없습니다.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('취소'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await _deleteRecord(context, ref, recordId);
+            },
+            child: const Text('삭제', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _deleteRecord(
+    BuildContext context,
+    WidgetRef ref,
+    int recordId,
+  ) async {
+    try {
+      await ref.read(deleteRecordProvider.notifier).deleteRecord(recordId);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('기록이 삭제되었습니다')),
+      );
+      ref.refresh(recordListProvider(0));
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('삭제 실패: $e')),
+      );
+    }
   }
 }

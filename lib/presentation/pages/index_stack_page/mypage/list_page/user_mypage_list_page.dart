@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../charge_page/models/point_notifier.dart';
+import '../../../../../domain/point/providers/point_notifier.dart';
 import '../charge_page/point_charge_page.dart';
 import '../charge_page/point_history_page.dart';
+import '../payment_page/payment_history_page.dart';
 import '../widgets/user_activity_grid.dart';
 import '../charge_page/widgets/user_point_section.dart';
 import '../comment_page/user_comment_history_page.dart';
@@ -121,6 +122,16 @@ class _UserMypageListPageState extends ConsumerState<UserMypageListPage> {
     );
   }
 
+  // ✅ 결제 내역 페이지
+  void _handlePaymentHistory(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const PaymentHistoryPage(),
+      ),
+    );
+  }
+
   void _showSettingsBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -196,7 +207,7 @@ class _UserMypageListPageState extends ConsumerState<UserMypageListPage> {
 
             // 4. ✅ 포인트 + 액티비티 그리드 (분리된 위젯)
             UserActivityGrid(
-              onPointChargePressed: () => _handlePointCharge(context),
+              onPaymentHistoryPressed: () => _handlePaymentHistory(context),
               onPointHistoryPressed: () => _handlePointHistory(context),
               onPostListPressed: () => _handlePostList(context),
               onFavoriteListPressed: () => _handleFavoriteList(context),

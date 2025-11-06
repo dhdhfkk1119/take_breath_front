@@ -22,6 +22,7 @@ mixin _$RecordItem {
   String get date => throw _privateConstructorUsedError;
   int get imageCount => throw _privateConstructorUsedError;
   int get audioCount => throw _privateConstructorUsedError;
+  String? get thumbnailUrl => throw _privateConstructorUsedError;
 
   /// Create a copy of RecordItem
   /// with the given fields replaced by the non-null parameter values.
@@ -42,7 +43,8 @@ abstract class $RecordItemCopyWith<$Res> {
       String content,
       String date,
       int imageCount,
-      int audioCount});
+      int audioCount,
+      String? thumbnailUrl});
 }
 
 /// @nodoc
@@ -66,6 +68,7 @@ class _$RecordItemCopyWithImpl<$Res, $Val extends RecordItem>
     Object? date = null,
     Object? imageCount = null,
     Object? audioCount = null,
+    Object? thumbnailUrl = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -92,6 +95,10 @@ class _$RecordItemCopyWithImpl<$Res, $Val extends RecordItem>
           ? _value.audioCount
           : audioCount // ignore: cast_nullable_to_non_nullable
               as int,
+      thumbnailUrl: freezed == thumbnailUrl
+          ? _value.thumbnailUrl
+          : thumbnailUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -110,7 +117,8 @@ abstract class _$$RecordItemImplCopyWith<$Res>
       String content,
       String date,
       int imageCount,
-      int audioCount});
+      int audioCount,
+      String? thumbnailUrl});
 }
 
 /// @nodoc
@@ -132,6 +140,7 @@ class __$$RecordItemImplCopyWithImpl<$Res>
     Object? date = null,
     Object? imageCount = null,
     Object? audioCount = null,
+    Object? thumbnailUrl = freezed,
   }) {
     return _then(_$RecordItemImpl(
       id: null == id
@@ -158,6 +167,10 @@ class __$$RecordItemImplCopyWithImpl<$Res>
           ? _value.audioCount
           : audioCount // ignore: cast_nullable_to_non_nullable
               as int,
+      thumbnailUrl: freezed == thumbnailUrl
+          ? _value.thumbnailUrl
+          : thumbnailUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -171,7 +184,8 @@ class _$RecordItemImpl implements _RecordItem {
       required this.content,
       required this.date,
       required this.imageCount,
-      required this.audioCount});
+      required this.audioCount,
+      this.thumbnailUrl});
 
   @override
   final int id;
@@ -185,10 +199,12 @@ class _$RecordItemImpl implements _RecordItem {
   final int imageCount;
   @override
   final int audioCount;
+  @override
+  final String? thumbnailUrl;
 
   @override
   String toString() {
-    return 'RecordItem(id: $id, title: $title, content: $content, date: $date, imageCount: $imageCount, audioCount: $audioCount)';
+    return 'RecordItem(id: $id, title: $title, content: $content, date: $date, imageCount: $imageCount, audioCount: $audioCount, thumbnailUrl: $thumbnailUrl)';
   }
 
   @override
@@ -203,12 +219,14 @@ class _$RecordItemImpl implements _RecordItem {
             (identical(other.imageCount, imageCount) ||
                 other.imageCount == imageCount) &&
             (identical(other.audioCount, audioCount) ||
-                other.audioCount == audioCount));
+                other.audioCount == audioCount) &&
+            (identical(other.thumbnailUrl, thumbnailUrl) ||
+                other.thumbnailUrl == thumbnailUrl));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, title, content, date, imageCount, audioCount);
+  int get hashCode => Object.hash(runtimeType, id, title, content, date,
+      imageCount, audioCount, thumbnailUrl);
 
   /// Create a copy of RecordItem
   /// with the given fields replaced by the non-null parameter values.
@@ -226,7 +244,8 @@ abstract class _RecordItem implements RecordItem {
       required final String content,
       required final String date,
       required final int imageCount,
-      required final int audioCount}) = _$RecordItemImpl;
+      required final int audioCount,
+      final String? thumbnailUrl}) = _$RecordItemImpl;
 
   @override
   int get id;
@@ -240,6 +259,8 @@ abstract class _RecordItem implements RecordItem {
   int get imageCount;
   @override
   int get audioCount;
+  @override
+  String? get thumbnailUrl;
 
   /// Create a copy of RecordItem
   /// with the given fields replaced by the non-null parameter values.
