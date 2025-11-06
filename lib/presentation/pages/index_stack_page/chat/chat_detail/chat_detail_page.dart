@@ -25,98 +25,87 @@ class ChatDetailPage extends ConsumerStatefulWidget {
 
 class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
   StompClient? stompClient;
-  final List<ChatMessageResponse> messages = [];
   bool _isConnected = false;
-  int? myId;
+  final List<ChatMessageResponse> messages = [];
 
   @override
   void initState() {
     super.initState();
-    _initialize();
+    _connectStomp();
   }
 
-  Future<void> _initialize() async {
-    final member = await AuthStorage.getUserInfo();
-    myId = member?.id;
-    _connectWebSocket();
-  }
-
-  Future<void> _connectWebSocket() async {
+  Future<void> _connectStomp() async {
     final token = await AuthStorage.getAccessToken();
-    if (token == null) {
-      print("⚠️ JWT 토큰이 없습니다. 로그인 필요");
-      return;
-    }
 
     stompClient = StompClient(
       config: StompConfig(
-        // ✅ /websocket 없이 순수 /ws-chat만 사용
         url: 'ws://10.0.2.2:8080/ws',
-        stompConnectHeaders: {'Authorization': 'Bearer $token'},
-        webSocketConnectHeaders: {'Authorization': 'Bearer $token'},
-
-        reconnectDelay: const Duration(seconds: 3),     // 연결 실패 시 자동 재시도 (optional)
-        onConnect: _onConnect,
-        onDisconnect: (frame) {
-          print("🔌 WebSocket disconnected");
-          setState(() => _isConnected = false);
+        beforeConnect: () async {
+          debugPrint("WebSocket 연결 중...");
         },
-        onWebSocketError: (err) {
-          print("⚠️ WebSocket error: $err");
-          setState(() => _isConnected = false);
+        webSocketConnectHeaders: {
+          'Authorization': 'Bearer $token',
+        },
+        stompConnectHeaders: {
+          'Authorization': 'Bearer $token',
+        },
+        onConnect: _onConnect,
+        onWebSocketDone: () {
+          debugPrint('🛑 WebSocket 연결 닫힘');
         },
         onStompError: (frame) {
-          print("🚨 STOMP Error: ${frame.body}");
+          debugPrint('❌ STOMP Error: ${frame.body}');
+        },
+        onWebSocketError: (error) {
+          debugPrint('❌ WebSocket Error: $error');
+        },
+        onDisconnect: (frame) {
+          debugPrint('🛑 WebSocket 연결 종료');
           setState(() => _isConnected = false);
         },
       ),
     );
-
-    stompClient!.activate();
+    stompClient!.activate();  // 연결 시작
   }
 
-  void _onConnect(StompFrame frame) {
-    print("✅ Connected to WebSocket room ${widget.roomId}");
+  // 연결 성공 -> 구독
+  void _onConnect(StompFrame frame) async {
+    debugPrint('✅ STOMP 연결 완료 -> 채널 구독 진행');
     setState(() => _isConnected = true);
+    final token = await AuthStorage.getAccessToken();
 
-    // 구독 (서버에서 broadcast하는 topic)
+    // 해당 채팅방 구독
+    final destination = '/sub/chat/room.${widget.roomId}';
     stompClient!.subscribe(
-      destination: '/sub/chat/room.${widget.roomId}',
-      headers: {
-        'Authorization': 'Bearer ${AuthStorage.getAccessToken()}',
-      },
+      destination: destination,
+      headers: {'Authorization': 'Bearer $token'},
       callback: (frame) {
         if (frame.body != null) {
-          final data = jsonDecode(frame.body!);
-          final msg = ChatMessageResponse.fromJson(data);
 
-          final isMine = msg.senderId == myId;
-          final updated = msg.copyWith(isMe: isMine);
-
-          setState(() => messages.insert(0, updated));
+          final decoded = jsonDecode(frame.body!);      // 받은 응답 String -> Map 변환
+          final data = decoded['response'] ?? decoded;  // ApiResult 구조 파싱
+          final msg = ChatMessageResponse.fromJson(data); // json 변환ㅁㄴㅇ
+          setState(() {
+            messages.add(msg);
+          });
         }
       },
     );
   }
 
-  void _sendMessage(String content) async {
-    if (stompClient == null || !stompClient!.connected) {
-      print("⚠️ WebSocket is not connected. Cannot send message.");
-      return;
-    }
-
+  // 메세지 전송
+  Future<void> _sendMessage(String content) async {
+    debugPrint('✅ 채팅방 메세지 전송');
+    if (!_isConnected) return;
     final token = await AuthStorage.getAccessToken();
-    final msgBody = {
-      "content": content,
-      "messageType": "TEXT",
-    };
 
     stompClient!.send(
       destination: '/pub/chat.sendMessage.${widget.roomId}',
-      body: jsonEncode(msgBody),
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Authorization': 'Bearer $token'},
+      body: jsonEncode({
+        "content": content,
+        "messageType": "TEXT",
+      }),
     );
   }
 
@@ -135,7 +124,7 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
           Expanded(child: ChatDetailBody(messages: messages)),
           ChatInputField(
             onSend: _sendMessage,
-            enabled: _isConnected, // ✅ 연결이 완료돼야만 입력 가능
+            enabled: _isConnected,
           ),
         ],
       ),
