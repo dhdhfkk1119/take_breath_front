@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/recorder/detail_page/widgets/recorder_detail_app_bar.dart';
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:path_provider/path_provider.dart';
 import '../../../../../domain/recorder/providers/recorder_provider.dart';
 import '../../../../../domain/recorder/models/record_item.dart';
 import 'widgets/recorder_detail_content.dart';
@@ -68,22 +66,14 @@ class RecorderDetailPage extends ConsumerWidget {
       final filePath = '${directory.path}/$fileName';
 
       final file = File(filePath);
-      await file.writeAsBytes(pdfBytes);
+      await file.writeAsBytes(pdfBytes, flush: true);
 
-      bool exists = await file.exists();
-
-      if (exists) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('다운로드 완료: $fileName'),
-            duration: const Duration(seconds: 3),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('파일 저장 실패')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('다운로드 완료: $fileName'),
+          duration: const Duration(seconds: 3),
+        ),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('다운로드 실패: $e')),

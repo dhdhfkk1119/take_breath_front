@@ -17,7 +17,16 @@ class RecordRepository {
       size: size,
     );
 
-    final List<dynamic> content = response['content'] ?? [];
+    print('========== RecordRepository.getRecordList ==========');
+    print('Full Response: $response');
+    print('Response keys: ${response.keys.toList()}');
+    print('Response type: ${response.runtimeType}');
+    print('====================================================');
+
+    final List<dynamic> content = response['response']?['content'] ?? [];
+
+    print(' Content length: ${content.length}');
+
     final List<RecordItem> records = content.map((item) {
       String? thumbnailUrl;
       if (item['imageFiles'] != null &&
@@ -58,7 +67,8 @@ class RecordRepository {
       size: size,
     );
 
-    final List<dynamic> content = response['content'] ?? [];
+    final List<dynamic> content = response['response']?['content'] ?? [];
+
     final List<RecordItem> records = content.map((item) {
       String? thumbnailUrl;
       if (item['imageFiles'] != null &&
@@ -91,9 +101,11 @@ class RecordRepository {
   Future<Map<String, dynamic>> getRecord({required int id}) async {
     final response = await recordService.getRecord(id: id);
 
-    if (response['imageFiles'] != null) {
-      final imageFiles = response['imageFiles'] as List<dynamic>;
-      response['imageFiles'] = imageFiles.map((file) {
+    final recordData = response['response'] ?? response;
+
+    if (recordData['imageFiles'] != null) {
+      final imageFiles = recordData['imageFiles'] as List<dynamic>;
+      recordData['imageFiles'] = imageFiles.map((file) {
         final filePath = file['filePath'] as String? ?? '';
         String imageUrl = _convertToValidUrl(filePath);
         return {
@@ -103,9 +115,9 @@ class RecordRepository {
       }).toList();
     }
 
-    if (response['audioFiles'] != null) {
-      final audioFiles = response['audioFiles'] as List<dynamic>;
-      response['audioFiles'] = audioFiles.map((file) {
+    if (recordData['audioFiles'] != null) {
+      final audioFiles = recordData['audioFiles'] as List<dynamic>;
+      recordData['audioFiles'] = audioFiles.map((file) {
         final filePath = file['filePath'] as String? ?? '';
         String audioUrl = _convertToValidUrl(filePath);
         return {
@@ -115,9 +127,9 @@ class RecordRepository {
       }).toList();
     }
 
-    if (response['videoFiles'] != null) {
-      final videoFiles = response['videoFiles'] as List<dynamic>;
-      response['videoFiles'] = videoFiles.map((file) {
+    if (recordData['videoFiles'] != null) {
+      final videoFiles = recordData['videoFiles'] as List<dynamic>;
+      recordData['videoFiles'] = videoFiles.map((file) {
         final filePath = file['filePath'] as String? ?? '';
         String videoUrl = _convertToValidUrl(filePath);
         return {
@@ -127,7 +139,7 @@ class RecordRepository {
       }).toList();
     }
 
-    return response;
+    return recordData;
   }
 
   Future<void> updateRecord({
@@ -137,6 +149,7 @@ class RecordRepository {
     List<File>? imageFiles,
     List<File>? audioFiles,
     List<File>? videoFiles,
+    List<int>? deletedImageIds,
   }) async {
     await recordService.updateRecord(
       id: id,
@@ -145,6 +158,7 @@ class RecordRepository {
       imageFiles: imageFiles,
       audioFiles: audioFiles,
       videoFiles: videoFiles,
+      deletedImageIds: deletedImageIds,
     );
   }
 
@@ -157,6 +171,8 @@ class RecordRepository {
   }
 
   String _convertToValidUrl(String filePath) {
+    print('🔍 Converting filePath: $filePath');
+
     if (filePath.isEmpty || filePath == 'url1') {
       return 'http://192.168.0.156:8080/uploads/records/images/sample_001.png';
     }
@@ -165,11 +181,19 @@ class RecordRepository {
       return filePath;
     }
 
+    if (filePath.startsWith('records/')) {
+      final url = 'http://192.168.0.156:8080/uploads/$filePath';
+      print('Converted to: $url');
+      return url;
+    }
+
     String convertedPath =
         filePath.replaceAll('/uploads/record/', '/uploads/records/');
 
     if (convertedPath.startsWith('/uploads/')) {
-      return 'http://192.168.0.156:8080$convertedPath';
+      final url = 'http://192.168.0.156:8080$convertedPath';
+      print('Converted to: $url');
+      return url;
     }
 
     if (convertedPath.contains('uploads')) {
@@ -177,10 +201,12 @@ class RecordRepository {
       if (parts.length > 1) {
         String imageUrl = 'http://192.168.0.156:8080/uploads${parts[1]}';
         imageUrl = imageUrl.replaceAll('\\', '/');
+        print('Converted to: $imageUrl');
         return imageUrl;
       }
     }
 
+    print('Using default sample image');
     return 'http://192.168.0.156:8080/uploads/records/images/sample_001.png';
   }
 }
