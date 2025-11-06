@@ -25,6 +25,7 @@ class _ChatListItemState extends State<ChatListItem> {
           MaterialPageRoute(
             builder: (context) => ChatDetailPage(
               roomId: widget.chatRoomListResponse.roomId,
+              roomName: widget.chatRoomListResponse.roomName,
             ),
           ),
         );

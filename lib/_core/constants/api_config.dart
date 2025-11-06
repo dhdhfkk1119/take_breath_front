@@ -6,7 +6,7 @@ class ApiConfig {
   static const String baseUrl = "http://$baseIp:$port/api";
 
   // WebSocket Base URL (API prefix 제외)
-  static const String socketUrl = "http://$baseIp:$port";
+  static const String socketUrl = "ws://$baseIp:$port";
 
   // WebSocket Endpoint
   static String get webSocketEndpoint => "$socketUrl/ws-chat";

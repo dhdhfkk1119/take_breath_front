@@ -1,148 +1,144 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:take_breath/_core/constants/custom_showDialog.dart';
-import 'package:take_breath/_core/utils/widgets_app_bar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:stomp_dart_client/stomp_dart_client.dart';
+import 'package:take_breath/domain/chat/models/chat_message_response.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_detail/widgets/chat_detail_body.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_detail/widgets/chat_input_field.dart';
 
-import 'widgets/chat_detail_bottom.dart';
+import '../../../../../domain/member/services/auth_storage.dart';
 
-class ChatDetailPage extends StatefulWidget {
+class ChatDetailPage extends ConsumerStatefulWidget {
   final int roomId;
+  final String roomName;
 
   const ChatDetailPage({
     super.key,
     required this.roomId,
+    required this.roomName,
   });
 
   @override
-  State<ChatDetailPage> createState() => _ChatDetailPageState();
+  ConsumerState<ChatDetailPage> createState() => _ChatDetailPageState();
 }
 
-class _ChatDetailPageState extends State<ChatDetailPage> {
-  late WebSocketChannel _channel;
-  final List<Map<String, dynamic>> _messages = [];
+class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
+  StompClient? stompClient;
+  final List<ChatMessageResponse> messages = [];
+  bool _isConnected = false;
+  int? myId;
 
   @override
   void initState() {
     super.initState();
-    // _connectWebSocket();
+    _initialize();
   }
 
-  /// ✅ 웹소켓 연결
-  void _connectWebSocket() {
-    final uri = Uri.parse('ws://localhost:8080/ws-chat/${widget.roomId}');
-    print("🔌 WebSocket 연결 시도: $uri");
-
-    _channel = WebSocketChannel.connect(uri);
-
-    // ✅ 수신 스트림 리스닝
-    _channel.stream.listen((data) {
-      print("📩 수신 메시지: $data");
-      final decoded = jsonDecode(data);
-      setState(() {
-        _messages.add({
-          'message': decoded['message'] ?? '',
-          'isMe': decoded['sender'] == 'me', // sender 구분
-        });
-      });
-    }, onError: (error) {
-      print("⚠️ WebSocket 에러: $error");
-    }, onDone: () {
-      print("❌ WebSocket 연결 종료됨");
-    });
+  Future<void> _initialize() async {
+    final member = await AuthStorage.getUserInfo();
+    myId = member?.id;
+    _connectWebSocket();
   }
 
-  /// ✅ 메시지 전송
-  void _sendMessage(String text) {
-    if (text.trim().isEmpty) return;
+  Future<void> _connectWebSocket() async {
+    final token = await AuthStorage.getAccessToken();
+    if (token == null) {
+      print("⚠️ JWT 토큰이 없습니다. 로그인 필요");
+      return;
+    }
 
-    final messageData = {
-      'roomId': widget.roomId,
-      'sender': 'me', // 실제 로그인 사용자 ID or Email
-      'message': text.trim(),
+    stompClient = StompClient(
+      config: StompConfig(
+        // ✅ /websocket 없이 순수 /ws-chat만 사용
+        url: 'ws://10.0.2.2:8080/ws',
+        stompConnectHeaders: {'Authorization': 'Bearer $token'},
+        webSocketConnectHeaders: {'Authorization': 'Bearer $token'},
+
+        reconnectDelay: const Duration(seconds: 3),     // 연결 실패 시 자동 재시도 (optional)
+        onConnect: _onConnect,
+        onDisconnect: (frame) {
+          print("🔌 WebSocket disconnected");
+          setState(() => _isConnected = false);
+        },
+        onWebSocketError: (err) {
+          print("⚠️ WebSocket error: $err");
+          setState(() => _isConnected = false);
+        },
+        onStompError: (frame) {
+          print("🚨 STOMP Error: ${frame.body}");
+          setState(() => _isConnected = false);
+        },
+      ),
+    );
+
+    stompClient!.activate();
+  }
+
+  void _onConnect(StompFrame frame) {
+    print("✅ Connected to WebSocket room ${widget.roomId}");
+    setState(() => _isConnected = true);
+
+    // 구독 (서버에서 broadcast하는 topic)
+    stompClient!.subscribe(
+      destination: '/sub/chat/room.${widget.roomId}',
+      headers: {
+        'Authorization': 'Bearer ${AuthStorage.getAccessToken()}',
+      },
+      callback: (frame) {
+        if (frame.body != null) {
+          final data = jsonDecode(frame.body!);
+          final msg = ChatMessageResponse.fromJson(data);
+
+          final isMine = msg.senderId == myId;
+          final updated = msg.copyWith(isMe: isMine);
+
+          setState(() => messages.insert(0, updated));
+        }
+      },
+    );
+  }
+
+  void _sendMessage(String content) async {
+    if (stompClient == null || !stompClient!.connected) {
+      print("⚠️ WebSocket is not connected. Cannot send message.");
+      return;
+    }
+
+    final token = await AuthStorage.getAccessToken();
+    final msgBody = {
+      "content": content,
+      "messageType": "TEXT",
     };
 
-    print("📤 전송 메시지: $messageData");
-    _channel.sink.add(jsonEncode(messageData));
-
-    // 전송 즉시 로컬에 표시
-    setState(() {
-      _messages.add({'message': text.trim(), 'isMe': true});
-    });
+    stompClient!.send(
+      destination: '/pub/chat.sendMessage.${widget.roomId}',
+      body: jsonEncode(msgBody),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
   }
 
   @override
   void dispose() {
-    print("🔌 WebSocket 연결 종료");
-    _channel.sink.close();
+    stompClient?.deactivate();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WidgetsAppBar(
-        title: "채팅방 #${widget.roomId}",
-        icon: const Icon(Icons.more_vert),
-        menuItems: [
-          BottomMenuItem(
-            title: "상담 종료하기",
-            icon: const Icon(
-              Icons.door_back_door_outlined,
-              color: Colors.redAccent,
-            ),
-            onTap: () {},
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text(widget.roomName)),
       body: Column(
         children: [
-          Expanded(
-            child: ChatDetailBody(messages: _messages),
+          Expanded(child: ChatDetailBody(messages: messages)),
+          ChatInputField(
+            onSend: _sendMessage,
+            enabled: _isConnected, // ✅ 연결이 완료돼야만 입력 가능
           ),
-          ChatDetailBottom(onSend: _sendMessage),
         ],
       ),
     );
   }
 }
-
-/*
-class ChatDetailPage extends StatelessWidget {
-  final int roomId;
-
-  const ChatDetailPage({
-    super.key,
-    required this.roomId,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: WidgetsAppBar(
-        title: "테스트 채팅방 (아직 연결 안됨)",
-        icon: Icon(Icons.more_vert),
-        menuItems: [
-          BottomMenuItem(
-              title: "상담 종료하기",
-              icon: const Icon(
-                Icons.door_back_door_outlined,
-                color: Colors.redAccent,
-              ),
-              onTap: () {}),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ChatDetailBody(roomId: roomId),
-          ),
-          ChatDetailBottom(),
-        ],
-      ),
-    );
-  }
-}
-*/

@@ -18,6 +18,7 @@ _$ChatMessageResponseImpl _$$ChatMessageResponseImplFromJson(
       isRead: json['isRead'] as bool,
       imageUrl: json['imageUrl'] as String?,
       currentPoint: json['currentPoint'] as String?,
+      isMe: json['isMe'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$ChatMessageResponseImplToJson(
@@ -32,4 +33,5 @@ Map<String, dynamic> _$$ChatMessageResponseImplToJson(
       'isRead': instance.isRead,
       'imageUrl': instance.imageUrl,
       'currentPoint': instance.currentPoint,
+      'isMe': instance.isMe,
     };
