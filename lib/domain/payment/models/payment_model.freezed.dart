@@ -875,3 +875,533 @@ abstract class _PaymentResult implements PaymentResult {
   _$$PaymentResultImplCopyWith<_$PaymentResultImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+PaymentHistory _$PaymentHistoryFromJson(Map<String, dynamic> json) {
+  return _PaymentHistory.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PaymentHistory {
+// 결제 정보
+  int get id => throw _privateConstructorUsedError;
+  String get impUid => throw _privateConstructorUsedError;
+  String get merchantUid => throw _privateConstructorUsedError;
+  int get amount => throw _privateConstructorUsedError;
+  int get pointAmount => throw _privateConstructorUsedError;
+  int get feeAmount => throw _privateConstructorUsedError;
+  double get feeRate => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
+  String get payMethod => throw _privateConstructorUsedError;
+  String get orderName => throw _privateConstructorUsedError;
+  String get createdAt => throw _privateConstructorUsedError;
+  String? get paidAt => throw _privateConstructorUsedError; // 환불 정보
+  int? get refundId => throw _privateConstructorUsedError;
+  int? get refundAmount => throw _privateConstructorUsedError;
+  String? get refundStatus => throw _privateConstructorUsedError;
+  String? get refundedAt => throw _privateConstructorUsedError; // 환불 가능 여부
+  bool get canRefund => throw _privateConstructorUsedError;
+  int get daysUntilRefundExpiry => throw _privateConstructorUsedError;
+
+  /// Serializes this PaymentHistory to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PaymentHistory
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PaymentHistoryCopyWith<PaymentHistory> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PaymentHistoryCopyWith<$Res> {
+  factory $PaymentHistoryCopyWith(
+          PaymentHistory value, $Res Function(PaymentHistory) then) =
+      _$PaymentHistoryCopyWithImpl<$Res, PaymentHistory>;
+  @useResult
+  $Res call(
+      {int id,
+      String impUid,
+      String merchantUid,
+      int amount,
+      int pointAmount,
+      int feeAmount,
+      double feeRate,
+      String status,
+      String payMethod,
+      String orderName,
+      String createdAt,
+      String? paidAt,
+      int? refundId,
+      int? refundAmount,
+      String? refundStatus,
+      String? refundedAt,
+      bool canRefund,
+      int daysUntilRefundExpiry});
+}
+
+/// @nodoc
+class _$PaymentHistoryCopyWithImpl<$Res, $Val extends PaymentHistory>
+    implements $PaymentHistoryCopyWith<$Res> {
+  _$PaymentHistoryCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PaymentHistory
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? impUid = null,
+    Object? merchantUid = null,
+    Object? amount = null,
+    Object? pointAmount = null,
+    Object? feeAmount = null,
+    Object? feeRate = null,
+    Object? status = null,
+    Object? payMethod = null,
+    Object? orderName = null,
+    Object? createdAt = null,
+    Object? paidAt = freezed,
+    Object? refundId = freezed,
+    Object? refundAmount = freezed,
+    Object? refundStatus = freezed,
+    Object? refundedAt = freezed,
+    Object? canRefund = null,
+    Object? daysUntilRefundExpiry = null,
+  }) {
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      impUid: null == impUid
+          ? _value.impUid
+          : impUid // ignore: cast_nullable_to_non_nullable
+              as String,
+      merchantUid: null == merchantUid
+          ? _value.merchantUid
+          : merchantUid // ignore: cast_nullable_to_non_nullable
+              as String,
+      amount: null == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as int,
+      pointAmount: null == pointAmount
+          ? _value.pointAmount
+          : pointAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      feeAmount: null == feeAmount
+          ? _value.feeAmount
+          : feeAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      feeRate: null == feeRate
+          ? _value.feeRate
+          : feeRate // ignore: cast_nullable_to_non_nullable
+              as double,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+      payMethod: null == payMethod
+          ? _value.payMethod
+          : payMethod // ignore: cast_nullable_to_non_nullable
+              as String,
+      orderName: null == orderName
+          ? _value.orderName
+          : orderName // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      paidAt: freezed == paidAt
+          ? _value.paidAt
+          : paidAt // ignore: cast_nullable_to_non_nullable
+              as String?,
+      refundId: freezed == refundId
+          ? _value.refundId
+          : refundId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      refundAmount: freezed == refundAmount
+          ? _value.refundAmount
+          : refundAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      refundStatus: freezed == refundStatus
+          ? _value.refundStatus
+          : refundStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
+      refundedAt: freezed == refundedAt
+          ? _value.refundedAt
+          : refundedAt // ignore: cast_nullable_to_non_nullable
+              as String?,
+      canRefund: null == canRefund
+          ? _value.canRefund
+          : canRefund // ignore: cast_nullable_to_non_nullable
+              as bool,
+      daysUntilRefundExpiry: null == daysUntilRefundExpiry
+          ? _value.daysUntilRefundExpiry
+          : daysUntilRefundExpiry // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$PaymentHistoryImplCopyWith<$Res>
+    implements $PaymentHistoryCopyWith<$Res> {
+  factory _$$PaymentHistoryImplCopyWith(_$PaymentHistoryImpl value,
+          $Res Function(_$PaymentHistoryImpl) then) =
+      __$$PaymentHistoryImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {int id,
+      String impUid,
+      String merchantUid,
+      int amount,
+      int pointAmount,
+      int feeAmount,
+      double feeRate,
+      String status,
+      String payMethod,
+      String orderName,
+      String createdAt,
+      String? paidAt,
+      int? refundId,
+      int? refundAmount,
+      String? refundStatus,
+      String? refundedAt,
+      bool canRefund,
+      int daysUntilRefundExpiry});
+}
+
+/// @nodoc
+class __$$PaymentHistoryImplCopyWithImpl<$Res>
+    extends _$PaymentHistoryCopyWithImpl<$Res, _$PaymentHistoryImpl>
+    implements _$$PaymentHistoryImplCopyWith<$Res> {
+  __$$PaymentHistoryImplCopyWithImpl(
+      _$PaymentHistoryImpl _value, $Res Function(_$PaymentHistoryImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of PaymentHistory
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = null,
+    Object? impUid = null,
+    Object? merchantUid = null,
+    Object? amount = null,
+    Object? pointAmount = null,
+    Object? feeAmount = null,
+    Object? feeRate = null,
+    Object? status = null,
+    Object? payMethod = null,
+    Object? orderName = null,
+    Object? createdAt = null,
+    Object? paidAt = freezed,
+    Object? refundId = freezed,
+    Object? refundAmount = freezed,
+    Object? refundStatus = freezed,
+    Object? refundedAt = freezed,
+    Object? canRefund = null,
+    Object? daysUntilRefundExpiry = null,
+  }) {
+    return _then(_$PaymentHistoryImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      impUid: null == impUid
+          ? _value.impUid
+          : impUid // ignore: cast_nullable_to_non_nullable
+              as String,
+      merchantUid: null == merchantUid
+          ? _value.merchantUid
+          : merchantUid // ignore: cast_nullable_to_non_nullable
+              as String,
+      amount: null == amount
+          ? _value.amount
+          : amount // ignore: cast_nullable_to_non_nullable
+              as int,
+      pointAmount: null == pointAmount
+          ? _value.pointAmount
+          : pointAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      feeAmount: null == feeAmount
+          ? _value.feeAmount
+          : feeAmount // ignore: cast_nullable_to_non_nullable
+              as int,
+      feeRate: null == feeRate
+          ? _value.feeRate
+          : feeRate // ignore: cast_nullable_to_non_nullable
+              as double,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+      payMethod: null == payMethod
+          ? _value.payMethod
+          : payMethod // ignore: cast_nullable_to_non_nullable
+              as String,
+      orderName: null == orderName
+          ? _value.orderName
+          : orderName // ignore: cast_nullable_to_non_nullable
+              as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String,
+      paidAt: freezed == paidAt
+          ? _value.paidAt
+          : paidAt // ignore: cast_nullable_to_non_nullable
+              as String?,
+      refundId: freezed == refundId
+          ? _value.refundId
+          : refundId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      refundAmount: freezed == refundAmount
+          ? _value.refundAmount
+          : refundAmount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      refundStatus: freezed == refundStatus
+          ? _value.refundStatus
+          : refundStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
+      refundedAt: freezed == refundedAt
+          ? _value.refundedAt
+          : refundedAt // ignore: cast_nullable_to_non_nullable
+              as String?,
+      canRefund: null == canRefund
+          ? _value.canRefund
+          : canRefund // ignore: cast_nullable_to_non_nullable
+              as bool,
+      daysUntilRefundExpiry: null == daysUntilRefundExpiry
+          ? _value.daysUntilRefundExpiry
+          : daysUntilRefundExpiry // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PaymentHistoryImpl implements _PaymentHistory {
+  const _$PaymentHistoryImpl(
+      {required this.id,
+      required this.impUid,
+      required this.merchantUid,
+      required this.amount,
+      required this.pointAmount,
+      required this.feeAmount,
+      required this.feeRate,
+      required this.status,
+      required this.payMethod,
+      required this.orderName,
+      required this.createdAt,
+      this.paidAt,
+      this.refundId,
+      this.refundAmount,
+      this.refundStatus,
+      this.refundedAt,
+      required this.canRefund,
+      required this.daysUntilRefundExpiry});
+
+  factory _$PaymentHistoryImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PaymentHistoryImplFromJson(json);
+
+// 결제 정보
+  @override
+  final int id;
+  @override
+  final String impUid;
+  @override
+  final String merchantUid;
+  @override
+  final int amount;
+  @override
+  final int pointAmount;
+  @override
+  final int feeAmount;
+  @override
+  final double feeRate;
+  @override
+  final String status;
+  @override
+  final String payMethod;
+  @override
+  final String orderName;
+  @override
+  final String createdAt;
+  @override
+  final String? paidAt;
+// 환불 정보
+  @override
+  final int? refundId;
+  @override
+  final int? refundAmount;
+  @override
+  final String? refundStatus;
+  @override
+  final String? refundedAt;
+// 환불 가능 여부
+  @override
+  final bool canRefund;
+  @override
+  final int daysUntilRefundExpiry;
+
+  @override
+  String toString() {
+    return 'PaymentHistory(id: $id, impUid: $impUid, merchantUid: $merchantUid, amount: $amount, pointAmount: $pointAmount, feeAmount: $feeAmount, feeRate: $feeRate, status: $status, payMethod: $payMethod, orderName: $orderName, createdAt: $createdAt, paidAt: $paidAt, refundId: $refundId, refundAmount: $refundAmount, refundStatus: $refundStatus, refundedAt: $refundedAt, canRefund: $canRefund, daysUntilRefundExpiry: $daysUntilRefundExpiry)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PaymentHistoryImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.impUid, impUid) || other.impUid == impUid) &&
+            (identical(other.merchantUid, merchantUid) ||
+                other.merchantUid == merchantUid) &&
+            (identical(other.amount, amount) || other.amount == amount) &&
+            (identical(other.pointAmount, pointAmount) ||
+                other.pointAmount == pointAmount) &&
+            (identical(other.feeAmount, feeAmount) ||
+                other.feeAmount == feeAmount) &&
+            (identical(other.feeRate, feeRate) || other.feeRate == feeRate) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.payMethod, payMethod) ||
+                other.payMethod == payMethod) &&
+            (identical(other.orderName, orderName) ||
+                other.orderName == orderName) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.paidAt, paidAt) || other.paidAt == paidAt) &&
+            (identical(other.refundId, refundId) ||
+                other.refundId == refundId) &&
+            (identical(other.refundAmount, refundAmount) ||
+                other.refundAmount == refundAmount) &&
+            (identical(other.refundStatus, refundStatus) ||
+                other.refundStatus == refundStatus) &&
+            (identical(other.refundedAt, refundedAt) ||
+                other.refundedAt == refundedAt) &&
+            (identical(other.canRefund, canRefund) ||
+                other.canRefund == canRefund) &&
+            (identical(other.daysUntilRefundExpiry, daysUntilRefundExpiry) ||
+                other.daysUntilRefundExpiry == daysUntilRefundExpiry));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      impUid,
+      merchantUid,
+      amount,
+      pointAmount,
+      feeAmount,
+      feeRate,
+      status,
+      payMethod,
+      orderName,
+      createdAt,
+      paidAt,
+      refundId,
+      refundAmount,
+      refundStatus,
+      refundedAt,
+      canRefund,
+      daysUntilRefundExpiry);
+
+  /// Create a copy of PaymentHistory
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PaymentHistoryImplCopyWith<_$PaymentHistoryImpl> get copyWith =>
+      __$$PaymentHistoryImplCopyWithImpl<_$PaymentHistoryImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PaymentHistoryImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PaymentHistory implements PaymentHistory {
+  const factory _PaymentHistory(
+      {required final int id,
+      required final String impUid,
+      required final String merchantUid,
+      required final int amount,
+      required final int pointAmount,
+      required final int feeAmount,
+      required final double feeRate,
+      required final String status,
+      required final String payMethod,
+      required final String orderName,
+      required final String createdAt,
+      final String? paidAt,
+      final int? refundId,
+      final int? refundAmount,
+      final String? refundStatus,
+      final String? refundedAt,
+      required final bool canRefund,
+      required final int daysUntilRefundExpiry}) = _$PaymentHistoryImpl;
+
+  factory _PaymentHistory.fromJson(Map<String, dynamic> json) =
+      _$PaymentHistoryImpl.fromJson;
+
+// 결제 정보
+  @override
+  int get id;
+  @override
+  String get impUid;
+  @override
+  String get merchantUid;
+  @override
+  int get amount;
+  @override
+  int get pointAmount;
+  @override
+  int get feeAmount;
+  @override
+  double get feeRate;
+  @override
+  String get status;
+  @override
+  String get payMethod;
+  @override
+  String get orderName;
+  @override
+  String get createdAt;
+  @override
+  String? get paidAt; // 환불 정보
+  @override
+  int? get refundId;
+  @override
+  int? get refundAmount;
+  @override
+  String? get refundStatus;
+  @override
+  String? get refundedAt; // 환불 가능 여부
+  @override
+  bool get canRefund;
+  @override
+  int get daysUntilRefundExpiry;
+
+  /// Create a copy of PaymentHistory
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PaymentHistoryImplCopyWith<_$PaymentHistoryImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

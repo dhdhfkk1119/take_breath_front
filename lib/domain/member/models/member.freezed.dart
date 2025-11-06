@@ -23,6 +23,7 @@ mixin _$Member {
   String get accessToken => throw _privateConstructorUsedError;
   String? get refreshToken => throw _privateConstructorUsedError;
   int get id => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
   String get nickName => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String? get profileImageUrl =>
@@ -50,6 +51,7 @@ abstract class $MemberCopyWith<$Res> {
       {String accessToken,
       String? refreshToken,
       int id,
+      String name,
       String nickName,
       String email,
       String? profileImageUrl,
@@ -77,6 +79,7 @@ class _$MemberCopyWithImpl<$Res, $Val extends Member>
     Object? accessToken = null,
     Object? refreshToken = freezed,
     Object? id = null,
+    Object? name = null,
     Object? nickName = null,
     Object? email = null,
     Object? profileImageUrl = freezed,
@@ -98,6 +101,10 @@ class _$MemberCopyWithImpl<$Res, $Val extends Member>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
       nickName: null == nickName
           ? _value.nickName
           : nickName // ignore: cast_nullable_to_non_nullable
@@ -141,6 +148,7 @@ abstract class _$$MemberImplCopyWith<$Res> implements $MemberCopyWith<$Res> {
       {String accessToken,
       String? refreshToken,
       int id,
+      String name,
       String nickName,
       String email,
       String? profileImageUrl,
@@ -166,6 +174,7 @@ class __$$MemberImplCopyWithImpl<$Res>
     Object? accessToken = null,
     Object? refreshToken = freezed,
     Object? id = null,
+    Object? name = null,
     Object? nickName = null,
     Object? email = null,
     Object? profileImageUrl = freezed,
@@ -187,6 +196,10 @@ class __$$MemberImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
       nickName: null == nickName
           ? _value.nickName
           : nickName // ignore: cast_nullable_to_non_nullable
@@ -226,6 +239,7 @@ class _$MemberImpl implements _Member {
       {required this.accessToken,
       this.refreshToken,
       required this.id,
+      required this.name,
       required this.nickName,
       required this.email,
       this.profileImageUrl,
@@ -244,6 +258,8 @@ class _$MemberImpl implements _Member {
   @override
   final int id;
   @override
+  final String name;
+  @override
   final String nickName;
   @override
   final String email;
@@ -261,7 +277,7 @@ class _$MemberImpl implements _Member {
 
   @override
   String toString() {
-    return 'Member(accessToken: $accessToken, refreshToken: $refreshToken, id: $id, nickName: $nickName, email: $email, profileImageUrl: $profileImageUrl, role: $role, status: $status, phone: $phone, daysLeft: $daysLeft)';
+    return 'Member(accessToken: $accessToken, refreshToken: $refreshToken, id: $id, name: $name, nickName: $nickName, email: $email, profileImageUrl: $profileImageUrl, role: $role, status: $status, phone: $phone, daysLeft: $daysLeft)';
   }
 
   @override
@@ -274,6 +290,7 @@ class _$MemberImpl implements _Member {
             (identical(other.refreshToken, refreshToken) ||
                 other.refreshToken == refreshToken) &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.nickName, nickName) ||
                 other.nickName == nickName) &&
             (identical(other.email, email) || other.email == email) &&
@@ -289,7 +306,7 @@ class _$MemberImpl implements _Member {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, accessToken, refreshToken, id,
-      nickName, email, profileImageUrl, role, status, phone, daysLeft);
+      name, nickName, email, profileImageUrl, role, status, phone, daysLeft);
 
   /// Create a copy of Member
   /// with the given fields replaced by the non-null parameter values.
@@ -312,6 +329,7 @@ abstract class _Member implements Member {
       {required final String accessToken,
       final String? refreshToken,
       required final int id,
+      required final String name,
       required final String nickName,
       required final String email,
       final String? profileImageUrl,
@@ -328,6 +346,8 @@ abstract class _Member implements Member {
   String? get refreshToken;
   @override
   int get id;
+  @override
+  String get name;
   @override
   String get nickName;
   @override

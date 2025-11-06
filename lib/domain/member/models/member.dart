@@ -9,6 +9,7 @@ class Member with _$Member {
     required String accessToken,
     String? refreshToken,
     required int id,
+    required String name,
     required String nickName,
     required String email,
     String? profileImageUrl, // nullable 처리
