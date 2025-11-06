@@ -12,9 +12,9 @@ class ChatMessageResponse with _$ChatMessageResponse {
     required String content,
     required String messageType,
     required DateTime createdAt,
-    required bool isRead,
     String? imageUrl,
-    String? currentPoint,
+    int? currentPoint,
+    required bool isRead,
     @Default(false) bool isMe,
   }) = _ChatMessageResponse;
 
