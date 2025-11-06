@@ -19,6 +19,20 @@ class RecordRepository {
 
     final List<dynamic> content = response['content'] ?? [];
     final List<RecordItem> records = content.map((item) {
+      String? thumbnailUrl;
+      if (item['imageFiles'] != null &&
+          (item['imageFiles'] as List).isNotEmpty) {
+        try {
+          final firstImage = (item['imageFiles'] as List)[0] as Map;
+          final filePath = (firstImage['filePath'] ?? '') as String;
+          if (filePath.isNotEmpty) {
+            thumbnailUrl = _convertToValidUrl(filePath);
+          }
+        } catch (e) {
+          // URL 변환 오류 무시
+        }
+      }
+
       return RecordItem(
         id: item['id'],
         title: item['title'] ?? '',
@@ -26,13 +40,13 @@ class RecordRepository {
         date: item['recordDate'] ?? '',
         imageCount: item['imageFileCount'] ?? 0,
         audioCount: item['audioFileCount'] ?? 0,
+        thumbnailUrl: thumbnailUrl,
       );
     }).toList();
 
     return records;
   }
 
-  /// 기록 검색
   Future<List<RecordItem>> searchRecords({
     required String keyword,
     required int page,
@@ -46,6 +60,20 @@ class RecordRepository {
 
     final List<dynamic> content = response['content'] ?? [];
     final List<RecordItem> records = content.map((item) {
+      String? thumbnailUrl;
+      if (item['imageFiles'] != null &&
+          (item['imageFiles'] as List).isNotEmpty) {
+        try {
+          final firstImage = (item['imageFiles'] as List)[0] as Map;
+          final filePath = (firstImage['filePath'] ?? '') as String;
+          if (filePath.isNotEmpty) {
+            thumbnailUrl = _convertToValidUrl(filePath);
+          }
+        } catch (e) {
+          // URL 변환 오류 무시
+        }
+      }
+
       return RecordItem(
         id: item['id'],
         title: item['title'] ?? '',
@@ -53,6 +81,7 @@ class RecordRepository {
         date: item['recordDate'] ?? '',
         imageCount: item['imageFileCount'] ?? 0,
         audioCount: item['audioFileCount'] ?? 0,
+        thumbnailUrl: thumbnailUrl,
       );
     }).toList();
 
@@ -62,7 +91,6 @@ class RecordRepository {
   Future<Map<String, dynamic>> getRecord({required int id}) async {
     final response = await recordService.getRecord(id: id);
 
-    // imageFiles 변환
     if (response['imageFiles'] != null) {
       final imageFiles = response['imageFiles'] as List<dynamic>;
       response['imageFiles'] = imageFiles.map((file) {
@@ -75,7 +103,6 @@ class RecordRepository {
       }).toList();
     }
 
-    // audioFiles 변환
     if (response['audioFiles'] != null) {
       final audioFiles = response['audioFiles'] as List<dynamic>;
       response['audioFiles'] = audioFiles.map((file) {
@@ -88,7 +115,6 @@ class RecordRepository {
       }).toList();
     }
 
-    // videoFiles 변환
     if (response['videoFiles'] != null) {
       final videoFiles = response['videoFiles'] as List<dynamic>;
       response['videoFiles'] = videoFiles.map((file) {
@@ -104,7 +130,6 @@ class RecordRepository {
     return response;
   }
 
-  /// 기록 수정 (파일 포함)
   Future<void> updateRecord({
     required int id,
     required String title,
@@ -123,43 +148,39 @@ class RecordRepository {
     );
   }
 
-  /// 기록 삭제
   Future<void> deleteRecord({required int id}) async {
     await recordService.deleteRecord(id: id);
   }
 
-  /// ⭐ PDF 다운로드
   Future<Uint8List> downloadRecordPdf({required int id}) async {
     return await recordService.downloadRecordPdf(id: id);
   }
 
-  /// 파일 경로를 유효한 네트워크 URL로 변환
   String _convertToValidUrl(String filePath) {
     if (filePath.isEmpty || filePath == 'url1') {
-      return 'http://10.0.2.2:8080/uploads/records/images/sample_001.png';
+      return 'http://192.168.0.156:8080/uploads/records/images/sample_001.png';
     }
 
     if (filePath.startsWith('http')) {
       return filePath;
     }
 
-    // record → records 변환
     String convertedPath =
         filePath.replaceAll('/uploads/record/', '/uploads/records/');
 
     if (convertedPath.startsWith('/uploads/')) {
-      return 'http://10.0.2.2:8080$convertedPath';
+      return 'http://192.168.0.156:8080$convertedPath';
     }
 
     if (convertedPath.contains('uploads')) {
       final parts = convertedPath.split('uploads');
       if (parts.length > 1) {
-        String imageUrl = 'http://10.0.2.2:8080/uploads${parts[1]}';
+        String imageUrl = 'http://192.168.0.156:8080/uploads${parts[1]}';
         imageUrl = imageUrl.replaceAll('\\', '/');
         return imageUrl;
       }
     }
 
-    return 'http://10.0.2.2:8080/uploads/records/images/sample_001.png';
+    return 'http://192.168.0.156:8080/uploads/records/images/sample_001.png';
   }
 }

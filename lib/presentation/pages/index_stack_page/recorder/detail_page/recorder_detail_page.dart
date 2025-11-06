@@ -48,7 +48,6 @@ class RecorderDetailPage extends ConsumerWidget {
     );
   }
 
-  // ⭐ PDF 다운로드 기능
   Future<void> _downloadPdf(BuildContext context, WidgetRef ref) async {
     try {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -58,23 +57,33 @@ class RecorderDetailPage extends ConsumerWidget {
       final repository = ref.read(recordRepositoryProvider);
       final pdfBytes = await repository.downloadRecordPdf(id: record.id);
 
-      // 파일 저장
-      final directory = await getDownloadsDirectory();
-      if (directory == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('다운로드 폴더를 찾을 수 없습니다')),
-        );
-        return;
+      final directory = Directory('/storage/emulated/0/Download');
+
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
       }
 
-      final filePath =
-          '${directory.path}/기록_${record.id}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final fileName = 'record_${record.id}_$timestamp.pdf';
+      final filePath = '${directory.path}/$fileName';
+
       final file = File(filePath);
       await file.writeAsBytes(pdfBytes);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('다운로드 완료: ${file.path}')),
-      );
+      bool exists = await file.exists();
+
+      if (exists) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('다운로드 완료: $fileName'),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('파일 저장 실패')),
+        );
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('다운로드 실패: $e')),

@@ -16,7 +16,6 @@ class RecorderListPage extends ConsumerWidget {
     final currentPage = ref.watch(currentPageProvider);
     final searchKeyword = ref.watch(searchKeywordProvider);
 
-    // 검색 중이면 검색 결과, 아니면 목록
     final recordsAsync =
         searchKeyword == '__SEARCH_MODE__' || searchKeyword.isEmpty
             ? (searchKeyword == '__SEARCH_MODE__'
@@ -40,7 +39,7 @@ class RecorderListPage extends ConsumerWidget {
             itemCount: records.length,
             itemBuilder: (context, index) {
               final record = records[index];
-              return _buildRecordListTile(context, ref, record);
+              return _buildRecordListTile(context, record);
             },
           );
         },
@@ -74,7 +73,6 @@ class RecorderListPage extends ConsumerWidget {
             ),
           ).then((result) {
             if (result != null) {
-              // 글쓰기 후 목록 새로고침
               ref.refresh(recordListProvider(0));
             }
           });
@@ -92,7 +90,6 @@ class RecorderListPage extends ConsumerWidget {
     String searchKeyword,
   ) {
     if (searchKeyword.isNotEmpty) {
-      // 검색 중 - SearchAppBar 표시
       final TextEditingController controller = TextEditingController();
       controller.text = searchKeyword;
 
@@ -106,10 +103,8 @@ class RecorderListPage extends ConsumerWidget {
         },
       );
     } else {
-      // 일반 모드 - AppBar 표시
       return RecorderListAppBar(
         onSearchPressed: () {
-          // 검색 모드 활성화
           ref.read(searchKeywordProvider.notifier).state = '__SEARCH_MODE__';
         },
         onCalendarPressed: () {
@@ -130,8 +125,7 @@ class RecorderListPage extends ConsumerWidget {
     }
   }
 
-  Widget _buildRecordListTile(
-      BuildContext context, WidgetRef ref, dynamic record) {
+  Widget _buildRecordListTile(BuildContext context, dynamic record) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -165,15 +159,12 @@ class RecorderListPage extends ConsumerWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // 이미지 영역 - 백엔드에서 불러온 실제 이미지
-                  _buildImageThumbnail(ref, record),
+                  _buildImageThumbnail(record),
                   const SizedBox(width: 12),
-                  // 텍스트 영역
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // 제목
                         Text(
                           record.title,
                           style: const TextStyle(
@@ -184,7 +175,6 @@ class RecorderListPage extends ConsumerWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 6),
-                        // 내용
                         Text(
                           record.content,
                           maxLines: 2,
@@ -195,7 +185,6 @@ class RecorderListPage extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 6),
-                        // 날짜
                         Text(
                           record.date,
                           style: const TextStyle(
@@ -207,11 +196,9 @@ class RecorderListPage extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  // 파일 카운트 영역
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // 이미지 카운트
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -231,7 +218,6 @@ class RecorderListPage extends ConsumerWidget {
                         ],
                       ),
                       const SizedBox(height: 6),
-                      // 음성 카운트
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -262,88 +248,11 @@ class RecorderListPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildImageThumbnail(WidgetRef ref, dynamic record) {
-    final recordDetailAsync = ref.watch(recordDetailProvider(record.id));
+  Widget _buildImageThumbnail(dynamic record) {
+    final imageUrl = record.thumbnailUrl;
 
-    return recordDetailAsync.when(
-      data: (recordDetail) {
-        final imageFiles = recordDetail['imageFiles'] as List?;
-
-        if (imageFiles != null && imageFiles.isNotEmpty) {
-          final firstImage = imageFiles[0] as Map;
-          final imageUrl = (firstImage['filePath'] ?? '') as String;
-
-          if (imageUrl.isNotEmpty) {
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                imageUrl,
-                width: 90,
-                height: 90,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child;
-                  }
-                  return Container(
-                    width: 90,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Center(
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: 90,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      Icons.image,
-                      color: Colors.grey[600],
-                      size: 40,
-                    ),
-                  );
-                },
-              ),
-            );
-          }
-        }
-
-        // 이미지가 없는 경우
-        return Container(
-          width: 90,
-          height: 90,
-          decoration: BoxDecoration(
-            color: Colors.grey[300],
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(
-            Icons.image,
-            color: Colors.grey[600],
-            size: 40,
-          ),
-        );
-      },
-      loading: () => Container(
-        width: 90,
-        height: 90,
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: const Center(
-          child: CircularProgressIndicator(strokeWidth: 2),
-        ),
-      ),
-      error: (error, stack) => Container(
+    if (imageUrl == null || imageUrl.isEmpty) {
+      return Container(
         width: 90,
         height: 90,
         decoration: BoxDecoration(
@@ -355,6 +264,47 @@ class RecorderListPage extends ConsumerWidget {
           color: Colors.grey[600],
           size: 40,
         ),
+      );
+    }
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Image.network(
+        imageUrl,
+        width: 90,
+        height: 90,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          }
+          return Container(
+            width: 90,
+            height: 90,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Center(
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: 90,
+            height: 90,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.image,
+              color: Colors.grey[600],
+              size: 40,
+            ),
+          );
+        },
       ),
     );
   }

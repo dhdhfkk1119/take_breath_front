@@ -57,7 +57,6 @@ class RecordService {
     }
   }
 
-  /// 기록 검색
   Future<Map<String, dynamic>> searchRecords({
     required String keyword,
     required int page,
@@ -94,7 +93,6 @@ class RecordService {
     }
   }
 
-  /// 기록 수정 (파일 포함)
   Future<void> updateRecord({
     required int id,
     required String title,
@@ -109,7 +107,6 @@ class RecordService {
         'content': content,
       });
 
-      // 새로운 이미지 파일 추가
       if (imageFiles != null && imageFiles.isNotEmpty) {
         for (var file in imageFiles) {
           formData.files.add(
@@ -124,7 +121,6 @@ class RecordService {
         }
       }
 
-      // 새로운 오디오 파일 추가
       if (audioFiles != null && audioFiles.isNotEmpty) {
         for (var file in audioFiles) {
           formData.files.add(
@@ -139,7 +135,6 @@ class RecordService {
         }
       }
 
-      // 새로운 비디오 파일 추가
       if (videoFiles != null && videoFiles.isNotEmpty) {
         for (var file in videoFiles) {
           formData.files.add(
@@ -169,7 +164,6 @@ class RecordService {
     }
   }
 
-  /// 기록 삭제
   Future<void> deleteRecord({required int id}) async {
     try {
       final response = await _dio.delete('/records/$id');
@@ -184,7 +178,6 @@ class RecordService {
     }
   }
 
-  /// ⭐ PDF 다운로드
   Future<Uint8List> downloadRecordPdf({required int id}) async {
     try {
       final response = await _dio.get(
