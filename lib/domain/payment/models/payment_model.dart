@@ -54,3 +54,36 @@ class PaymentResult with _$PaymentResult {
   factory PaymentResult.fromJson(Map<String, dynamic> json) =>
       _$PaymentResultFromJson(json);
 }
+
+// 결제+환불 통합 내역
+@freezed
+class PaymentHistory with _$PaymentHistory {
+  const factory PaymentHistory({
+    // 결제 정보
+    required int id,
+    required String impUid,
+    required String merchantUid,
+    required int amount,
+    required int pointAmount,
+    required int feeAmount,
+    required double feeRate,
+    required String status,
+    required String payMethod,
+    required String orderName,
+    required String createdAt,
+    String? paidAt,
+
+    // 환불 정보
+    int? refundId,
+    int? refundAmount,
+    String? refundStatus,
+    String? refundedAt,
+
+    // 환불 가능 여부
+    required bool canRefund,
+    required int daysUntilRefundExpiry,
+  }) = _PaymentHistory;
+
+  factory PaymentHistory.fromJson(Map<String, dynamic> json) =>
+      _$PaymentHistoryFromJson(json);
+}

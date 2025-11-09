@@ -14,9 +14,9 @@ _$CommunityCommentResponseImpl _$$CommunityCommentResponseImplFromJson(
       memberId: (json['memberId'] as num).toInt(),
       memberName: json['memberName'] as String,
       createdAt: json['createdAt'] as String,
-      updatedAt: json['updatedAt'] as String,
-      deleted: json['deleted'] as bool,
-      modified: json['modified'] as bool,
+      updatedAt: json['updatedAt'] as String? ?? "",
+      modified: json['modified'] as bool? ?? false,
+      deleted: json['deleted'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$CommunityCommentResponseImplToJson(
@@ -28,6 +28,6 @@ Map<String, dynamic> _$$CommunityCommentResponseImplToJson(
       'memberName': instance.memberName,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
-      'deleted': instance.deleted,
       'modified': instance.modified,
+      'deleted': instance.deleted,
     };

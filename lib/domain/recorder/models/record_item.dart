@@ -11,6 +11,7 @@ class RecordItem with _$RecordItem {
     required String date,
     required int imageCount,
     required int audioCount,
+    String? thumbnailUrl,
   }) = _RecordItem;
 }
 

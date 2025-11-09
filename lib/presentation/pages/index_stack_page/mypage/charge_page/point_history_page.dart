@@ -126,7 +126,7 @@ class PointHistoryPage extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            '${isCharge ? '+' : '-'}${transaction.amount}P',
+                            '${isCharge ? '+' : ''}${transaction.amount}P',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,

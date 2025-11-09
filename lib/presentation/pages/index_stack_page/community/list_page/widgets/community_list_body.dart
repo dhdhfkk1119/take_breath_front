@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/utils/my_http.dart';
 import 'package:take_breath/domain/community/providers/community_list_notifier.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/community/list_page/widgets/community_list_item.dart';
 

@@ -3,7 +3,7 @@ import '../charge_page/widgets/user_activity_button.dart';
 
 class UserActivityGrid extends StatelessWidget {
   // 포인트 충전 & 내역
-  final VoidCallback onPointChargePressed;
+  final VoidCallback onPaymentHistoryPressed;
   final VoidCallback onPointHistoryPressed;
 
   // 기존 액티비티
@@ -14,7 +14,7 @@ class UserActivityGrid extends StatelessWidget {
 
   const UserActivityGrid({
     Key? key,
-    required this.onPointChargePressed,
+    required this.onPaymentHistoryPressed,
     required this.onPointHistoryPressed,
     required this.onPostListPressed,
     required this.onFavoriteListPressed,
@@ -84,8 +84,10 @@ class UserActivityGrid extends StatelessWidget {
               const SizedBox(width: 12),
               // 오른쪽 빈칸
               Expanded(
-                child: SizedBox(
-                  height: 80,
+                child: UserActivityButton(
+                  icon: Icons.payment_outlined,
+                  label: '결제 내역',
+                  onPressed: onPaymentHistoryPressed,
                 ),
               ),
             ],

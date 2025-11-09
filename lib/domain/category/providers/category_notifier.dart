@@ -11,15 +11,19 @@ class CategoryNotifier extends Notifier<BaseState<List<Category>>> {
   final CategoryRepository _repository = CategoryRepository();
 
   @override
-  BaseState<List<Category>> build() => BaseState.initial();
+  BaseState<List<Category>> build() => const BaseState<List<Category>>(
+        isLoading: false,
+        error: null,
+        data: [],
+      );
 
   Future<void> getCategoryList() async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.loading();
     try {
       final categories = await _repository.getCategoryList();
-      state = state.copyWith(isLoading: false, data: categories);
+      state = state.success(categories);
     } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
+      state = state.failure(e.toString());
     }
   }
 }

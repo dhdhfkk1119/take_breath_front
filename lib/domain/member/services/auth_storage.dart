@@ -22,6 +22,7 @@ class AuthStorage {
   static Future<void> saveUserInfo(Member member) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('id', member.id.toString());
+    await prefs.setString('name', member.name);
     await prefs.setString('nickName', member.nickName);
     await prefs.setString('email', member.email);
     await prefs.setString('profileImageUrl', member.profileImageUrl ?? "");
@@ -39,6 +40,7 @@ class AuthStorage {
 
     return Member(
       id: int.parse(id),
+      name: prefs.getString('name') ?? '',
       nickName: prefs.getString('nickName') ?? '',
       email: prefs.getString('email') ?? '',
       profileImageUrl: prefs.getString('profileImageUrl') ?? '',
@@ -55,6 +57,7 @@ class AuthStorage {
     await prefs.remove('accessToken');
     await prefs.remove('refreshToken');
     await prefs.remove('id');
+    await prefs.remove('name');
     await prefs.remove('nickName');
     await prefs.remove('email');
     await prefs.remove('profileImageUrl');
