@@ -7,10 +7,7 @@ class ChatMessageRepository {
   Future<List<ChatMessageResponse>> getChatMessages(int roomId) async {
     try {
       final response = await dio.get(
-        "/chat/messages",
-        queryParameters: {
-          'roomId': roomId,
-        },
+        "/chat/messages/$roomId",
       );
 
       if (response.statusCode == 200) {

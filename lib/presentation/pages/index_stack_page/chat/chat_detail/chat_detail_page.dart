@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 import 'package:take_breath/domain/chat/models/chat_message_response.dart';
+import 'package:take_breath/domain/chat/models/chat_message_ui.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_detail/widgets/chat_detail_body.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_detail/widgets/chat_input_field.dart';
 
+import '../../../../../domain/chat/providers/chat_message_repository_provider.dart';
 import '../../../../../domain/member/services/auth_storage.dart';
 
 class ChatDetailPage extends ConsumerStatefulWidget {
@@ -24,16 +26,59 @@ class ChatDetailPage extends ConsumerStatefulWidget {
 }
 
 class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
-  StompClient? stompClient;
-  bool _isConnected = false;
-  final List<ChatMessageResponse> messages = [];
+  StompClient? stompClient; // stomp 클라
+  bool _isConnected = false; // 연결 유무
+  final List<ChatMessageUI> messages = []; // 전체 메세지(이전 메세지, 현재 메세지)
+  int? _currentUserId;
 
   @override
   void initState() {
     super.initState();
-    _connectStomp();
+    _initChat();
   }
 
+  Future<void> _initChat() async {
+    final userInfo = await AuthStorage.getUserInfo();
+    _currentUserId = userInfo?.id;
+
+    if (_currentUserId == null) {
+      debugPrint('❌ 사용자 정보 없음 - 로그인 필요');
+      return;
+    }
+
+    debugPrint('✅ 현재 사용자 ID: $_currentUserId');
+
+    await _loadChatHistory();
+    await _connectStomp();
+  }
+
+  // 채팅 이력 가져오기
+  Future<void> _loadChatHistory() async {
+    try {
+      final repository = ref.read(chatMessageRepositoryProvider);
+      final loadMessages = await repository.getChatMessages(widget.roomId);
+
+      setState(() {
+        // ✅ 2. ChatMessageResponse → ChatMessageUI 변환
+        final uiMessages = <ChatMessageUI>[];
+        for (int i = 0; i < loadMessages.length; i++) {
+          final msg = loadMessages[i];
+          final prevMsg = i > 0 ? uiMessages[i - 1] : null;
+
+          uiMessages.add(_convertToUIModel(msg, prevMsg));
+        }
+
+        // reversed로 최신 메시지가 위로
+        messages.addAll(uiMessages.reversed);
+      });
+
+      debugPrint('✅ 과거 메시지 ${messages.length}개 로드 완료');
+    } catch (e) {
+      debugPrint("❌ 이전 메시지 로드 실패: $e");
+    }
+  }
+
+  // 웹소켓 연결 설정
   Future<void> _connectStomp() async {
     final token = await AuthStorage.getAccessToken();
 
@@ -61,11 +106,13 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
         },
         onDisconnect: (frame) {
           debugPrint('🛑 WebSocket 연결 종료');
-          setState(() => _isConnected = false);
+          if (mounted) {
+            setState(() => _isConnected = false);
+          }
         },
       ),
     );
-    stompClient!.activate();  // 연결 시작
+    stompClient!.activate(); // 연결 시작
   }
 
   // 연결 성공 -> 구독
@@ -81,13 +128,16 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
       headers: {'Authorization': 'Bearer $token'},
       callback: (frame) {
         if (frame.body != null) {
-
-          final decoded = jsonDecode(frame.body!);      // 받은 응답 String -> Map 변환
-          final data = decoded['response'] ?? decoded;  // ApiResult 구조 파싱
-          final msg = ChatMessageResponse.fromJson(data); // json 변환ㅁㄴㅇ
-          setState(() {
-            messages.add(msg);
-          });
+          final decoded = jsonDecode(frame.body!); // 받은 응답 String -> Map 변환
+          final data = decoded['response'] ?? decoded; // ApiResult 구조 파싱
+          final msg = ChatMessageResponse.fromJson(data); // json 변환
+          if (mounted) {
+            setState(() {
+              // ✅ 3. 이전 메시지 참조해서 변환
+              final prevMsg = messages.isNotEmpty ? messages.first : null;
+              messages.insert(0, _convertToUIModel(msg, prevMsg));
+            });
+          }
         }
       },
     );
@@ -109,6 +159,35 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
     );
   }
 
+  // ChatMessageResponse를 ChatMessageUI로 변환하는 핵심 메서드
+  ChatMessageUI _convertToUIModel(
+    ChatMessageResponse response,
+    ChatMessageUI? previousMessage,
+  ) {
+    // isMe 계산
+    final isMe = response.senderId == _currentUserId;
+
+    // 이전 메시지와 비교
+    final isSameSender = previousMessage?.senderId == response.senderId;
+    final minutesDiff = previousMessage != null
+        ? response.createdAt
+            .difference(previousMessage.createdAt)
+            .inMinutes
+            .abs()
+        : 999;
+
+    // ✅ 같은 발신자 + 5분 이내면 프로필/시간 숨김
+    final shouldShowProfile = !isSameSender || minutesDiff >= 5;
+    final shouldShowTimestamp = !isSameSender || minutesDiff >= 5;
+
+    return ChatMessageUI(
+      message: response,
+      isMe: isMe,
+      showProfile: shouldShowProfile,
+      showTimestamp: shouldShowTimestamp,
+    );
+  }
+
   @override
   void dispose() {
     stompClient?.deactivate();
@@ -121,7 +200,9 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
       appBar: AppBar(title: Text(widget.roomName)),
       body: Column(
         children: [
-          Expanded(child: ChatDetailBody(messages: messages)),
+          Expanded(
+            child: ChatDetailBody(messages: messages),
+          ),
           ChatInputField(
             onSend: _sendMessage,
             enabled: _isConnected,
