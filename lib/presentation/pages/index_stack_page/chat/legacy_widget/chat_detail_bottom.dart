@@ -3,6 +3,56 @@
 import 'package:flutter/material.dart';
 import 'package:take_breath/_core/constants/custom_color.dart';
 
+class ChatDetailBottom extends StatefulWidget {
+  final void Function(String text) onSend;
+
+  const ChatDetailBottom({super.key, required this.onSend});
+
+  @override
+  State<ChatDetailBottom> createState() => _ChatDetailBottomState();
+}
+
+class _ChatDetailBottomState extends State<ChatDetailBottom> {
+  final TextEditingController _controller = TextEditingController();
+
+  void _handleSend() {
+    final text = _controller.text.trim();
+    if (text.isNotEmpty) {
+      widget.onSend(text); // ✅ 부모에서 받은 함수 실행
+      _controller.clear();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: const BoxDecoration(
+        border: Border(top: BorderSide(color: Colors.grey, width: 0.5)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _controller,
+              decoration: const InputDecoration(
+                hintText: "메시지를 입력하세요...",
+                border: InputBorder.none,
+              ),
+              onSubmitted: (_) => _handleSend(),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.send, color: Colors.blue),
+            onPressed: _handleSend,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/*
 class ChatDetailBottom extends StatelessWidget {
   const ChatDetailBottom({super.key});
 
@@ -49,3 +99,4 @@ class ChatDetailBottom extends StatelessWidget {
     );
   }
 }
+*/
