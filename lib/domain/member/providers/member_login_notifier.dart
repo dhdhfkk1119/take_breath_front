@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/domain/member/models/is_email_check.dart';
 import 'package:take_breath/domain/member/models/member.dart';
 import 'package:take_breath/domain/member/repositories/member_repository.dart';
 import 'package:take_breath/domain/member/services/auth_storage.dart';
+import 'package:take_breath/domain/sse_notification/service/connect_sse.dart';
 
 import 'member_repository_provider.dart';
 
@@ -23,14 +25,19 @@ class MemberNotifier extends Notifier<Member?> {
   Future<void> loginUser(String email, String password, bool autoLogin) async {
     final member = await memberRepository.login(email, password, autoLogin);
 
+    // member가 null이 아니라면 데이터를 저장함
+    if(member != null) {
+      await AuthStorage.saveUserInfo(member);
+    }
+
     if (autoLogin) {
       await AuthStorage.saveUserInfo(member);
     } else {
-      await AuthStorage.saveTokens(
-          member.accessToken, member.refreshToken ?? "");
+      await AuthStorage.saveTokens(member.accessToken, member.refreshToken ?? "");
     }
 
     state = member; // 상태 갱신
+    connectSSE(member.id);
   }
 
   // 자동 로그인 시도

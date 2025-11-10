@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../service/notification_service.dart';
+import '../../../../../domain/sse_notification/service/notification_service.dart';
 import 'widgets/settings_notification_section.dart';
 import 'widgets/settings_account_section.dart';
 import 'widgets/settings_display_section.dart';

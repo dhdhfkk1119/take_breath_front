@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "498079476090",
+    "project_id": "takeabreath-72320",
+    "storage_bucket": "takeabreath-72320.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:498079476090:android:c3cf2ab95e1121557ecec3",
+        "android_client_info": {
+          "package_name": "com.example.take_breath"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZBxydOZ971r_jhWOCS8ZLoVsRe6C2qUQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

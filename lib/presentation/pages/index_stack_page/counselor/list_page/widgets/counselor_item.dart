@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import '../models/counselor_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/domain/counselor/models/counselor_response.dart';
 
-class CounselorItem extends StatefulWidget {
-  final CounselorModel counselor;
+class CounselorItem extends ConsumerStatefulWidget {
+  final CounselorResponse counselor;
   final VoidCallback onTap;
 
   const CounselorItem({
@@ -13,16 +14,16 @@ class CounselorItem extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CounselorItem> createState() => _CounselorItemState();
+  ConsumerState<CounselorItem> createState() => _CounselorItemState();
 }
 
-class _CounselorItemState extends State<CounselorItem> {
+class _CounselorItemState extends ConsumerState<CounselorItem> {
   late bool isFavorite;
 
   @override
   void initState() {
     super.initState();
-    isFavorite = widget.counselor.isFavorite;
+    isFavorite = false;
   }
 
   @override
@@ -75,25 +76,6 @@ class _CounselorItemState extends State<CounselorItem> {
                         // 뱃지 + 이름
                         Row(
                           children: [
-                            if (widget.counselor.badge.isNotEmpty)
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.orange[100],
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  widget.counselor.badge,
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.orange[700],
-                                  ),
-                                ),
-                              ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
@@ -109,7 +91,7 @@ class _CounselorItemState extends State<CounselorItem> {
                         const SizedBox(height: 4),
                         // 자격증
                         Text(
-                          widget.counselor.specialty,
+                          "자격증",
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.grey[600],
@@ -138,7 +120,7 @@ class _CounselorItemState extends State<CounselorItem> {
               const SizedBox(height: 12),
               // 설명
               Text(
-                widget.counselor.description,
+                "서렴ㅇ",
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.grey[600],
@@ -188,7 +170,7 @@ class _CounselorItemState extends State<CounselorItem> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            '${widget.counselor.consultFee ~/ 1000}만',
+                            '1000만',
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
@@ -229,7 +211,7 @@ class _CounselorItemState extends State<CounselorItem> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            '${widget.counselor.reviewFee ~/ 1000}만',
+                            '1000만',
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,

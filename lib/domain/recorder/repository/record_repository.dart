@@ -17,21 +17,12 @@ class RecordRepository {
       size: size,
     );
 
-    final List<dynamic> content = response['content'] ?? [];
+    final List<dynamic> content = response['response']?['content'] ?? [];
+
     final List<RecordItem> records = content.map((item) {
-      String? thumbnailUrl;
-      if (item['imageFiles'] != null &&
-          (item['imageFiles'] as List).isNotEmpty) {
-        try {
-          final firstImage = (item['imageFiles'] as List)[0] as Map;
-          final filePath = (firstImage['filePath'] ?? '') as String;
-          if (filePath.isNotEmpty) {
-            thumbnailUrl = _convertToValidUrl(filePath);
-          }
-        } catch (e) {
-          // URL 변환 오류 무시
-        }
-      }
+      final String? rawThumbnailUrl = item['thumbnailUrl'];
+      final String? thumbnailUrl =
+          rawThumbnailUrl != null ? _convertToValidUrl(rawThumbnailUrl) : null;
 
       return RecordItem(
         id: item['id'],
@@ -58,21 +49,12 @@ class RecordRepository {
       size: size,
     );
 
-    final List<dynamic> content = response['content'] ?? [];
+    final List<dynamic> content = response['response']?['content'] ?? [];
+
     final List<RecordItem> records = content.map((item) {
-      String? thumbnailUrl;
-      if (item['imageFiles'] != null &&
-          (item['imageFiles'] as List).isNotEmpty) {
-        try {
-          final firstImage = (item['imageFiles'] as List)[0] as Map;
-          final filePath = (firstImage['filePath'] ?? '') as String;
-          if (filePath.isNotEmpty) {
-            thumbnailUrl = _convertToValidUrl(filePath);
-          }
-        } catch (e) {
-          // URL 변환 오류 무시
-        }
-      }
+      final String? rawThumbnailUrl = item['thumbnailUrl'];
+      final String? thumbnailUrl =
+          rawThumbnailUrl != null ? _convertToValidUrl(rawThumbnailUrl) : null;
 
       return RecordItem(
         id: item['id'],
@@ -90,10 +72,11 @@ class RecordRepository {
 
   Future<Map<String, dynamic>> getRecord({required int id}) async {
     final response = await recordService.getRecord(id: id);
+    final recordData = response['response'] ?? response;
 
-    if (response['imageFiles'] != null) {
-      final imageFiles = response['imageFiles'] as List<dynamic>;
-      response['imageFiles'] = imageFiles.map((file) {
+    if (recordData['imageFiles'] != null) {
+      final imageFiles = recordData['imageFiles'] as List<dynamic>;
+      recordData['imageFiles'] = imageFiles.map((file) {
         final filePath = file['filePath'] as String? ?? '';
         String imageUrl = _convertToValidUrl(filePath);
         return {
@@ -103,9 +86,9 @@ class RecordRepository {
       }).toList();
     }
 
-    if (response['audioFiles'] != null) {
-      final audioFiles = response['audioFiles'] as List<dynamic>;
-      response['audioFiles'] = audioFiles.map((file) {
+    if (recordData['audioFiles'] != null) {
+      final audioFiles = recordData['audioFiles'] as List<dynamic>;
+      recordData['audioFiles'] = audioFiles.map((file) {
         final filePath = file['filePath'] as String? ?? '';
         String audioUrl = _convertToValidUrl(filePath);
         return {
@@ -115,9 +98,9 @@ class RecordRepository {
       }).toList();
     }
 
-    if (response['videoFiles'] != null) {
-      final videoFiles = response['videoFiles'] as List<dynamic>;
-      response['videoFiles'] = videoFiles.map((file) {
+    if (recordData['videoFiles'] != null) {
+      final videoFiles = recordData['videoFiles'] as List<dynamic>;
+      recordData['videoFiles'] = videoFiles.map((file) {
         final filePath = file['filePath'] as String? ?? '';
         String videoUrl = _convertToValidUrl(filePath);
         return {
@@ -127,7 +110,7 @@ class RecordRepository {
       }).toList();
     }
 
-    return response;
+    return recordData;
   }
 
   Future<void> updateRecord({
@@ -137,6 +120,7 @@ class RecordRepository {
     List<File>? imageFiles,
     List<File>? audioFiles,
     List<File>? videoFiles,
+    List<int>? deletedImageIds,
   }) async {
     await recordService.updateRecord(
       id: id,
@@ -145,6 +129,7 @@ class RecordRepository {
       imageFiles: imageFiles,
       audioFiles: audioFiles,
       videoFiles: videoFiles,
+      deletedImageIds: deletedImageIds,
     );
   }
 
@@ -157,30 +142,30 @@ class RecordRepository {
   }
 
   String _convertToValidUrl(String filePath) {
-    if (filePath.isEmpty || filePath == 'url1') {
-      return 'http://192.168.0.156:8080/uploads/records/images/sample_001.png';
+    if (filePath.isEmpty) {
+      return '';
     }
 
-    if (filePath.startsWith('http')) {
+    if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
       return filePath;
     }
 
-    String convertedPath =
-        filePath.replaceAll('/uploads/record/', '/uploads/records/');
-
-    if (convertedPath.startsWith('/uploads/')) {
-      return 'http://192.168.0.156:8080$convertedPath';
+    if (filePath.startsWith('/uploads/')) {
+      return 'http://192.168.0.156:8080$filePath';
     }
 
-    if (convertedPath.contains('uploads')) {
-      final parts = convertedPath.split('uploads');
+    if (filePath.startsWith('records/')) {
+      return 'http://192.168.0.156:8080/uploads/$filePath';
+    }
+
+    if (filePath.contains('uploads')) {
+      final parts = filePath.split('uploads');
       if (parts.length > 1) {
         String imageUrl = 'http://192.168.0.156:8080/uploads${parts[1]}';
-        imageUrl = imageUrl.replaceAll('\\', '/');
-        return imageUrl;
+        return imageUrl.replaceAll('\\', '/');
       }
     }
 
-    return 'http://192.168.0.156:8080/uploads/records/images/sample_001.png';
+    return '';
   }
 }

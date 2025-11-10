@@ -1,7 +1,13 @@
+import 'package:take_breath/_core/utils/api_service.dart';
 import 'package:take_breath/_core/utils/my_http.dart';
+import 'package:take_breath/_core/utils/page_request.dart';
+import 'package:take_breath/domain/counselor/models/counselor_response.dart';
 import 'package:take_breath/domain/counselor/models/counselor_sign.dart';
 
 class CounselorRepository {
+  final ApiService apiService;
+  CounselorRepository({required this.apiService});
+
   // 상담사 회원가입
   Future<void> counselorSign(CounselorSign counselorSign) async {
     final List<Map<String, dynamic>> agreementsJson =
@@ -36,5 +42,21 @@ class CounselorRepository {
     } catch (e) {
       throw new Exception("서버가 연결되어 있지 않습니다: $e");
     }
+  }
+
+  Future<PageResponse<CounselorResponse>> findAll(
+      {int page = 0, int size = 10}) async {
+    final data = await apiService.get("/counselors", queryParameters: {
+      "page": page,
+      "size": size,
+    });
+
+    return PageResponse.fromJson(
+        data, (json) => CounselorResponse.fromJson(json));
+  }
+
+  Future<CounselorResponse> getCounselorById(int id) async {
+    final data = await apiService.get("/counselors/$id");
+    return CounselorResponse.fromJson(data);
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../list_page/models/counselor_model.dart';
+import 'package:take_breath/domain/counselor/models/counselor_response.dart';
 
 class CounselorDetailReview extends StatefulWidget {
-  final CounselorModel counselor;
+  final CounselorResponse counselor;
 
   const CounselorDetailReview({
     Key? key,
@@ -109,7 +109,7 @@ class _CounselorDetailReviewState extends State<CounselorDetailReview>
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '${widget.counselor.rating} (${widget.counselor.reviewCount})',
+                      '평점 / 댓글 갯수',
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,

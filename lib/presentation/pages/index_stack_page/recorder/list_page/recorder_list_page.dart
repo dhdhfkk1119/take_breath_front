@@ -140,7 +140,6 @@ class RecorderListPage extends ConsumerWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         child: Material(
-          color: Colors.white,
           borderRadius: BorderRadius.circular(8),
           child: InkWell(
             borderRadius: BorderRadius.circular(8),

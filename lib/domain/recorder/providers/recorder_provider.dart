@@ -54,7 +54,7 @@ final updateRecordProvider =
     StateNotifierProvider<UpdateRecordNotifier, AsyncValue<void>>(
   (ref) {
     final repository = ref.watch(recordRepositoryProvider);
-    return UpdateRecordNotifier(repository);
+    return UpdateRecordNotifier(repository, ref);
   },
 );
 
@@ -71,8 +71,10 @@ class DeleteRecordNotifier extends StateNotifier<AsyncValue<void>> {
 
 class UpdateRecordNotifier extends StateNotifier<AsyncValue<void>> {
   final RecordRepository _repository;
+  final Ref _ref;
 
-  UpdateRecordNotifier(this._repository) : super(const AsyncValue.data(null));
+  UpdateRecordNotifier(this._repository, this._ref)
+      : super(const AsyncValue.data(null));
 
   Future<void> updateRecord({
     required int id,
@@ -81,17 +83,26 @@ class UpdateRecordNotifier extends StateNotifier<AsyncValue<void>> {
     List<File>? imageFiles,
     List<File>? audioFiles,
     List<File>? videoFiles,
+    List<int>? deletedImageIds,
   }) async {
     state = const AsyncValue.loading();
+
     state = await AsyncValue.guard(
-      () => _repository.updateRecord(
-        id: id,
-        title: title,
-        content: content,
-        imageFiles: imageFiles,
-        audioFiles: audioFiles,
-        videoFiles: videoFiles,
-      ),
+      () async {
+        await _repository.updateRecord(
+          id: id,
+          title: title,
+          content: content,
+          imageFiles: imageFiles,
+          audioFiles: audioFiles,
+          videoFiles: videoFiles,
+          deletedImageIds: deletedImageIds,
+        );
+
+        _ref.invalidate(recordDetailProvider(id));
+
+        _ref.invalidate(recordListProvider);
+      },
     );
   }
 }

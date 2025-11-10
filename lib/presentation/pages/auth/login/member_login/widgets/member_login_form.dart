@@ -64,8 +64,8 @@ class _MemberLoginFormState extends ConsumerState<MemberLoginForm> {
             click: () async {
               try {
                 await loginNotifier.loginUser(
-                  "user@test.com",
-                  "1234",
+                  _emailController.text,
+                  _passwordController.text,
                   _isAutoLoginChecked,
                 );
                 if (mounted) {

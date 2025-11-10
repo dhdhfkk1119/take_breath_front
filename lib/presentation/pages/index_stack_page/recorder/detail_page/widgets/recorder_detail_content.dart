@@ -46,6 +46,7 @@ class RecorderDetailContent extends StatelessWidget {
 
   // ========== 이미지 섹션 ==========
   Widget _buildImageSection(List? imageFiles) {
+    print("이미지 정보들 : ${data['imageFiles']} \n");
     if (imageFiles == null || imageFiles.isEmpty) {
       return const SizedBox.shrink();
     }

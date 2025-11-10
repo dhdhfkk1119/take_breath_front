@@ -12,8 +12,9 @@ class CustomTextFormField extends StatelessWidget {
   final bool enabled;
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
+  double? size;
 
-  const CustomTextFormField({
+  CustomTextFormField({
     Key? key,
     this.hint,
     this.obscureText = false,
@@ -25,6 +26,7 @@ class CustomTextFormField extends StatelessWidget {
     this.enabled = true,
     this.inputFormatters,
     this.keyboardType, // 위젯 속성으로 키보드 타입 받기
+    this.size,
   }) : super(key: key);
 
   @override
@@ -76,6 +78,9 @@ class CustomTextFormField extends StatelessWidget {
       enabled: enabled,
       inputFormatters: finalInputFormatters,
       keyboardType: finalKeyboardType,
+      style: TextStyle(
+        fontSize: size ?? 14,
+      ),
     );
   }
 }

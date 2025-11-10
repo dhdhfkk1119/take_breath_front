@@ -26,6 +26,12 @@ class _RecorderEditPageState extends ConsumerState<RecorderEditPage> {
   List<File> selectedImages = [];
   List<File> selectedAudios = [];
 
+  // 삭제할 이미지 ID 추적
+  List<int> deletedImageIds = [];
+
+  // 기존 이미지 목록 (삭제 시 UI에서 제거하기 위해)
+  List<Map<String, dynamic>> existingImages = [];
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +41,11 @@ class _RecorderEditPageState extends ConsumerState<RecorderEditPage> {
     widget.recordDetail.whenData((data) {
       _titleController.text = data['title'] ?? '';
       _contentController.text = data['content'] ?? '';
+
+      existingImages = (data['imageFiles'] as List?)
+              ?.map((e) => Map<String, dynamic>.from(e as Map))
+              .toList() ??
+          [];
     });
   }
 
@@ -149,104 +160,115 @@ class _RecorderEditPageState extends ConsumerState<RecorderEditPage> {
     );
   }
 
+  //  이미지 섹션 완전히 새로 작성
   Widget _buildImageEditSection() {
-    return widget.recordDetail.when(
-      data: (data) {
-        final existingImages = (data['imageFiles'] as List?)?.cast<Map>() ?? [];
+    // 삭제되지 않은 기존 이미지만 필터링
+    final visibleExistingImages = existingImages
+        .where((image) => !deletedImageIds.contains(image['id'] as int))
+        .toList();
 
-        if (selectedImages.isEmpty && existingImages.isEmpty) {
-          return const SizedBox.shrink();
-        }
+    if (selectedImages.isEmpty && visibleExistingImages.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              '이미지',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 100,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  // 기존 이미지
-                  ...existingImages.map((image) {
-                    final imageUrl = image['filePath'] as String? ?? '';
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Stack(
-                          children: [
-                            Image.network(
-                              imageUrl,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          '이미지',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 100,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              // 기존 이미지 (삭제되지 않은 것만)
+              ...visibleExistingImages.map((image) {
+                final imageUrl = image['filePath'] as String? ?? '';
+                final imageId = image['id'] as int;
+
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Stack(
+                      children: [
+                        Image.network(
+                          imageUrl,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
                               width: 100,
                               height: 100,
-                              fit: BoxFit.cover,
-                            ),
-                            Positioned(
-                              top: -10,
-                              right: -10,
-                              child: IconButton(
-                                icon: const Icon(Icons.close,
-                                    color: Colors.red, size: 24),
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('기존 이미지는 삭제할 수 없습니다'),
-                                    ),
-                                  );
-                                },
+                              color: Colors.grey[300],
+                              child: const Center(
+                                child:
+                                    Text('0', style: TextStyle(fontSize: 32)),
                               ),
-                            ),
-                          ],
+                            );
+                          },
                         ),
-                      ),
-                    );
-                  }),
-                  // 새로운 이미지
-                  ...selectedImages.map((image) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Stack(
-                          children: [
-                            Image.file(
-                              image,
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
-                            ),
-                            Positioned(
-                              top: -10,
-                              right: -10,
-                              child: IconButton(
-                                icon: const Icon(Icons.close,
-                                    color: Colors.red, size: 24),
-                                onPressed: () {
-                                  setState(() {
-                                    selectedImages.remove(image);
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
+                        Positioned(
+                          top: -10,
+                          right: -10,
+                          child: IconButton(
+                            icon: const Icon(Icons.close,
+                                color: Colors.red, size: 24),
+                            onPressed: () {
+                              //  기존 이미지 삭제 처리
+                              setState(() {
+                                deletedImageIds.add(imageId);
+                              });
+                            },
+                          ),
                         ),
-                      ),
-                    );
-                  }),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
-        );
-      },
-      loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+
+              //  새로 추가한 이미지
+              ...selectedImages.map((image) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Stack(
+                      children: [
+                        Image.file(
+                          image,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                        Positioned(
+                          top: -10,
+                          right: -10,
+                          child: IconButton(
+                            icon: const Icon(Icons.close,
+                                color: Colors.red, size: 24),
+                            onPressed: () {
+                              setState(() {
+                                selectedImages.remove(image);
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
     );
   }
 
@@ -321,7 +343,11 @@ class _RecorderEditPageState extends ConsumerState<RecorderEditPage> {
     }
 
     try {
-      // ⭐ 변경: newImageFiles → imageFiles (Repository/Provider와 일치)
+      print('========== RecorderEditPage.saveRecord ==========');
+      print('deletedImageIds: $deletedImageIds');
+      print('selectedImages count: ${selectedImages.length}');
+      print('====================================================');
+
       await ref.read(updateRecordProvider.notifier).updateRecord(
             id: widget.recordId,
             title: _titleController.text,
@@ -329,12 +355,15 @@ class _RecorderEditPageState extends ConsumerState<RecorderEditPage> {
             imageFiles: selectedImages.isNotEmpty ? selectedImages : null,
             audioFiles: selectedAudios.isNotEmpty ? selectedAudios : null,
             videoFiles: null,
+            deletedImageIds:
+                deletedImageIds.isNotEmpty ? deletedImageIds : null,
           );
 
       _showSnackBar('기록이 수정되었습니다');
       widget.onSaved();
       Navigator.pop(context);
     } catch (e) {
+      print(' Update error: $e');
       _showSnackBar('수정 실패: $e');
     }
   }
