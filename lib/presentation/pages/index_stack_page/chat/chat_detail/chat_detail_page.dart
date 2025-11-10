@@ -115,7 +115,7 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
     stompClient!.activate(); // 연결 시작
   }
 
-  // 연결 성공 -> 구독
+  // 연결 성공 시 구독
   void _onConnect(StompFrame frame) async {
     debugPrint('✅ STOMP 연결 완료 -> 채널 구독 진행');
     setState(() => _isConnected = true);
@@ -196,18 +196,22 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.roomName)),
-      body: Column(
-        children: [
-          Expanded(
-            child: ChatDetailBody(messages: messages),
-          ),
-          ChatInputField(
-            onSend: _sendMessage,
-            enabled: _isConnected,
-          ),
-        ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.translucent,
+      child: Scaffold(
+        appBar: AppBar(title: Text(widget.roomName)),
+        body: Column(
+          children: [
+            Expanded(
+              child: ChatDetailBody(messages: messages),
+            ),
+            ChatInputField(
+              onSend: _sendMessage,
+              enabled: _isConnected,
+            ),
+          ],
+        ),
       ),
     );
   }

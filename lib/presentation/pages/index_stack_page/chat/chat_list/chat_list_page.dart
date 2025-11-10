@@ -8,12 +8,6 @@ class ChatListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*
-      appBar: WidgetsAppBar(
-        title: "채팅방",
-        icon: Icon(Icons.refresh),
-      ),
-      */
       appBar: AppBar(
         title: const Text("채팅"),
         centerTitle: true,

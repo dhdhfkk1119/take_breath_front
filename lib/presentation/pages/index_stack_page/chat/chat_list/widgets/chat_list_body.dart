@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/_core/constants/custom_color.dart';
 import 'package:take_breath/_core/utils/selectable_button.dart';
 import 'package:take_breath/domain/chat/models/chat_filter.dart';
-import 'package:take_breath/domain/chat/providers/chat_room_list_notifier.dart';
+import 'package:take_breath/domain/chat/providers/chat_room_notifier.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_list/widgets/chat_list_item.dart';
 
 class ChatListBody extends ConsumerStatefulWidget {
@@ -14,11 +14,41 @@ class ChatListBody extends ConsumerStatefulWidget {
 }
 
 class _ChatListBodyState extends ConsumerState<ChatListBody> {
-  ChatFilter selected = ChatFilter.all; // 클래스 멤버 변수
+  ChatFilter selected = ChatFilter.all;
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  // 스크롤 이벤트 처리 (무한 스크롤)
+  void _onScroll() {
+    // 스크롤이 80% 이상 내려갔을 때 다음 페이지 로드
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.8) {
+      final chatListState = ref.read(chatRoomProvider);
+
+      // 로딩 중이 아니고, 다음 페이지가 있으면 로드
+      if (chatListState.hasValue) {
+        final state = chatListState.value!;
+        if (!state.isLoadingMore && state.hasNext) {
+          ref.read(chatRoomProvider.notifier).loadMore();
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final chatListState = ref.watch(chatRoomListProvider);
+    final chatListState = ref.watch(chatRoomProvider);
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -45,24 +75,25 @@ class _ChatListBodyState extends ConsumerState<ChatListBody> {
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
-                ref.invalidate(chatRoomListProvider); // provider 무효화
-                await ref.read(chatRoomListProvider.future); // 새로고침이 완료될 때까지 대기
+                await ref.read(chatRoomProvider.notifier).refresh();
               },
               child: chatListState.when(
-                data: (chatRooms) {
-                  // 필터링 (selected가 unread인 경우 unreadCount가 0이 아닌 채팅만 필터링)
+                data: (state) {
+                  final chatRooms = state.rooms;
+
+                  // 필터링
                   final filteredRooms = selected == ChatFilter.unread
                       ? chatRooms.where((room) => room.unreadCount > 0).toList()
                       : chatRooms;
 
-                  // 필터링 (방이 없는 경우)
+                  // 빈 상태
                   if (filteredRooms.isEmpty) {
                     return Center(
                       child: Text(
                         selected == ChatFilter.unread
                             ? "읽지 않은 채팅이 없습니다"
                             : "채팅이 없습니다",
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 16,
                         ),
@@ -70,13 +101,26 @@ class _ChatListBodyState extends ConsumerState<ChatListBody> {
                     );
                   }
 
-                  // 실제 데이터 목록 - 이게 뜰때만 리프레시 가능함
+                  // 리스트 렌더링
                   return ListView.separated(
+                    controller: _scrollController,
+                    // ⭐ ScrollController 연결
                     physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: filteredRooms.length,
+                    itemCount: filteredRooms.length + (state.hasNext ? 1 : 0),
+                    // ⭐ 로딩 인디케이터용 +1
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 8),
                     itemBuilder: (context, index) {
+                      // 마지막 아이템이고 다음 페이지가 있으면 로딩 인디케이터 표시
+                      if (index == filteredRooms.length) {
+                        return const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+
                       final chatRoom = filteredRooms[index];
                       return ChatListItem(chatRoomListResponse: chatRoom);
                     },
@@ -95,14 +139,14 @@ class _ChatListBodyState extends ConsumerState<ChatListBody> {
                         color: Colors.grey,
                       ),
                       const SizedBox(height: 16),
-                      Text(
+                      const Text(
                         "채팅 목록을 불러올 수 없습니다",
                         style: TextStyle(color: Colors.grey),
                       ),
                       const SizedBox(height: 8),
                       TextButton(
                         onPressed: () {
-                          ref.invalidate(chatRoomListProvider);
+                          ref.read(chatRoomProvider.notifier).refresh();
                         },
                         child: const Text("다시 시도"),
                       ),
