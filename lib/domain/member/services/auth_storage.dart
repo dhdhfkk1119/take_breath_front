@@ -25,7 +25,7 @@ class AuthStorage {
     await prefs.setString('name', member.name);
     await prefs.setString('nickName', member.nickName);
     await prefs.setString('email', member.email);
-    await prefs.setString('profileImageUrl', member.profileImageUrl ?? "");
+    await prefs.setString('profileImage', member.profileImage ?? "");
     await prefs.setString('role', member.role);
     await prefs.setString('status', member.status);
     await prefs.setString('phone', member.phone);
@@ -43,7 +43,7 @@ class AuthStorage {
       name: prefs.getString('name') ?? '',
       nickName: prefs.getString('nickName') ?? '',
       email: prefs.getString('email') ?? '',
-      profileImageUrl: prefs.getString('profileImageUrl') ?? '',
+      profileImage : prefs.getString('profileImage') ?? '',
       role: prefs.getString('role') ?? '',
       status: prefs.getString('status') ?? '',
       phone: prefs.getString('phone') ?? '',
@@ -60,7 +60,7 @@ class AuthStorage {
     await prefs.remove('name');
     await prefs.remove('nickName');
     await prefs.remove('email');
-    await prefs.remove('profileImageUrl');
+    await prefs.remove('profileImage');
     await prefs.remove('role');
     await prefs.remove('status');
     await prefs.remove('phone');

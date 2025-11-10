@@ -41,6 +41,17 @@ class MemberNotifier extends Notifier<Member?> {
     }
   }
 
+  // 회원정보 재조회
+  Future<void> fetchMemberInfo() async {
+    try {
+      final member = await memberRepository.getMemberInfo();
+      state = member;
+      await AuthStorage.saveUserInfo(member);
+    } catch (e) {
+      print("회원정보 조회 실패: $e");
+    }
+  }
+
   // 로그아웃
   Future<void> logout() async {
     await AuthStorage.clear();
