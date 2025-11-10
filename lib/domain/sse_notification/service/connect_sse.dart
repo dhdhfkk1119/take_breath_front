@@ -8,7 +8,7 @@ Future<void> connectSSE() async {
   final token = await AuthStorage.getAccessToken();
 
   SSEClient.subscribeToSSE(
-    url: "${baseUrl}/notifications/subscribe/",
+    url: "${baseUrl}/notifications/subscribe", // 끝의 슬래시 제거
     method: SSERequestType.GET,
     header: {'Authorization': 'Bearer $token'},
   ).listen((event) async {
