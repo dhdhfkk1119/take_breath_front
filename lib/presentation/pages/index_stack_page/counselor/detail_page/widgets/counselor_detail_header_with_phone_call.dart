@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:take_breath/domain/counselor/models/counselor_response.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
-import '../../list_page/models/counselor_model.dart';
 
 class CounselorDetailHeader extends StatefulWidget {
-  final CounselorModel counselor;
+  final CounselorResponse counselor;
 
   const CounselorDetailHeader({
     Key? key,
@@ -22,7 +21,7 @@ class _CounselorDetailHeaderState extends State<CounselorDetailHeader> {
   @override
   void initState() {
     super.initState();
-    isFavorite = widget.counselor.isFavorite;
+    isFavorite = false;
   }
 
   Future<void> _makePhoneCall(String phoneNumber) async {
@@ -87,37 +86,6 @@ class _CounselorDetailHeaderState extends State<CounselorDetailHeader> {
               ),
               const SizedBox(height: 12),
               // 뱃지
-              if (widget.counselor.badge.isNotEmpty)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.yellow[300],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        CupertinoIcons.star_fill,
-                        size: 12,
-                        color: Colors.orange[700],
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        widget.counselor.badge,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.orange[700],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              const SizedBox(height: 12),
               // 이름
               Text(
                 widget.counselor.name,
@@ -129,7 +97,7 @@ class _CounselorDetailHeaderState extends State<CounselorDetailHeader> {
               const SizedBox(height: 4),
               // 자격증
               Text(
-                widget.counselor.specialty,
+                "자격증",
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
