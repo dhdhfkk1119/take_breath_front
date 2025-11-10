@@ -79,7 +79,7 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                widget.counselor.name,
+                                "이름",
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,

@@ -32,17 +32,19 @@ class PageResponse<T> {
   });
 
   factory PageResponse.fromJson(
-      Map<String, dynamic> json, T Function(Map<String, dynamic>) fromJsonT) {
-    return PageResponse(
-      content: (json['content'] as List)
+    Map<String, dynamic> json,
+    T Function(Map<String, dynamic>) fromJsonT,
+  ) {
+    return PageResponse<T>(
+      content: (json['content'] as List<dynamic>)
           .map((e) => fromJsonT(e as Map<String, dynamic>))
           .toList(),
-      pageNumber: json['pageNumber'],
-      pageSize: json['pageSize'],
-      totalPages: json['totalPages'],
-      totalElements: json['totalElements'],
-      isFirst: json['isFirst'],
-      isLast: json['isLast'],
+      pageNumber: json['number'] ?? 0, // <- Spring Page JSON 기준
+      pageSize: json['size'] ?? 10,
+      totalPages: json['totalPages'] ?? 1,
+      totalElements: json['totalElements'] ?? 0,
+      isFirst: json['first'] ?? false,
+      isLast: json['last'] ?? false,
     );
   }
 }

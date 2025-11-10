@@ -44,15 +44,29 @@ class CounselorRepository {
     }
   }
 
-  Future<PageResponse<CounselorResponse>> findAll(
-      {int page = 0, int size = 10}) async {
-    final data = await apiService.get("/counselors", queryParameters: {
-      "page": page,
-      "size": size,
-    });
+  Future<PageResponse<CounselorResponse>> findAll({
+    int page = 0,
+    int size = 10,
+  }) async {
+    try {
+      final response = await dio.get(
+        '/counselors',
+        queryParameters: {'page': page, 'size': size},
+      );
 
-    return PageResponse.fromJson(
-        data, (json) => CounselorResponse.fromJson(json));
+      if (response.statusCode == 200 && response.data != null) {
+        final data = response.data; // 백엔드 JSON 구조에 맞게 조정
+        return PageResponse.fromJson(
+          data,
+          (json) => CounselorResponse.fromJson(json),
+        );
+      } else {
+        print("상담사 리스트 : ${response.data}");
+        throw Exception('API 오류: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('findAll() 오류: $e');
+    }
   }
 
   Future<CounselorResponse> getCounselorById(int id) async {

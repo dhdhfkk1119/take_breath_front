@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 class ApiService {
   final Dio _dio;
 
-
   ApiService({required Dio dio}) : _dio = dio;
 
   // GET 요청
@@ -27,7 +26,6 @@ class ApiService {
     }
   }
 
-
   // POST 요청
   Future<dynamic> post(String path, dynamic data) async {
     try {
@@ -46,7 +44,6 @@ class ApiService {
       throw Exception("예상치 못한 오류: $e");
     }
   }
-
 
   // 공통 Dio 에러 핸들링 메서드
   String _handleDioError(DioException e) {
