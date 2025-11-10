@@ -12,7 +12,7 @@ class Member with _$Member {
     required String name,
     required String nickName,
     required String email,
-    String? profileImageUrl, // nullable 처리
+    String? profileImage, // nullable 처리
     required String role,
     required String status,
     required String phone,

@@ -1,20 +1,23 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-class UserProfileEditPage extends StatefulWidget {
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:take_breath/domain/member/providers/member_login_notifier.dart';
+import 'package:take_breath/domain/member/providers/member_repository_provider.dart';
+
+import '../../../../../_core/utils/my_http.dart';
+
+class UserProfileEditPage extends ConsumerStatefulWidget {
   const UserProfileEditPage({Key? key}) : super(key: key);
 
   @override
-  State<UserProfileEditPage> createState() => _UserProfileEditPageState();
+  ConsumerState<UserProfileEditPage> createState() => _UserProfileEditPageState();
 }
 
-class _UserProfileEditPageState extends State<UserProfileEditPage> {
-  late TextEditingController _nicknameController;
-  late TextEditingController _emailController;
-  late TextEditingController _phoneController;
-  late TextEditingController _introductionController;
+class _UserProfileEditPageState extends ConsumerState<UserProfileEditPage> {
+  late TextEditingController _nickNameController;
 
   File? _selectedImage;
   final ImagePicker _imagePicker = ImagePicker();
@@ -22,19 +25,12 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
   @override
   void initState() {
     super.initState();
-    // 기존 데이터로 초기화 (실제로는 서버에서 받아온 데이터 사용)
-    _nicknameController = TextEditingController(text: '홍길동');
-    _emailController = TextEditingController(text: 'busy@example.com');
-    _phoneController = TextEditingController(text: '010-1234-5678');
-    _introductionController = TextEditingController(text: '');
+    _nickNameController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _nicknameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _introductionController.dispose();
+    _nickNameController.dispose();
     super.dispose();
   }
 
@@ -51,30 +47,60 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('이미지 선택 중 오류가 발생했습니다: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('이미지 선택 중 오류가 발생했습니다: $e')),
+        );
+      }
     }
   }
 
-  void _handleSave() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('정보가 저장되었습니다')),
-    );
-    Navigator.pop(context);
+  Future<void> _handleSave() async {
+    try {
+      final memberRepository = ref.read(memberRepositoryProvider);
+
+      await memberRepository.updateProfile(
+        nickName: _nickNameController.text,
+        profileImage: _selectedImage,
+      );
+
+      // 업데이트된 정보 재조회
+      await ref.read(memberProvider.notifier).fetchMemberInfo();
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('정보가 저장되었습니다')),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('저장 실패: $e')),
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final member = ref.watch(memberProvider);
+
+    // 회원 정보가 로드되면 닉네임 설정
+    if (member != null && _nickNameController.text.isEmpty) {
+      _nickNameController.text = member.nickName;
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('정보수정'),
+        title: const Text('정보 수정'),
         centerTitle: true,
         elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
+            const SizedBox(height: 20),
             // 프로필 사진 섹션
             Container(
               padding: const EdgeInsets.all(20),
@@ -97,16 +123,31 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
                         ),
                         child: _selectedImage != null
                             ? ClipOval(
-                                child: Image.file(
-                                  _selectedImage!,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : const Icon(
+                          child: Image.file(
+                            _selectedImage!,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                            : member?.profileImage != null && member!.profileImage!.isNotEmpty
+                            ? ClipOval(
+                          child: Image.network(
+                            //member.profileImage!,
+                            '$imageLocalUrl/uploads/${member.profileImage!}',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(
                                 CupertinoIcons.person_fill,
                                 size: 50,
                                 color: Colors.grey,
-                              ),
+                              );
+                            },
+                          ),
+                        )
+                            : const Icon(
+                          CupertinoIcons.person_fill,
+                          size: 50,
+                          color: Colors.grey,
+                        ),
                       ),
                       Positioned(
                         bottom: 0,
@@ -162,7 +203,7 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
                   ),
                   const SizedBox(height: 8),
                   TextField(
-                    controller: _nicknameController,
+                    controller: _nickNameController,
                     decoration: InputDecoration(
                       hintText: '닉네임을 입력하세요',
                       border: OutlineInputBorder(
@@ -175,7 +216,7 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // 이메일
+                  // 이메일 (수정 불가 - 읽기 전용)
                   const Text(
                     '이메일',
                     style: TextStyle(
@@ -184,22 +225,27 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: '이메일을 입력하세요',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 12,
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey[300]!),
+                    ),
+                    child: Text(
+                      member?.email ?? '',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[600],
                       ),
                     ),
-                    keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 20),
-                  // 전화번호
+                  // 전화번호 (수정 불가 - 읽기 전용)
                   const Text(
                     '전화번호',
                     style: TextStyle(
@@ -208,45 +254,26 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  TextField(
-                    controller: _phoneController,
-                    decoration: InputDecoration(
-                      hintText: '전화번호를 입력하세요',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 12,
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey[300]!),
+                    ),
+                    child: Text(
+                      member?.phone ?? '',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[600],
                       ),
                     ),
-                    keyboardType: TextInputType.phone,
                   ),
-                  const SizedBox(height: 20),
-                  // 자기소개
-                  const Text(
-                    '자기소개',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _introductionController,
-                    decoration: InputDecoration(
-                      hintText: '자기소개를 입력하세요',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 12,
-                      ),
-                    ),
-                    maxLines: 4,
-                  ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 50),
                   // 저장 버튼
                   SizedBox(
                     width: double.infinity,

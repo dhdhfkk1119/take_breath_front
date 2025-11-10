@@ -85,6 +85,32 @@ class CommunityRepository {
     }
   }
 
+  Future<CommunityListPage> getMyPosts({
+    required int page,
+    required int size,
+  }) async {
+    try {
+      final Map<String, dynamic> queryParams = {
+        'page': page,
+        'size': size,
+        'sort': 'createdAt,DESC',
+      };
+
+      final response = await dio.get(
+        '/community/posts/mine',
+        queryParameters: queryParams,
+      );
+
+      if (response.statusCode == 200) {
+        return CommunityListPage.fromJson(response.data);
+      } else {
+        throw Exception('내 게시물 조회 실패');
+      }
+    } catch (e) {
+      throw Exception("서버가 연결되어 있지 않습니다: $e");
+    }
+  }
+
   Future<void> save(CommunityWrite communityWrite) async {
     List<MultipartFile> files =
         await filesToMultipartFiles(communityWrite.images);

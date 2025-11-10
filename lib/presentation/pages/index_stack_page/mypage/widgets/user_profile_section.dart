@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/domain/member/providers/member_login_notifier.dart';
 
-class UserProfileSection extends StatelessWidget {
+import '../../../../../_core/utils/my_http.dart';
+
+
+class UserProfileSection extends ConsumerWidget {
   final VoidCallback onEditPressed;
 
   const UserProfileSection({
@@ -10,7 +15,16 @@ class UserProfileSection extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+    final notifier = ref.watch(memberProvider);
+
+    if (notifier == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushNamed(context, "/social_page");
+      });
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       color: Colors.grey[50],
@@ -25,7 +39,22 @@ class UserProfileSection extends StatelessWidget {
               shape: BoxShape.circle,
               color: Colors.grey[300],
             ),
-            child: const Icon(
+            child: notifier.profileImage != null && notifier.profileImage!.isNotEmpty
+                ? ClipOval(
+              child: Image.network(
+                // notifier.profileImage!
+                '$imageLocalUrl/uploads/${notifier.profileImage!}',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(
+                    CupertinoIcons.person_fill,
+                    size: 40,
+                    color: Colors.grey,
+                  );
+                },
+              ),
+            )
+                : const Icon(
               CupertinoIcons.person_fill,
               size: 40,
               color: Colors.grey,
@@ -33,8 +62,8 @@ class UserProfileSection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           // 이름
-          const Text(
-            '최영희',
+          Text(
+            notifier.nickName,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
@@ -42,7 +71,7 @@ class UserProfileSection extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '#직장인, #30대',
+            notifier.email,
             style: TextStyle(
               fontSize: 12,
               color: Colors.grey[600],

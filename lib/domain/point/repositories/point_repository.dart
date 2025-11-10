@@ -31,15 +31,10 @@ class PointRepository {
         id: json['id'],
         amount: json['amount'],
         type: json['type'] == 'CHARGE' ? 'charge' : 'use',
-        dateTime: FormatTime.parseKoreanFormat(json['createdAt']),
+        dateTime: FormatTime.parseServerFormat(json['createdAt']),
         description: json['description'] ?? '포인트 내역',
       );
     }).toList();
   }
 }
-
-
-
-
-
 

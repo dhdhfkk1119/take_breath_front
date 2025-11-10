@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:take_breath/_core/utils/my_http.dart';
 import 'package:take_breath/domain/member/models/email.dart';
@@ -31,7 +33,7 @@ class MemberRepository {
 
   Future<void> sign(MemberSign memberSign) async {
     final List<Map<String, dynamic>> agreementsJson =
-        memberSign.agreements.map((req) => req.toJson()).toList();
+    memberSign.agreements.map((req) => req.toJson()).toList();
 
     try {
       final response = await dio.post(
@@ -126,6 +128,52 @@ class MemberRepository {
       }
     } catch (e) {
       throw Exception("서버가 연결 되어있지 않음: $e");
+    }
+  }
+
+
+// 회원정보 조회
+  Future<Member> getMemberInfo() async {
+    try {
+      final response = await dio.get("/members/info");
+      if (response.statusCode == 200) {
+        print("회원정보 응답: ${response.data}");
+        return Member.fromJson(response.data);
+      } else {
+        throw Exception("회원정보 조회 실패");
+      }
+    } catch (e) {
+      print("에러 상세: $e");
+      throw Exception("서버 연결 실패: $e");
+    }
+  }
+
+// 회원정보 수정 (닉네임, 프로필 이미지)
+  Future<void> updateProfile({
+    required String nickName,
+    File? profileImage,
+  }) async {
+    try {
+      final formData = FormData();
+      formData.fields.add(MapEntry('nickName', nickName));
+
+      if (profileImage != null) {
+        formData.files.add(MapEntry(
+          'image',
+          await MultipartFile.fromFile(profileImage.path),
+        ));
+      }
+
+      final response = await dio.patch(
+        '/members/update',
+        data: formData,
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception("정보 수정 실패");
+      }
+    } catch (e) {
+      throw Exception("서버 연결 실패: $e");
     }
   }
 }
