@@ -4,6 +4,7 @@ import 'package:take_breath/domain/member/models/is_email_check.dart';
 import 'package:take_breath/domain/member/models/member.dart';
 import 'package:take_breath/domain/member/repositories/member_repository.dart';
 import 'package:take_breath/domain/member/services/auth_storage.dart';
+import 'package:take_breath/domain/sse_notification/service/connect_sse.dart';
 
 import 'member_repository_provider.dart';
 
@@ -36,6 +37,7 @@ class MemberNotifier extends Notifier<Member?> {
     }
 
     state = member; // 상태 갱신
+    connectSSE(member.id);
   }
 
   // 자동 로그인 시도

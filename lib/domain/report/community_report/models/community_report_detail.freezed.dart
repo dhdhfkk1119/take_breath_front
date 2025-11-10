@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-CommentReportDetailDTO _$CommunityReportDetailFromJson(
+CommunityReportDetail _$CommunityReportDetailFromJson(
     Map<String, dynamic> json) {
   return _CommunityReportDetail.fromJson(json);
 }
@@ -38,15 +38,15 @@ mixin _$CommunityReportDetail {
   /// Create a copy of CommunityReportDetail
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $CommunityReportDetailCopyWith<CommentReportDetailDTO> get copyWith =>
+  $CommunityReportDetailCopyWith<CommunityReportDetail> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $CommunityReportDetailCopyWith<$Res> {
-  factory $CommunityReportDetailCopyWith(CommentReportDetailDTO value,
-          $Res Function(CommentReportDetailDTO) then) =
-      _$CommunityReportDetailCopyWithImpl<$Res, CommentReportDetailDTO>;
+  factory $CommunityReportDetailCopyWith(CommunityReportDetail value,
+          $Res Function(CommunityReportDetail) then) =
+      _$CommunityReportDetailCopyWithImpl<$Res, CommunityReportDetail>;
   @useResult
   $Res call(
       {int id,
@@ -63,7 +63,7 @@ abstract class $CommunityReportDetailCopyWith<$Res> {
 
 /// @nodoc
 class _$CommunityReportDetailCopyWithImpl<$Res,
-        $Val extends CommentReportDetailDTO>
+        $Val extends CommunityReportDetail>
     implements $CommunityReportDetailCopyWith<$Res> {
   _$CommunityReportDetailCopyWithImpl(this._value, this._then);
 
@@ -332,7 +332,7 @@ class _$CommunityReportDetailImpl implements _CommunityReportDetail {
   }
 }
 
-abstract class _CommunityReportDetail implements CommentReportDetailDTO {
+abstract class _CommunityReportDetail implements CommunityReportDetail {
   const factory _CommunityReportDetail(
       {required final int id,
       required final int reporterId,

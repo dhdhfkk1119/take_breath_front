@@ -46,14 +46,14 @@ class CommunityReportRepository {
     }
   }
 
-  Future<CommentReportDetailDTO> getReportDetail(int reportId) async {
+  Future<CommunityReportDetail> getReportDetail(int reportId) async {
     try {
       final response = await dio.get(
         "/community/reports/post/$reportId",
       );
       if (response.statusCode == 200) {
         print("신고 상세 내역 : ${response.data['response']}");
-        return CommentReportDetailDTO.fromJson(response.data['response']);
+        return CommunityReportDetail.fromJson(response.data['response']);
       } else {
         throw Exception("신고 상세 내역");
       }
