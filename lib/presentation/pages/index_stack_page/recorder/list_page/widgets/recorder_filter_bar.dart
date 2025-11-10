@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import '../../../../../../domain/recorder/models/record_filter.dart';
 
 class RecorderListFilter extends StatefulWidget {
-  final Function(String) onFilterApplied;
-  final String initialCategory;
+  final Function(RecordFilter) onFilterApplied; // ✅ 타입 변경
+  final RecordFilter initialFilter; // ✅ 타입 변경
 
   const RecorderListFilter({
     super.key,
     required this.onFilterApplied,
-    this.initialCategory = 'all',
+    this.initialFilter = const RecordFilter.initial(), // ✅ 기본값 변경
   });
 
   @override
@@ -20,7 +21,14 @@ class _RecorderListFilterState extends State<RecorderListFilter> {
   @override
   void initState() {
     super.initState();
-    _selectedCategory = widget.initialCategory;
+    // ✅ 초기 필터 상태를 String으로 변환
+    if (widget.initialFilter.hasImage == true) {
+      _selectedCategory = 'image';
+    } else if (widget.initialFilter.hasAudio == true) {
+      _selectedCategory = 'audio';
+    } else {
+      _selectedCategory = 'all';
+    }
   }
 
   @override
@@ -67,7 +75,10 @@ class _RecorderListFilterState extends State<RecorderListFilter> {
           // 적용 버튼
           ElevatedButton(
             onPressed: () {
-              widget.onFilterApplied(_selectedCategory);
+              // ✅ String을 RecordFilter로 변환
+              final filter = _convertToFilter(_selectedCategory);
+              widget.onFilterApplied(filter);
+              Navigator.pop(context); // ✅ 필터 적용 후 닫기
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF0891B2),
@@ -91,5 +102,18 @@ class _RecorderListFilterState extends State<RecorderListFilter> {
         });
       },
     );
+  }
+
+  // ✅ String을 RecordFilter로 변환하는 메서드 추가
+  RecordFilter _convertToFilter(String category) {
+    switch (category) {
+      case 'image':
+        return const RecordFilter(hasImage: true);
+      case 'audio':
+        return const RecordFilter(hasAudio: true);
+      case 'all':
+      default:
+        return const RecordFilter.initial();
+    }
   }
 }

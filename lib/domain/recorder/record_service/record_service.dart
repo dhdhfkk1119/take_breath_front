@@ -7,13 +7,25 @@ class RecordService {
 
   RecordService({required this.dio});
 
+  // ✅ 필터 파라미터 추가
   Future<Map<String, dynamic>> getRecordList({
     required int page,
     required int size,
+    bool? hasImage, // ✅ 추가
+    bool? hasAudio, // ✅ 추가
+    bool? hasVideo, // ✅ 추가
   }) async {
+    final queryParameters = {
+      'page': page,
+      'size': size,
+      if (hasImage != null) 'hasImage': hasImage, // ✅ 추가
+      if (hasAudio != null) 'hasAudio': hasAudio, // ✅ 추가
+      if (hasVideo != null) 'hasVideo': hasVideo, // ✅ 추가
+    };
+
     final response = await dio.get(
       '/records',
-      queryParameters: {'page': page, 'size': size},
+      queryParameters: queryParameters,
     );
     return response.data;
   }
