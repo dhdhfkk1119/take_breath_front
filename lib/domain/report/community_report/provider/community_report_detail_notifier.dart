@@ -5,18 +5,18 @@ import 'package:take_breath/domain/report/community_report/provider/community_re
 import 'package:take_breath/domain/report/community_report/repositories/community_report_repository.dart';
 
 final communityReportDetailProvider = NotifierProvider<
-    CommunityReportDetailNotifier, BaseState<CommentReportDetailDTO>>(
+    CommunityReportDetailNotifier, BaseState<CommunityReportDetail>>(
   () => CommunityReportDetailNotifier(),
 );
 
 class CommunityReportDetailNotifier
-    extends Notifier<BaseState<CommentReportDetailDTO>> {
+    extends Notifier<BaseState<CommunityReportDetail>> {
   late final CommunityReportRepository communityReportRepository;
 
   @override
-  BaseState<CommentReportDetailDTO> build() {
+  BaseState<CommunityReportDetail> build() {
     communityReportRepository = ref.read(communityReportRepositoryProvider);
-    return const BaseState<CommentReportDetailDTO>(
+    return const BaseState<CommunityReportDetail>(
       isLoading: false,
       error: null,
       data: null,
@@ -29,7 +29,7 @@ class CommunityReportDetailNotifier
     state = state.loading();
 
     try {
-      final CommentReportDetailDTO detail =
+      final CommunityReportDetail detail =
           await communityReportRepository.getReportDetail(reportId);
 
       state = state.success(detail);

@@ -7,8 +7,8 @@ part 'community_report_detail.freezed.dart';
 part 'community_report_detail.g.dart';
 
 @freezed
-class CommentReportDetailDTO with _$CommunityReportDetail {
-  const factory CommentReportDetailDTO({
+class CommunityReportDetail with _$CommunityReportDetail {
+  const factory CommunityReportDetail({
     required int id,
     required int reporterId,
     required String reporterName,
@@ -21,6 +21,6 @@ class CommentReportDetailDTO with _$CommunityReportDetail {
     @Default([]) List<AdminComment> adminComments,
   }) = _CommunityReportDetail;
 
-  factory CommentReportDetailDTO.fromJson(Map<String, dynamic> json) =>
+  factory CommunityReportDetail.fromJson(Map<String, dynamic> json) =>
       _$CommunityReportDetailFromJson(json);
 }

@@ -1,9 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/domain/member/services/auth_storage.dart';
+import 'package:take_breath/domain/sse_notification/provider/flutter_local_notification.dart';
+import 'package:take_breath/domain/sse_notification/service/connect_sse.dart';
+import 'package:take_breath/domain/sse_notification/service/firebase_notification_service.dart';
 import 'package:take_breath/presentation/pages/auth/social/social_page.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/main_screen.dart';
-import 'package:take_breath/presentation/pages/index_stack_page/service/notification_service.dart';
+import 'package:take_breath/domain/sse_notification/service/notification_service.dart';
 import 'package:take_breath/presentation/pages/splash/splash_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -17,6 +22,16 @@ void main() async {
 
   // NotificationService 초기화
   await NotificationService().initialize(); // 알람 기능 초기화
+  await initLocalNotifications();
+
+  final userId = await AuthStorage.getUserInfo();
+  if (userId != null) {
+    connectSSE(userId.id); // context 없이도 로컬 알림 가능
+  }
+
+  // Firebase + FCM 초기화
+  await Firebase.initializeApp();
+  await initFirebaseMessaging();
 
   runApp(
     // 전체에 리버팟 사용 가능 앱
