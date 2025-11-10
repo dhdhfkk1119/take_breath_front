@@ -26,10 +26,9 @@ mixin _$ChatMessageResponse {
   String get content => throw _privateConstructorUsedError;
   String get messageType => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
-  String? get imageUrl => throw _privateConstructorUsedError;
+  String? get attachmentPath => throw _privateConstructorUsedError;
   int? get currentPoint => throw _privateConstructorUsedError;
   bool get isRead => throw _privateConstructorUsedError;
-  bool get isMe => throw _privateConstructorUsedError;
 
   /// Serializes this ChatMessageResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -54,10 +53,9 @@ abstract class $ChatMessageResponseCopyWith<$Res> {
       String content,
       String messageType,
       DateTime createdAt,
-      String? imageUrl,
+      String? attachmentPath,
       int? currentPoint,
-      bool isRead,
-      bool isMe});
+      bool isRead});
 }
 
 /// @nodoc
@@ -81,10 +79,9 @@ class _$ChatMessageResponseCopyWithImpl<$Res, $Val extends ChatMessageResponse>
     Object? content = null,
     Object? messageType = null,
     Object? createdAt = null,
-    Object? imageUrl = freezed,
+    Object? attachmentPath = freezed,
     Object? currentPoint = freezed,
     Object? isRead = null,
-    Object? isMe = null,
   }) {
     return _then(_value.copyWith(
       messageId: null == messageId
@@ -111,9 +108,9 @@ class _$ChatMessageResponseCopyWithImpl<$Res, $Val extends ChatMessageResponse>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      imageUrl: freezed == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
+      attachmentPath: freezed == attachmentPath
+          ? _value.attachmentPath
+          : attachmentPath // ignore: cast_nullable_to_non_nullable
               as String?,
       currentPoint: freezed == currentPoint
           ? _value.currentPoint
@@ -122,10 +119,6 @@ class _$ChatMessageResponseCopyWithImpl<$Res, $Val extends ChatMessageResponse>
       isRead: null == isRead
           ? _value.isRead
           : isRead // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isMe: null == isMe
-          ? _value.isMe
-          : isMe // ignore: cast_nullable_to_non_nullable
               as bool,
     ) as $Val);
   }
@@ -146,10 +139,9 @@ abstract class _$$ChatMessageResponseImplCopyWith<$Res>
       String content,
       String messageType,
       DateTime createdAt,
-      String? imageUrl,
+      String? attachmentPath,
       int? currentPoint,
-      bool isRead,
-      bool isMe});
+      bool isRead});
 }
 
 /// @nodoc
@@ -171,10 +163,9 @@ class __$$ChatMessageResponseImplCopyWithImpl<$Res>
     Object? content = null,
     Object? messageType = null,
     Object? createdAt = null,
-    Object? imageUrl = freezed,
+    Object? attachmentPath = freezed,
     Object? currentPoint = freezed,
     Object? isRead = null,
-    Object? isMe = null,
   }) {
     return _then(_$ChatMessageResponseImpl(
       messageId: null == messageId
@@ -201,9 +192,9 @@ class __$$ChatMessageResponseImplCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      imageUrl: freezed == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
+      attachmentPath: freezed == attachmentPath
+          ? _value.attachmentPath
+          : attachmentPath // ignore: cast_nullable_to_non_nullable
               as String?,
       currentPoint: freezed == currentPoint
           ? _value.currentPoint
@@ -212,10 +203,6 @@ class __$$ChatMessageResponseImplCopyWithImpl<$Res>
       isRead: null == isRead
           ? _value.isRead
           : isRead // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isMe: null == isMe
-          ? _value.isMe
-          : isMe // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -231,10 +218,9 @@ class _$ChatMessageResponseImpl implements _ChatMessageResponse {
       required this.content,
       required this.messageType,
       required this.createdAt,
-      this.imageUrl,
+      this.attachmentPath,
       this.currentPoint,
-      required this.isRead,
-      this.isMe = false});
+      required this.isRead});
 
   factory _$ChatMessageResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChatMessageResponseImplFromJson(json);
@@ -252,18 +238,15 @@ class _$ChatMessageResponseImpl implements _ChatMessageResponse {
   @override
   final DateTime createdAt;
   @override
-  final String? imageUrl;
+  final String? attachmentPath;
   @override
   final int? currentPoint;
   @override
   final bool isRead;
-  @override
-  @JsonKey()
-  final bool isMe;
 
   @override
   String toString() {
-    return 'ChatMessageResponse(messageId: $messageId, senderId: $senderId, senderName: $senderName, content: $content, messageType: $messageType, createdAt: $createdAt, imageUrl: $imageUrl, currentPoint: $currentPoint, isRead: $isRead, isMe: $isMe)';
+    return 'ChatMessageResponse(messageId: $messageId, senderId: $senderId, senderName: $senderName, content: $content, messageType: $messageType, createdAt: $createdAt, attachmentPath: $attachmentPath, currentPoint: $currentPoint, isRead: $isRead)';
   }
 
   @override
@@ -282,18 +265,17 @@ class _$ChatMessageResponseImpl implements _ChatMessageResponse {
                 other.messageType == messageType) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
-            (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl) &&
+            (identical(other.attachmentPath, attachmentPath) ||
+                other.attachmentPath == attachmentPath) &&
             (identical(other.currentPoint, currentPoint) ||
                 other.currentPoint == currentPoint) &&
-            (identical(other.isRead, isRead) || other.isRead == isRead) &&
-            (identical(other.isMe, isMe) || other.isMe == isMe));
+            (identical(other.isRead, isRead) || other.isRead == isRead));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, messageId, senderId, senderName,
-      content, messageType, createdAt, imageUrl, currentPoint, isRead, isMe);
+      content, messageType, createdAt, attachmentPath, currentPoint, isRead);
 
   /// Create a copy of ChatMessageResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -320,10 +302,9 @@ abstract class _ChatMessageResponse implements ChatMessageResponse {
       required final String content,
       required final String messageType,
       required final DateTime createdAt,
-      final String? imageUrl,
+      final String? attachmentPath,
       final int? currentPoint,
-      required final bool isRead,
-      final bool isMe}) = _$ChatMessageResponseImpl;
+      required final bool isRead}) = _$ChatMessageResponseImpl;
 
   factory _ChatMessageResponse.fromJson(Map<String, dynamic> json) =
       _$ChatMessageResponseImpl.fromJson;
@@ -341,13 +322,11 @@ abstract class _ChatMessageResponse implements ChatMessageResponse {
   @override
   DateTime get createdAt;
   @override
-  String? get imageUrl;
+  String? get attachmentPath;
   @override
   int? get currentPoint;
   @override
   bool get isRead;
-  @override
-  bool get isMe;
 
   /// Create a copy of ChatMessageResponse
   /// with the given fields replaced by the non-null parameter values.

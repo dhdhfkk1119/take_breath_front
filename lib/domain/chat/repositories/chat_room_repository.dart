@@ -1,5 +1,5 @@
 import 'package:take_breath/_core/utils/my_http.dart';
-import 'package:take_breath/domain/chat/models/chat_room_slice_response.dart';
+import 'package:take_breath/domain/chat/models/chat_room_slice_response/chat_room_slice_response.dart';
 
 class ChatRoomRepository {
   // 채팅방 목록 조회 (Slice 페이징)

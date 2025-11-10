@@ -2,7 +2,7 @@
 
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:take_breath/domain/chat/models/chat_room_list_response.dart';
+import 'package:take_breath/domain/chat/models/chat_room_list_response/chat_room_list_response.dart';
 
 part 'chat_room_slice_response.freezed.dart';
 part 'chat_room_slice_response.g.dart';

@@ -2,11 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/domain/chat/models/chat_room_list_state.dart';
 import 'package:take_breath/domain/chat/providers/chat_room_repository_provider.dart';
 
-// NotifierProvider 선언
-final chatRoomProvider =
-    AsyncNotifierProvider<ChatRoomNotifier, ChatRoomListState>(
-        () => ChatRoomNotifier());
-
 // 채팅방 목록을 관리하는 Notifier
 class ChatRoomNotifier extends AsyncNotifier<ChatRoomListState> {
   static const int pageSize = 10; // 한 페이지당 20개

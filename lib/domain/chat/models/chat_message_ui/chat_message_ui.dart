@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:take_breath/domain/chat/models/chat_message_response.dart';
+import 'package:take_breath/domain/chat/models/chat_message_response/chat_message_response.dart';
 
 part 'chat_message_ui.freezed.dart';
 
@@ -35,7 +35,7 @@ class ChatMessageUI with _$ChatMessageUI {
   bool get isRead => message.isRead;
 
   /// 이미지 URL (있는 경우)
-  String? get imageUrl => message.imageUrl;
+  String? get attachmentPath => message.attachmentPath;
 
   /// 현재 포인트 (포인트 메시지인 경우)
   int? get currentPoint => message.currentPoint;

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
-
 class ChatInputField extends StatefulWidget {
   final Function(String) onSend;
+  final Function(String)? onImageSend;
   final bool enabled;
 
   const ChatInputField({
     super.key,
     required this.onSend,
+    this.onImageSend,
     this.enabled = true,
   });
 

@@ -1,4 +1,4 @@
-import 'package:take_breath/domain/chat/models/chat_room_list_response.dart';
+import 'package:take_breath/domain/chat/models/chat_room_list_response/chat_room_list_response.dart';
 
 class ChatRoomListState {
   final List<ChatRoomListResponse> rooms;

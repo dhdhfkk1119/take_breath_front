@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/_core/constants/custom_color.dart';
 import 'package:take_breath/_core/utils/selectable_button.dart';
 import 'package:take_breath/domain/chat/models/chat_filter.dart';
-import 'package:take_breath/domain/chat/providers/chat_room_notifier.dart';
+import 'package:take_breath/domain/chat/providers/chat_room_provider.dart';
+import 'package:take_breath/domain/chat/providers/notifier/chat_room_notifier.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_list/widgets/chat_list_item.dart';
 
 class ChatListBody extends ConsumerStatefulWidget {

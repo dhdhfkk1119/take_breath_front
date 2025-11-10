@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:take_breath/_core/constants/custom_color.dart';
-import 'package:take_breath/domain/chat/models/chat_room_list_response.dart';
+import 'package:take_breath/domain/chat/models/chat_room_list_response/chat_room_list_response.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_detail/chat_detail_page.dart';
 
 class ChatListItem extends StatefulWidget {
