@@ -93,7 +93,7 @@ class _UserProfileEditPageState extends ConsumerState<UserProfileEditPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('정보수정'),
+        title: const Text('정보 수정'),
         centerTitle: true,
         elevation: 0,
       ),
