@@ -38,6 +38,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Future.microtask(() async {
       final notifier = ref.read(memberProvider.notifier);

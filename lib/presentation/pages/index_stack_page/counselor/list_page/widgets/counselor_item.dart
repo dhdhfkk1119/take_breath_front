@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/domain/counselor/models/counselor_response.dart';
+import 'package:take_breath/domain/counselor/providers/counselor_like_notifier.dart';
+import 'package:take_breath/domain/counselor/providers/counselor_list_notifier.dart';
 
 class CounselorItem extends ConsumerStatefulWidget {
   final CounselorResponse counselor;
@@ -76,7 +78,6 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
                         // 뱃지 + 이름
                         Row(
                           children: [
-                            const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 widget.counselor.name,
@@ -89,9 +90,8 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
                           ],
                         ),
                         const SizedBox(height: 4),
-                        // 자격증
                         Text(
-                          "자격증",
+                          widget.counselor.specialty ?? "자격증 없음",
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.grey[600],
@@ -102,13 +102,17 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
                   ),
                   // 찜 버튼
                   GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isFavorite = !isFavorite;
-                      });
+                    onTap: () async {
+                      await ref
+                          .read(counselorLikeProvider.notifier)
+                          .toggleLike(widget.counselor.id);
+
+                      await ref
+                          .read(counselorListProvider.notifier)
+                          .fetchFirstPage();
                     },
                     child: Icon(
-                      isFavorite
+                      widget.counselor.likedByMe
                           ? CupertinoIcons.heart_fill
                           : CupertinoIcons.heart,
                       color: isFavorite ? Colors.red : Colors.grey[400],

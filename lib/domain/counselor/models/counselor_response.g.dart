@@ -18,6 +18,8 @@ _$CounselorResponseImpl _$$CounselorResponseImplFromJson(
       hashtags: json['hashtags'] as String?,
       gender: json['gender'] as String?,
       price: (json['price'] as num).toInt(),
+      likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
+      likedByMe: json['likedByMe'] as bool? ?? false,
       licenses: (json['licenses'] as List<dynamic>?)
           ?.map((e) =>
               CounselorLicenseResponse.fromJson(e as Map<String, dynamic>))
@@ -36,5 +38,7 @@ Map<String, dynamic> _$$CounselorResponseImplToJson(
       'hashtags': instance.hashtags,
       'gender': instance.gender,
       'price': instance.price,
+      'likeCount': instance.likeCount,
+      'likedByMe': instance.likedByMe,
       'licenses': instance.licenses,
     };

@@ -12,7 +12,7 @@ class BaseState<T> {
   factory BaseState.initial() => BaseState<T>(
         isLoading: false,
         error: null,
-        data: [] as T, // 리스트 타입이면 안전하게 처리
+        data: null, // 리스트 타입이면 안전하게 처리
       );
 
   BaseState<T> copyWith({

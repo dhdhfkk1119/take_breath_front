@@ -3,9 +3,11 @@ import 'package:take_breath/_core/utils/my_http.dart';
 import 'package:take_breath/_core/utils/page_request.dart';
 import 'package:take_breath/domain/counselor/models/counselor_response.dart';
 import 'package:take_breath/domain/counselor/models/counselor_sign.dart';
+import 'package:take_breath/domain/member/services/auth_storage.dart';
 
 class CounselorRepository {
   final ApiService apiService;
+
   CounselorRepository({required this.apiService});
 
   // 상담사 회원가입
@@ -44,19 +46,41 @@ class CounselorRepository {
     }
   }
 
-  Future<PageResponse<CounselorResponse>> findAll(
-      {int page = 0, int size = 10}) async {
-    final data = await apiService.get("/counselors", queryParameters: {
-      "page": page,
-      "size": size,
-    });
+  Future<PageResponse<CounselorResponse>> findAll({
+    int page = 0,
+    int size = 10,
+  }) async {
+    try {
+      final response = await dio.get(
+        '/counselors',
+        queryParameters: {'page': page, 'size': size},
+      );
 
-    return PageResponse.fromJson(
-        data, (json) => CounselorResponse.fromJson(json));
+      if (response.statusCode == 200 && response.data != null) {
+        final data = response.data; // 백엔드 JSON 구조에 맞게 조정
+        return PageResponse.fromJson(
+          data,
+          (json) => CounselorResponse.fromJson(json),
+        );
+      } else {
+        print("상담사 리스트 : ${response.data}");
+        throw Exception('API 오류: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('findAll() 오류: $e');
+    }
   }
 
   Future<CounselorResponse> getCounselorById(int id) async {
-    final data = await apiService.get("/counselors/$id");
+    final data = await apiService.get("/counselors/$id", queryParameters: {});
     return CounselorResponse.fromJson(data);
+  }
+
+  Future<void> toggleLike(int counselorId) async {
+    final memberId = AuthStorage.getUserInfo();
+    await dio.post(
+      "/counselors/$counselorId",
+      queryParameters: {'memberId': memberId},
+    );
   }
 }

@@ -27,7 +27,7 @@ class CounselorListNotifier
   Future<void> fetchFirstPage() async {
     state = state.loading();
     try {
-      final pageData =
+      final PageResponse<CounselorResponse> pageData =
           await counselorRepository.findAll(page: 0, size: pageSize);
       currentPage = pageData.pageNumber;
 
