@@ -26,18 +26,19 @@ class MemberNotifier extends Notifier<Member?> {
     final member = await memberRepository.login(email, password, autoLogin);
 
     // member가 null이 아니라면 데이터를 저장함
-    if(member != null) {
+    if (member != null) {
       await AuthStorage.saveUserInfo(member);
     }
 
     if (autoLogin) {
       await AuthStorage.saveUserInfo(member);
     } else {
-      await AuthStorage.saveTokens(member.accessToken, member.refreshToken ?? "");
+      await AuthStorage.saveTokens(
+          member.accessToken, member.refreshToken ?? "");
     }
 
     state = member; // 상태 갱신
-    connectSSE(member.id);
+    connectSSE();
   }
 
   // 자동 로그인 시도

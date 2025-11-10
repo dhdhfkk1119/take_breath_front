@@ -3,9 +3,11 @@ import 'package:take_breath/_core/utils/my_http.dart';
 import 'package:take_breath/_core/utils/page_request.dart';
 import 'package:take_breath/domain/counselor/models/counselor_response.dart';
 import 'package:take_breath/domain/counselor/models/counselor_sign.dart';
+import 'package:take_breath/domain/member/services/auth_storage.dart';
 
 class CounselorRepository {
   final ApiService apiService;
+
   CounselorRepository({required this.apiService});
 
   // 상담사 회원가입
@@ -70,7 +72,15 @@ class CounselorRepository {
   }
 
   Future<CounselorResponse> getCounselorById(int id) async {
-    final data = await apiService.get("/counselors/$id");
+    final data = await apiService.get("/counselors/$id", queryParameters: {});
     return CounselorResponse.fromJson(data);
+  }
+
+  Future<void> toggleLike(int counselorId) async {
+    final memberId = AuthStorage.getUserInfo();
+    await dio.post(
+      "/counselors/$counselorId",
+      queryParameters: {'memberId': memberId},
+    );
   }
 }

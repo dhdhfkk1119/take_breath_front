@@ -29,6 +29,8 @@ mixin _$CounselorResponse {
   String? get hashtags => throw _privateConstructorUsedError;
   String? get gender => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
+  int get likeCount => throw _privateConstructorUsedError;
+  bool get likedByMe => throw _privateConstructorUsedError;
   List<CounselorLicenseResponse>? get licenses =>
       throw _privateConstructorUsedError;
 
@@ -58,6 +60,8 @@ abstract class $CounselorResponseCopyWith<$Res> {
       String? hashtags,
       String? gender,
       int price,
+      int likeCount,
+      bool likedByMe,
       List<CounselorLicenseResponse>? licenses});
 }
 
@@ -85,6 +89,8 @@ class _$CounselorResponseCopyWithImpl<$Res, $Val extends CounselorResponse>
     Object? hashtags = freezed,
     Object? gender = freezed,
     Object? price = null,
+    Object? likeCount = null,
+    Object? likedByMe = null,
     Object? licenses = freezed,
   }) {
     return _then(_value.copyWith(
@@ -124,6 +130,14 @@ class _$CounselorResponseCopyWithImpl<$Res, $Val extends CounselorResponse>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int,
+      likeCount: null == likeCount
+          ? _value.likeCount
+          : likeCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      likedByMe: null == likedByMe
+          ? _value.likedByMe
+          : likedByMe // ignore: cast_nullable_to_non_nullable
+              as bool,
       licenses: freezed == licenses
           ? _value.licenses
           : licenses // ignore: cast_nullable_to_non_nullable
@@ -150,6 +164,8 @@ abstract class _$$CounselorResponseImplCopyWith<$Res>
       String? hashtags,
       String? gender,
       int price,
+      int likeCount,
+      bool likedByMe,
       List<CounselorLicenseResponse>? licenses});
 }
 
@@ -175,6 +191,8 @@ class __$$CounselorResponseImplCopyWithImpl<$Res>
     Object? hashtags = freezed,
     Object? gender = freezed,
     Object? price = null,
+    Object? likeCount = null,
+    Object? likedByMe = null,
     Object? licenses = freezed,
   }) {
     return _then(_$CounselorResponseImpl(
@@ -214,6 +232,14 @@ class __$$CounselorResponseImplCopyWithImpl<$Res>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int,
+      likeCount: null == likeCount
+          ? _value.likeCount
+          : likeCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      likedByMe: null == likedByMe
+          ? _value.likedByMe
+          : likedByMe // ignore: cast_nullable_to_non_nullable
+              as bool,
       licenses: freezed == licenses
           ? _value._licenses
           : licenses // ignore: cast_nullable_to_non_nullable
@@ -235,6 +261,8 @@ class _$CounselorResponseImpl implements _CounselorResponse {
       this.hashtags,
       this.gender,
       required this.price,
+      this.likeCount = 0,
+      this.likedByMe = false,
       final List<CounselorLicenseResponse>? licenses})
       : _licenses = licenses;
 
@@ -259,6 +287,12 @@ class _$CounselorResponseImpl implements _CounselorResponse {
   final String? gender;
   @override
   final int price;
+  @override
+  @JsonKey()
+  final int likeCount;
+  @override
+  @JsonKey()
+  final bool likedByMe;
   final List<CounselorLicenseResponse>? _licenses;
   @override
   List<CounselorLicenseResponse>? get licenses {
@@ -271,7 +305,7 @@ class _$CounselorResponseImpl implements _CounselorResponse {
 
   @override
   String toString() {
-    return 'CounselorResponse(id: $id, name: $name, license: $license, specialty: $specialty, introduction: $introduction, profileImage: $profileImage, hashtags: $hashtags, gender: $gender, price: $price, licenses: $licenses)';
+    return 'CounselorResponse(id: $id, name: $name, license: $license, specialty: $specialty, introduction: $introduction, profileImage: $profileImage, hashtags: $hashtags, gender: $gender, price: $price, likeCount: $likeCount, likedByMe: $likedByMe, licenses: $licenses)';
   }
 
   @override
@@ -292,6 +326,10 @@ class _$CounselorResponseImpl implements _CounselorResponse {
                 other.hashtags == hashtags) &&
             (identical(other.gender, gender) || other.gender == gender) &&
             (identical(other.price, price) || other.price == price) &&
+            (identical(other.likeCount, likeCount) ||
+                other.likeCount == likeCount) &&
+            (identical(other.likedByMe, likedByMe) ||
+                other.likedByMe == likedByMe) &&
             const DeepCollectionEquality().equals(other._licenses, _licenses));
   }
 
@@ -308,6 +346,8 @@ class _$CounselorResponseImpl implements _CounselorResponse {
       hashtags,
       gender,
       price,
+      likeCount,
+      likedByMe,
       const DeepCollectionEquality().hash(_licenses));
 
   /// Create a copy of CounselorResponse
@@ -338,6 +378,8 @@ abstract class _CounselorResponse implements CounselorResponse {
           final String? hashtags,
           final String? gender,
           required final int price,
+          final int likeCount,
+          final bool likedByMe,
           final List<CounselorLicenseResponse>? licenses}) =
       _$CounselorResponseImpl;
 
@@ -362,6 +404,10 @@ abstract class _CounselorResponse implements CounselorResponse {
   String? get gender;
   @override
   int get price;
+  @override
+  int get likeCount;
+  @override
+  bool get likedByMe;
   @override
   List<CounselorLicenseResponse>? get licenses;
 

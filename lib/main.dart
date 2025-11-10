@@ -26,7 +26,7 @@ void main() async {
 
   final userId = await AuthStorage.getUserInfo();
   if (userId != null) {
-    connectSSE(userId.id); // context 없이도 로컬 알림 가능
+    connectSSE(); // context 없이도 로컬 알림 가능
   }
 
   // Firebase + FCM 초기화

@@ -4,11 +4,11 @@ import 'package:take_breath/_core/utils/my_http.dart';
 import 'package:take_breath/domain/member/services/auth_storage.dart';
 import 'notification_service.dart';
 
-Future<void> connectSSE(int userId) async {
+Future<void> connectSSE() async {
   final token = await AuthStorage.getAccessToken();
 
   SSEClient.subscribeToSSE(
-    url: "${baseUrl}/notifications/subscribe/$userId",
+    url: "${baseUrl}/notifications/subscribe/",
     method: SSERequestType.GET,
     header: {'Authorization': 'Bearer $token'},
   ).listen((event) async {
