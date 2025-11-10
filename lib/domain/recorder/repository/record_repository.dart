@@ -17,30 +17,12 @@ class RecordRepository {
       size: size,
     );
 
-    print('========== RecordRepository.getRecordList ==========');
-    print('Full Response: $response');
-    print('Response keys: ${response.keys.toList()}');
-    print('Response type: ${response.runtimeType}');
-    print('====================================================');
-
     final List<dynamic> content = response['response']?['content'] ?? [];
 
-    print(' Content length: ${content.length}');
-
     final List<RecordItem> records = content.map((item) {
-      String? thumbnailUrl;
-      if (item['imageFiles'] != null &&
-          (item['imageFiles'] as List).isNotEmpty) {
-        try {
-          final firstImage = (item['imageFiles'] as List)[0] as Map;
-          final filePath = (firstImage['filePath'] ?? '') as String;
-          if (filePath.isNotEmpty) {
-            thumbnailUrl = _convertToValidUrl(filePath);
-          }
-        } catch (e) {
-          // URL 변환 오류 무시
-        }
-      }
+      final String? rawThumbnailUrl = item['thumbnailUrl'];
+      final String? thumbnailUrl =
+          rawThumbnailUrl != null ? _convertToValidUrl(rawThumbnailUrl) : null;
 
       return RecordItem(
         id: item['id'],
@@ -70,19 +52,9 @@ class RecordRepository {
     final List<dynamic> content = response['response']?['content'] ?? [];
 
     final List<RecordItem> records = content.map((item) {
-      String? thumbnailUrl;
-      if (item['imageFiles'] != null &&
-          (item['imageFiles'] as List).isNotEmpty) {
-        try {
-          final firstImage = (item['imageFiles'] as List)[0] as Map;
-          final filePath = (firstImage['filePath'] ?? '') as String;
-          if (filePath.isNotEmpty) {
-            thumbnailUrl = _convertToValidUrl(filePath);
-          }
-        } catch (e) {
-          // URL 변환 오류 무시
-        }
-      }
+      final String? rawThumbnailUrl = item['thumbnailUrl'];
+      final String? thumbnailUrl =
+          rawThumbnailUrl != null ? _convertToValidUrl(rawThumbnailUrl) : null;
 
       return RecordItem(
         id: item['id'],
@@ -100,7 +72,6 @@ class RecordRepository {
 
   Future<Map<String, dynamic>> getRecord({required int id}) async {
     final response = await recordService.getRecord(id: id);
-
     final recordData = response['response'] ?? response;
 
     if (recordData['imageFiles'] != null) {
@@ -171,42 +142,30 @@ class RecordRepository {
   }
 
   String _convertToValidUrl(String filePath) {
-    print('🔍 Converting filePath: $filePath');
-
-    if (filePath.isEmpty || filePath == 'url1') {
-      return 'http://192.168.0.156:8080/uploads/records/images/sample_001.png';
+    if (filePath.isEmpty) {
+      return '';
     }
 
-    if (filePath.startsWith('http')) {
+    if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
       return filePath;
     }
 
+    if (filePath.startsWith('/uploads/')) {
+      return 'http://192.168.0.156:8080$filePath';
+    }
+
     if (filePath.startsWith('records/')) {
-      final url = 'http://192.168.0.156:8080/uploads/$filePath';
-      print('Converted to: $url');
-      return url;
+      return 'http://192.168.0.156:8080/uploads/$filePath';
     }
 
-    String convertedPath =
-        filePath.replaceAll('/uploads/record/', '/uploads/records/');
-
-    if (convertedPath.startsWith('/uploads/')) {
-      final url = 'http://192.168.0.156:8080$convertedPath';
-      print('Converted to: $url');
-      return url;
-    }
-
-    if (convertedPath.contains('uploads')) {
-      final parts = convertedPath.split('uploads');
+    if (filePath.contains('uploads')) {
+      final parts = filePath.split('uploads');
       if (parts.length > 1) {
         String imageUrl = 'http://192.168.0.156:8080/uploads${parts[1]}';
-        imageUrl = imageUrl.replaceAll('\\', '/');
-        print('Converted to: $imageUrl');
-        return imageUrl;
+        return imageUrl.replaceAll('\\', '/');
       }
     }
 
-    print('Using default sample image');
-    return 'http://192.168.0.156:8080/uploads/records/images/sample_001.png';
+    return '';
   }
 }

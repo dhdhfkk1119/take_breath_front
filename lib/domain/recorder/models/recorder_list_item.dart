@@ -32,23 +32,8 @@ class RecorderListItem extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(
-                width: 100,
-                height: 100,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Container(
-                    color: Colors.grey[300],
-                    child: const Center(
-                      child: Icon(
-                        CupertinoIcons.photo,
-                        size: 40,
-                        color: Colors.black45,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              // ✅ 썸네일 이미지 표시
+              _buildThumbnail(),
               const SizedBox(width: 16.0),
               Expanded(
                 child: Column(
@@ -130,6 +115,60 @@ class RecorderListItem extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  // 썸네일 위젯 생성
+  Widget _buildThumbnail() {
+    return SizedBox(
+      width: 100,
+      height: 100,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8.0),
+        child: record.thumbnailUrl != null && record.thumbnailUrl!.isNotEmpty
+            ? Image.network(
+                record.thumbnailUrl!,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    color: Colors.grey[300],
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  print('❌ Image load error: $error');
+                  return Container(
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: Icon(
+                        CupertinoIcons.photo,
+                        size: 40,
+                        color: Colors.black45,
+                      ),
+                    ),
+                  );
+                },
+              )
+            : Container(
+                color: Colors.grey[300],
+                child: const Center(
+                  child: Icon(
+                    CupertinoIcons.photo,
+                    size: 40,
+                    color: Colors.black45,
+                  ),
+                ),
+              ),
       ),
     );
   }
