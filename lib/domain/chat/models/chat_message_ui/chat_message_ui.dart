@@ -26,7 +26,7 @@ class ChatMessageUI with _$ChatMessageUI {
   String get senderName => message.senderName;
 
   /// 메시지 내용
-  String get content => message.content;
+  String? get content => message.content;
 
   /// 생성 시간
   DateTime get createdAt => message.createdAt;

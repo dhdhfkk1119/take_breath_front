@@ -12,7 +12,7 @@ _$ChatMessageResponseImpl _$$ChatMessageResponseImplFromJson(
       messageId: (json['messageId'] as num).toInt(),
       senderId: (json['senderId'] as num).toInt(),
       senderName: json['senderName'] as String,
-      content: json['content'] as String,
+      content: json['content'] as String?,
       messageType: json['messageType'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       attachmentPath: json['attachmentPath'] as String?,

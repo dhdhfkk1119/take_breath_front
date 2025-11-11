@@ -9,7 +9,7 @@ class ChatMessageResponse with _$ChatMessageResponse {
     required int messageId,
     required int senderId,
     required String senderName,
-    required String content,
+    String? content,
     required String messageType,
     required DateTime createdAt,
     String? attachmentPath,

@@ -23,7 +23,7 @@ mixin _$ChatMessageResponse {
   int get messageId => throw _privateConstructorUsedError;
   int get senderId => throw _privateConstructorUsedError;
   String get senderName => throw _privateConstructorUsedError;
-  String get content => throw _privateConstructorUsedError;
+  String? get content => throw _privateConstructorUsedError;
   String get messageType => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   String? get attachmentPath => throw _privateConstructorUsedError;
@@ -50,7 +50,7 @@ abstract class $ChatMessageResponseCopyWith<$Res> {
       {int messageId,
       int senderId,
       String senderName,
-      String content,
+      String? content,
       String messageType,
       DateTime createdAt,
       String? attachmentPath,
@@ -76,7 +76,7 @@ class _$ChatMessageResponseCopyWithImpl<$Res, $Val extends ChatMessageResponse>
     Object? messageId = null,
     Object? senderId = null,
     Object? senderName = null,
-    Object? content = null,
+    Object? content = freezed,
     Object? messageType = null,
     Object? createdAt = null,
     Object? attachmentPath = freezed,
@@ -96,10 +96,10 @@ class _$ChatMessageResponseCopyWithImpl<$Res, $Val extends ChatMessageResponse>
           ? _value.senderName
           : senderName // ignore: cast_nullable_to_non_nullable
               as String,
-      content: null == content
+      content: freezed == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       messageType: null == messageType
           ? _value.messageType
           : messageType // ignore: cast_nullable_to_non_nullable
@@ -136,7 +136,7 @@ abstract class _$$ChatMessageResponseImplCopyWith<$Res>
       {int messageId,
       int senderId,
       String senderName,
-      String content,
+      String? content,
       String messageType,
       DateTime createdAt,
       String? attachmentPath,
@@ -160,7 +160,7 @@ class __$$ChatMessageResponseImplCopyWithImpl<$Res>
     Object? messageId = null,
     Object? senderId = null,
     Object? senderName = null,
-    Object? content = null,
+    Object? content = freezed,
     Object? messageType = null,
     Object? createdAt = null,
     Object? attachmentPath = freezed,
@@ -180,10 +180,10 @@ class __$$ChatMessageResponseImplCopyWithImpl<$Res>
           ? _value.senderName
           : senderName // ignore: cast_nullable_to_non_nullable
               as String,
-      content: null == content
+      content: freezed == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       messageType: null == messageType
           ? _value.messageType
           : messageType // ignore: cast_nullable_to_non_nullable
@@ -215,7 +215,7 @@ class _$ChatMessageResponseImpl implements _ChatMessageResponse {
       {required this.messageId,
       required this.senderId,
       required this.senderName,
-      required this.content,
+      this.content,
       required this.messageType,
       required this.createdAt,
       this.attachmentPath,
@@ -232,7 +232,7 @@ class _$ChatMessageResponseImpl implements _ChatMessageResponse {
   @override
   final String senderName;
   @override
-  final String content;
+  final String? content;
   @override
   final String messageType;
   @override
@@ -299,7 +299,7 @@ abstract class _ChatMessageResponse implements ChatMessageResponse {
       {required final int messageId,
       required final int senderId,
       required final String senderName,
-      required final String content,
+      final String? content,
       required final String messageType,
       required final DateTime createdAt,
       final String? attachmentPath,
@@ -316,7 +316,7 @@ abstract class _ChatMessageResponse implements ChatMessageResponse {
   @override
   String get senderName;
   @override
-  String get content;
+  String? get content;
   @override
   String get messageType;
   @override

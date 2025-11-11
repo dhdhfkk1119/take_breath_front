@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 
 class ChatMessageBubble extends StatelessWidget {
   final bool isMe;
-  final String message;
+  final String? message;
   final String messageType;
-  final bool showProfile;        
-  final bool showTimestamp;      
-  final String senderName;       
-  final String formattedTime;  
+  final bool showProfile;
+  final bool showTimestamp;
+  final String senderName;
+  final String formattedTime;
   final String? attachmentPath;
 
   const ChatMessageBubble({
     super.key,
     required this.isMe,
-    required this.message,
+    this.message,
     required this.messageType,
     required this.showProfile,
     required this.showTimestamp,
@@ -48,7 +48,7 @@ class ChatMessageBubble extends StatelessWidget {
 
           // ✅ 프로필 없을 때 공간 유지 (정렬용)
           if (!isMe && !showProfile)
-            const SizedBox(width: 44),  // CircleAvatar 크기만큼
+            const SizedBox(width: 44), // CircleAvatar 크기만큼
 
           // 메시지 컬럼
           Flexible(
@@ -90,22 +90,7 @@ class ChatMessageBubble extends StatelessWidget {
                       ),
 
                     // 메시지 내용
-                    Container(
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width * 0.7,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isMe ? Colors.blue : Colors.grey[300],
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: messageType == 'IMAGE' && attachmentPath != null
-                          ? _buildImageMessage()
-                          : _buildTextMessage(),
-                    ),
+                    _buildMessageContent(context),
 
                     // ✅ 시간 표시 (타인 메시지 + showTimestamp)
                     if (!isMe && showTimestamp)
@@ -129,9 +114,37 @@ class ChatMessageBubble extends StatelessWidget {
     );
   }
 
+  Widget _buildMessageContent(BuildContext context) {
+    switch (messageType) {
+      case 'IMAGE':
+        return _buildImageMessage();
+      case 'TEXT':
+        return _messageBubble(context);
+      default:
+        return _messageBubble(context);
+    }
+  }
+
+  Widget _messageBubble(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.7,
+      ),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 8,
+      ),
+      decoration: BoxDecoration(
+        color: isMe ? Colors.blue : Colors.grey[300],
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: _buildTextMessage(),
+    );
+  }
+
   Widget _buildTextMessage() {
     return Text(
-      message,
+      message ?? '',
       style: TextStyle(
         color: isMe ? Colors.white : Colors.black87,
         fontSize: 14,
@@ -176,16 +189,18 @@ class ChatMessageBubble extends StatelessWidget {
             },
           ),
         ),
-        if (message.isNotEmpty) ...[
+        /*
+        if (message != null && message!.isNotEmpty) ...[
           const SizedBox(height: 4),
           Text(
-            message,
+            message!,
             style: TextStyle(
               color: isMe ? Colors.white : Colors.black87,
               fontSize: 14,
             ),
           ),
         ],
+        */
       ],
     );
   }

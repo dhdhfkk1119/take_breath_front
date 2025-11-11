@@ -26,11 +26,12 @@ class ChatDetailPage extends ConsumerStatefulWidget {
 }
 
 class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
-  StompClient? stompClient; // stomp 클라
+  StompClient? stompClient;                 // stomp 클라
   final List<ChatMessageUI> messages = []; // 전체 메세지(이전 메세지, 현재 메세지)
-  bool _isConnected = false; // 연결 유무
+  bool _isConnected = false;                // 연결 유무
   bool _isUploadingImage = false;
   int? _currentUserId;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -38,6 +39,7 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
     _initChat();
   }
 
+  // 초기 설정
   Future<void> _initChat() async {
     final userInfo = await AuthStorage.getUserInfo();
     _currentUserId = userInfo?.id;
@@ -51,6 +53,7 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
 
     await _loadChatHistory();
     await _connectStomp();
+
   }
 
   // 채팅 이력 가져오기
@@ -60,19 +63,17 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
       final loadMessages = await repository.getChatMessages(widget.roomId);
 
       setState(() {
-        // ✅ 2. ChatMessageResponse → ChatMessageUI 변환
+        // ChatMessageResponse → ChatMessageUI 변환
         final uiMessages = <ChatMessageUI>[];
         for (int i = 0; i < loadMessages.length; i++) {
           final msg = loadMessages[i];
           final prevMsg = i > 0 ? uiMessages[i - 1] : null;
-
           uiMessages.add(_convertToUIModel(msg, prevMsg));
         }
-
-        // reversed로 최신 메시지가 위로
-        messages.addAll(uiMessages.reversed);
+        messages.addAll(uiMessages);
       });
 
+      _scrollToBottom(force: true);
       debugPrint('✅ 과거 메시지 ${messages.length}개 로드 완료');
     } catch (e) {
       debugPrint("❌ 이전 메시지 로드 실패: $e");
@@ -135,16 +136,18 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
           if (mounted) {
             setState(() {
               final prevMsg = messages.isNotEmpty ? messages.first : null;
-              messages.insert(0, _convertToUIModel(msg, prevMsg));
+              messages.add(_convertToUIModel(msg, prevMsg));
             });
+            final isMyMessage = msg.senderId == _currentUserId;
+            _scrollToBottom(force: isMyMessage);
           }
         }
       },
     );
   }
 
-  // 메세지 전송
-  Future<void> _sendMessage(String content) async {
+  // 텍스트 메세지 전송
+  Future<void> _sendTextMessage(String content) async {
     debugPrint('✅ 채팅방 메세지 전송');
     if (!_isConnected) return;
     final token = await AuthStorage.getAccessToken();
@@ -157,8 +160,11 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
         "messageType": "TEXT",
       }),
     );
+
+    // _scrollToBottom();
   }
 
+  // 이미지 메세지 전송
   Future<void> _sendImageMessage(String imagePath) async {
     if (_isUploadingImage) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -231,6 +237,58 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
     }
   }
 
+  // 하단 자동 스크롤
+  void _scrollToBottom({bool force = false}) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        final currentPosition = _scrollController.position.pixels;
+        final maxScroll = _scrollController.position.maxScrollExtent;
+        final isNearBottom = (maxScroll - currentPosition) < 100; // ✅ 수정
+
+        if (force || isNearBottom) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    stompClient?.deactivate();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.translucent,
+      child: Scaffold(
+        appBar: AppBar(title: Text(widget.roomName)),
+        body: Column(
+          children: [
+            Expanded(
+              child: ChatDetailBody(
+                messages: messages,
+                scrollController: _scrollController,
+              ),
+            ),
+            ChatInputField(
+              onSend: _sendTextMessage,
+              onImageSend: _sendImageMessage,
+              enabled: _isConnected,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   // ChatMessageResponse를 ChatMessageUI로 변환하는 핵심 메서드
   ChatMessageUI _convertToUIModel(
     ChatMessageResponse response,
@@ -260,32 +318,5 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
     );
   }
 
-  @override
-  void dispose() {
-    stompClient?.deactivate();
-    super.dispose();
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      behavior: HitTestBehavior.translucent,
-      child: Scaffold(
-        appBar: AppBar(title: Text(widget.roomName)),
-        body: Column(
-          children: [
-            Expanded(
-              child: ChatDetailBody(messages: messages),
-            ),
-            ChatInputField(
-              onSend: _sendMessage,
-              onImageSend: _sendImageMessage,
-              enabled: _isConnected,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
