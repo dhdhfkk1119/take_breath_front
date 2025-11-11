@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -33,7 +34,7 @@ class MemberRepository {
 
   Future<void> sign(MemberSign memberSign) async {
     final List<Map<String, dynamic>> agreementsJson =
-    memberSign.agreements.map((req) => req.toJson()).toList();
+        memberSign.agreements.map((req) => req.toJson()).toList();
 
     try {
       final response = await dio.post(
@@ -131,7 +132,6 @@ class MemberRepository {
     }
   }
 
-
 // 회원정보 조회
   Future<Member> getMemberInfo() async {
     try {
@@ -148,7 +148,7 @@ class MemberRepository {
     }
   }
 
-// 회원정보 수정 (닉네임, 프로필 이미지)
+  // 회원정보 수정 (닉네임, 프로필 이미지)
   Future<void> updateProfile({
     required String nickName,
     File? profileImage,
@@ -174,6 +174,47 @@ class MemberRepository {
       }
     } catch (e) {
       throw Exception("서버 연결 실패: $e");
+    }
+  }
+
+  Future<Member?> socialLogin(String idToken, String provider) async {
+    try {
+      final response = await dio.post(
+        '/social/google-login',
+        data: jsonEncode({
+          'idToken': idToken,
+          'provider': provider,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = response.data;
+        if (responseBody['phone'] == null) {
+          responseBody['phone'] = '';
+        }
+        if (responseBody['daysLeft'] == null) {
+          responseBody['daysLeft'] = 0; // 또는 null 유지
+        }
+
+        Member member = Member.fromJson(responseBody);
+
+        final accessTokenFromHeader =
+            response.headers['authorization']?.first?.split(' ').last;
+
+        final String newAccessToken = member.accessToken.isNotEmpty
+            ? member.accessToken
+            : (accessTokenFromHeader ?? member.accessToken);
+
+        member = member.copyWith(accessToken: newAccessToken);
+
+        return member;
+      } else {
+        print('소셜 로그인 API 오류: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('소셜 로그인 통신 실패: $e');
+      return null;
     }
   }
 }

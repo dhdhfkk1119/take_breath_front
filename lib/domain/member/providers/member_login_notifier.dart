@@ -1,12 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:take_breath/domain/member/models/is_email_check.dart';
 import 'package:take_breath/domain/member/models/member.dart';
 import 'package:take_breath/domain/member/repositories/member_repository.dart';
 import 'package:take_breath/domain/member/services/auth_storage.dart';
 import 'package:take_breath/domain/sse_notification/service/connect_sse.dart';
-
 import 'member_repository_provider.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 final memberProvider =
     NotifierProvider<MemberNotifier, Member?>(MemberNotifier.new);
@@ -19,6 +21,69 @@ class MemberNotifier extends Notifier<Member?> {
     memberRepository = ref.read(memberRepositoryProvider);
     tryAutoLogin();
     return null;
+  }
+
+  // 소셜 로그인
+  Future<bool> socialLoginUser(BuildContext context) async {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn.instance;
+      await googleSignIn.initialize();
+
+      const List<String> scopes = ['email', 'profile'];
+      final GoogleSignInAccount? googleUser =
+          await googleSignIn.authenticate(scopeHint: scopes);
+
+      if (googleUser == null) {
+        print('Google sign-in aborted by user.');
+        return false;
+      }
+
+      final GoogleSignInClientAuthorization authz =
+          await googleUser.authorizationClient.authorizeScopes(scopes);
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final String? accessToken = authz.accessToken;
+      final String? idToken = googleAuth.idToken;
+
+      if (accessToken == null) {
+        throw Exception("Google accessToken 획득 실패");
+      }
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: accessToken,
+        idToken: idToken,
+      );
+
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      final firebaseIdToken = await userCredential.user?.getIdToken(true);
+
+      if (firebaseIdToken == null) {
+        throw Exception("Firebase ID Token 획득 실패");
+      }
+
+      final member =
+          await memberRepository.socialLogin(firebaseIdToken, 'google');
+
+      if (member != null) {
+        await AuthStorage.saveTokens(
+            member.accessToken, member.refreshToken ?? "");
+        await AuthStorage.saveUserInfo(member);
+        state = member;
+        connectSSE();
+        print('소셜 로그인 완료!');
+        return true;
+      } else {
+        print("서버에서 사용자 정보를 가져오지 못함");
+        return false;
+      }
+    } catch (e) {
+      print('소셜 로그인 중 오류 발생: $e');
+      return false;
+    }
   }
 
   // 로그인

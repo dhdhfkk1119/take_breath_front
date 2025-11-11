@@ -15,6 +15,7 @@ class RecorderListPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentPage = ref.watch(currentPageProvider);
     final searchKeyword = ref.watch(searchKeywordProvider);
+    final selectedDate = ref.watch(selectedDateProvider); // ✅ 추가
 
     final recordsAsync =
         searchKeyword == '__SEARCH_MODE__' || searchKeyword.isEmpty
@@ -24,13 +25,32 @@ class RecorderListPage extends ConsumerWidget {
             : ref.watch(searchRecordsProvider(searchKeyword));
 
     return Scaffold(
-      appBar: _buildAppBar(context, ref, searchKeyword),
+      appBar: _buildAppBar(
+          context, ref, searchKeyword, selectedDate), // ✅ selectedDate 전달
       body: recordsAsync.when(
         data: (records) {
           if (records.isEmpty) {
             return Center(
-              child: Text(
-                searchKeyword.isEmpty ? '기록이 없습니다' : '검색 결과가 없습니다',
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    selectedDate != null // ✅ 추가
+                        ? '선택한 날짜에 기록이 없습니다'
+                        : (searchKeyword.isEmpty ? '기록이 없습니다' : '검색 결과가 없습니다'),
+                  ),
+                  if (selectedDate != null) // ✅ 추가
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          ref.read(selectedDateProvider.notifier).state = null;
+                          ref.refresh(recordListProvider(0));
+                        },
+                        child: const Text('필터 초기화'),
+                      ),
+                    ),
+                ],
               ),
             );
           }
@@ -88,10 +108,16 @@ class RecorderListPage extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     String searchKeyword,
+    DateTime? selectedDate, // ✅ 추가
   ) {
     if (searchKeyword.isNotEmpty) {
       final TextEditingController controller = TextEditingController();
-      controller.text = searchKeyword;
+
+      if (searchKeyword == '__SEARCH_MODE__') {
+        controller.text = '';
+      } else {
+        controller.text = searchKeyword;
+      }
 
       return RecorderListSearchAppBar(
         controller: controller,
@@ -108,10 +134,10 @@ class RecorderListPage extends ConsumerWidget {
           ref.read(searchKeywordProvider.notifier).state = '__SEARCH_MODE__';
         },
         onCalendarPressed: () {
-          _showDatePicker(context);
+          _showDatePicker(context, ref);
         },
         onFilterPressed: () {
-          _showFilterDialog(context, ref); // ✅ ref 전달
+          _showFilterDialog(context, ref);
         },
         onNotificationPressed: () {
           Navigator.push(
@@ -308,33 +334,43 @@ class RecorderListPage extends ConsumerWidget {
     );
   }
 
-  void _showDatePicker(BuildContext context) async {
+  /// ✅ 달력 선택 다이얼로그 - 수정됨
+  void _showDatePicker(BuildContext context, WidgetRef ref) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
     );
+
     if (picked != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('선택된 날짜: ${picked.toString().split(' ')[0]}')),
-      );
+      ref.read(selectedDateProvider.notifier).state = picked;
+      ref.read(currentPageProvider.notifier).state = 0;
+      ref.refresh(recordListProvider(0));
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+                Text('선택된 날짜: ${picked.year}년 ${picked.month}월 ${picked.day}일'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
     }
   }
 
-  // ✅ 필터 다이얼로그 수정
   void _showFilterDialog(BuildContext context, WidgetRef ref) {
-    final currentFilter = ref.read(recordFilterProvider); // ✅ 현재 필터 가져오기
+    final currentFilter = ref.read(recordFilterProvider);
 
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => RecorderListFilter(
-          initialFilter: currentFilter, // ✅ 현재 필터 전달
+          initialFilter: currentFilter,
           onFilterApplied: (filter) {
-            // ✅ 필터 적용
             ref.read(recordFilterProvider.notifier).state = filter;
-            ref.refresh(recordListProvider(0)); // ✅ 목록 새로고침
+            ref.refresh(recordListProvider(0));
           },
         ),
       ),

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/_core/constants/custom_color.dart';
 import 'package:take_breath/_core/constants/custom_google_button.dart';
 import 'package:take_breath/_core/constants/custom_text_button.dart';
+import 'package:take_breath/domain/member/providers/member_login_notifier.dart';
 import 'package:take_breath/presentation/pages/auth/login/member_login/member_login_page.dart';
 import 'package:take_breath/presentation/pages/auth/social/widgets/user_type_selected.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/main_screen.dart';
 
-class SocialBody extends StatelessWidget {
+class SocialBody extends ConsumerWidget {
   const SocialBody({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 48.0),
       child: Column(
@@ -89,7 +91,19 @@ class SocialBody extends StatelessWidget {
           SizedBox(
             height: 180,
           ),
-          CustomGoogleButton(click: () {}),
+          // 소셜 로그인 버튼
+          CustomGoogleButton(
+            click: () async {
+              final memberNotifier = ref.read(memberProvider.notifier);
+              await memberNotifier.socialLoginUser(context);
+
+              final member = ref.read(memberProvider);
+              if (member != null) {
+                Navigator.pushReplacementNamed(context, "/main");
+              }
+            },
+          ),
+
           SizedBox(
             height: 8,
           ),
