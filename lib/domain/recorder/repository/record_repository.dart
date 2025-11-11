@@ -43,6 +43,41 @@ class RecordRepository {
     return records;
   }
 
+  /// ✅ 날짜 범위로 검색 - 추가된 메서드
+  Future<List<RecordItem>> searchByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required int page,
+    required int size,
+  }) async {
+    final response = await recordService.searchByDateRange(
+      startDate: startDate,
+      endDate: endDate,
+      page: page,
+      size: size,
+    );
+
+    final List<dynamic> content = response['response']?['content'] ?? [];
+
+    final List<RecordItem> records = content.map((item) {
+      final String? rawThumbnailUrl = item['thumbnailUrl'];
+      final String? thumbnailUrl =
+          rawThumbnailUrl != null ? _convertToValidUrl(rawThumbnailUrl) : null;
+
+      return RecordItem(
+        id: item['id'],
+        title: item['title'] ?? '',
+        content: item['content'] ?? '',
+        date: item['recordDate'] ?? '',
+        imageCount: item['imageFileCount'] ?? 0,
+        audioCount: item['audioFileCount'] ?? 0,
+        thumbnailUrl: thumbnailUrl,
+      );
+    }).toList();
+
+    return records;
+  }
+
   Future<List<RecordItem>> searchRecords({
     required String keyword,
     required int page,

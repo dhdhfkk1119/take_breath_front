@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import '../../../../../../domain/recorder/models/record_filter.dart';
 
 class RecorderListFilter extends StatefulWidget {
-  final Function(RecordFilter) onFilterApplied; // ✅ 타입 변경
-  final RecordFilter initialFilter; // ✅ 타입 변경
+  final Function(RecordFilter) onFilterApplied;
+  final RecordFilter initialFilter;
 
   const RecorderListFilter({
     super.key,
     required this.onFilterApplied,
-    this.initialFilter = const RecordFilter.initial(), // ✅ 기본값 변경
+    this.initialFilter = const RecordFilter.initial(),
   });
 
   @override

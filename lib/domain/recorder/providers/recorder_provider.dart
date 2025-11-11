@@ -19,6 +19,9 @@ final currentPageProvider = StateProvider<int>((ref) => 0);
 
 final searchKeywordProvider = StateProvider<String>((ref) => '');
 
+// ✅ 선택된 날짜 Provider
+final selectedDateProvider = StateProvider<DateTime?>((ref) => null);
+
 final recordFilterProvider = StateProvider<RecordFilter>((ref) {
   return const RecordFilter.initial();
 });
@@ -27,11 +30,29 @@ final recordListProvider = FutureProvider.family<List<RecordItem>, int>(
   (ref, page) async {
     final repository = ref.watch(recordRepositoryProvider);
     final filter = ref.watch(recordFilterProvider);
+    final selectedDate = ref.watch(selectedDateProvider);
+
+    if (selectedDate != null) {
+      return repository.searchByDateRange(
+        startDate: selectedDate,
+        endDate: selectedDate,
+        page: page,
+        size: 10,
+      );
+    }
+
+    if (filter.isFiltered) {
+      return repository.getRecordList(
+        page: page,
+        size: 10,
+        filter: filter,
+      );
+    }
 
     return repository.getRecordList(
       page: page,
       size: 10,
-      filter: filter,
+      filter: null,
     );
   },
 );
