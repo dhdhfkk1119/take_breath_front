@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ChatInputField extends StatefulWidget {
   final Function(String) onSend;
@@ -18,13 +19,71 @@ class ChatInputField extends StatefulWidget {
 
 class _ChatInputFieldState extends State<ChatInputField> {
   final TextEditingController _controller = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  bool _hasText = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      final hasText = _controller.text.trim().isNotEmpty;
+      if (_hasText != hasText) {
+        setState(() {
+          _hasText = hasText;
+        });
+      }
+    });
+  }
+
+  // 텍스트 이미지 전송하기
   void _submit() {
-    if (!widget.enabled) return; // ✅ 연결 안되면 전송 불가
+    if (!widget.enabled) return; // 연결 안되면 전송 불가
+
     final text = _controller.text.trim();
-    if (text.isEmpty) return;
-    widget.onSend(text);
+    if (text.isEmpty) return; // 텍스트 없으면 전송 불가
+
+    widget.onSend(text); // 메세지 전송
     _controller.clear();
+  }
+
+  // 이미지 선택하기
+  Future<void> _onAddPressed() async {
+    if (widget.onImageSend == null) return;
+
+    // 하단에 선택 옵션 표시
+    final result = await showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+          child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.photo_library),
+            title: const Text('갤러리에서 선택'),
+            onTap: () => Navigator.pop(context, 'gallery'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.camera_alt),
+            title: const Text('카메라로 촬영'),
+            onTap: () => Navigator.pop(context, 'camera'),
+          ),
+        ],
+      )),
+    );
+
+    if (result == null) return;
+
+    // 이미지 선택
+    final XFile? image = await _picker.pickImage(
+      source: result == 'camera' ? ImageSource.camera : ImageSource.gallery,
+      maxWidth: 1920,
+      maxHeight: 1920,
+      imageQuality: 85,
+    );
+
+    if (image != null) {
+      widget.onImageSend!(image.path);
+    }
   }
 
   @override
@@ -43,6 +102,27 @@ class _ChatInputFieldState extends State<ChatInputField> {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
+              // 이미지 선택 버튼
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.grey[300]!, // 📌 테두리 추가
+                    width: 1,
+                  ),
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.add, size: 24),
+                  color: Colors.grey[700],
+                  padding: EdgeInsets.zero,
+                  onPressed: widget.enabled ? _onAddPressed : null,
+                ),
+              ),
+              const SizedBox(width: 8),
+              // 메세지 입력 필드
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
@@ -61,9 +141,8 @@ class _ChatInputFieldState extends State<ChatInputField> {
                       fontSize: 15,
                     ),
                     decoration: InputDecoration(
-                      hintText: widget.enabled
-                          ? "메시지를 입력하세요..."
-                          : "서버에 연결 중입니다...",
+                      hintText:
+                          widget.enabled ? "메시지를 입력하세요..." : "서버에 연결 중입니다...",
                       hintStyle: TextStyle(
                         color: Colors.grey[500], // 📌 힌트 텍스트 색상
                         fontSize: 15,
@@ -79,16 +158,31 @@ class _ChatInputFieldState extends State<ChatInputField> {
                 ),
               ),
               const SizedBox(width: 8),
+              // 텍스트 메세지 전송 버튼
               Container(
+                width: 40,
+                height: 40,
                 decoration: BoxDecoration(
-                  color: widget.enabled
-                      ? Colors.blue // 📌 활성화: 파란색
-                      : Colors.grey[300], // 📌 비활성화: 회색
-                  shape: BoxShape.circle, // 📌 원형 버튼
+                  color: widget.enabled && _hasText
+                      ? const Color(0xFF4A90E2)
+                      : Colors.grey[100],
+                  shape: BoxShape.circle,
+                  border: widget.enabled && _hasText
+                      ? null
+                      : Border.all(
+                          color: Colors.grey[300]!,
+                          width: 1,
+                        ),
                 ),
                 child: IconButton(
-                  icon: const Icon(Icons.send),
-                  color: Colors.white, // 📌 아이콘 색상 흰색
+                  icon: const Icon(
+                    Icons.send,
+                    size: 24,
+                  ),
+                  color: widget.enabled && _hasText
+                      ? Colors.white
+                      : Colors.grey[700],
+                  padding: EdgeInsets.zero,
                   onPressed: widget.enabled ? _submit : null,
                 ),
               ),
