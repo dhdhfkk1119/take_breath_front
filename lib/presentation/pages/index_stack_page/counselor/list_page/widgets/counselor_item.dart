@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/utils/my_http.dart';
+import 'package:take_breath/_core/utils/thumbnail_image.dart';
 import 'package:take_breath/domain/counselor/models/counselor_response.dart';
-import 'package:take_breath/domain/counselor/providers/counselor_like_notifier.dart';
 import 'package:take_breath/domain/counselor/providers/counselor_list_notifier.dart';
 
 class CounselorItem extends ConsumerStatefulWidget {
@@ -20,16 +21,21 @@ class CounselorItem extends ConsumerStatefulWidget {
 }
 
 class _CounselorItemState extends ConsumerState<CounselorItem> {
-  late bool isFavorite;
-
   @override
   void initState() {
     super.initState();
-    isFavorite = false;
   }
 
   @override
   Widget build(BuildContext context) {
+    final counselorListState = ref.watch(counselorListProvider);
+    final updatedCounselor = counselorListState.data?.content.firstWhere(
+      (c) => c.id == widget.counselor.id,
+      orElse: () => widget.counselor,
+    );
+
+    final isLiked = updatedCounselor?.likedByMe ?? false;
+
     return GestureDetector(
       onTap: widget.onTap,
       child: Container(
@@ -51,23 +57,15 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 상단: 프로필, 이름, 찜
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 프로필 사진
-                  Container(
+                  ThumbnailImage(
+                    url: "${baseUrl}/uploads/${widget.counselor.profileImage}",
                     width: 80,
                     height: 80,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      CupertinoIcons.person_fill,
-                      size: 40,
-                      color: Colors.grey,
-                    ),
+                    borderRadius: 15,
                   ),
                   const SizedBox(width: 16),
                   // 이름, 자격증
@@ -75,7 +73,6 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // 뱃지 + 이름
                         Row(
                           children: [
                             Expanded(
@@ -91,11 +88,26 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          widget.counselor.specialty ?? "자격증 없음",
+                          widget.counselor.licenses != null &&
+                                  widget.counselor.licenses!.isNotEmpty
+                              ? widget.counselor.licenses!
+                                  .map((license) => license.licenseName)
+                                  .join(', ')
+                              : "자격증 없음",
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.grey[600],
                           ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          widget.counselor.hashtags ?? "해시태그",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[600],
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
@@ -104,18 +116,14 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
                   GestureDetector(
                     onTap: () async {
                       await ref
-                          .read(counselorLikeProvider.notifier)
-                          .toggleLike(widget.counselor.id);
-
-                      await ref
                           .read(counselorListProvider.notifier)
-                          .fetchFirstPage();
+                          .toggleLike(widget.counselor.id);
                     },
                     child: Icon(
-                      widget.counselor.likedByMe
+                      isLiked
                           ? CupertinoIcons.heart_fill
                           : CupertinoIcons.heart,
-                      color: isFavorite ? Colors.red : Colors.grey[400],
+                      color: isLiked ? Colors.red : Colors.grey[400],
                       size: 24,
                     ),
                   ),
@@ -124,7 +132,7 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
               const SizedBox(height: 12),
               // 설명
               Text(
-                "서렴ㅇ",
+                widget.counselor.introduction ?? "등록된 글이 없습니다",
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.grey[600],
@@ -141,17 +149,22 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
               const SizedBox(height: 12),
               // 가격 정보
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   // 상담료
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '문자 상담',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey[500],
+                      InkWell(
+                        onTap: () {
+                          //여기 문자를 주고받는 로직 추가 부탁
+                        },
+                        child: Text(
+                          '문자 상담',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey[500],
+                          ),
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -189,7 +202,7 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '전화 상담',
+                        '문자 상담',
                         style: TextStyle(
                           fontSize: 11,
                           color: Colors.grey[500],
@@ -224,14 +237,6 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
                         ],
                       ),
                     ],
-                  ),
-                  // 예약 버튼
-                  const Text(
-                    '-',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w300,
-                    ),
                   ),
                 ],
               ),

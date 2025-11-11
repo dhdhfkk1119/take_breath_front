@@ -3,7 +3,6 @@ import 'package:take_breath/_core/utils/my_http.dart';
 import 'package:take_breath/_core/utils/page_request.dart';
 import 'package:take_breath/domain/counselor/models/counselor_response.dart';
 import 'package:take_breath/domain/counselor/models/counselor_sign.dart';
-import 'package:take_breath/domain/member/services/auth_storage.dart';
 
 class CounselorRepository {
   final ApiService apiService;
@@ -52,7 +51,7 @@ class CounselorRepository {
   }) async {
     try {
       final response = await dio.get(
-        '/counselors',
+        '/counselors/page',
         queryParameters: {'page': page, 'size': size},
       );
 
@@ -76,11 +75,19 @@ class CounselorRepository {
     return CounselorResponse.fromJson(data);
   }
 
-  Future<void> toggleLike(int counselorId) async {
-    final memberId = AuthStorage.getUserInfo();
-    await dio.post(
-      "/counselors/$counselorId",
-      queryParameters: {'memberId': memberId},
-    );
+  Future<bool> toggleLike(int counselorId) async {
+    try {
+      final result = await dio.post(
+        "/counselors/likes/$counselorId",
+      );
+      if (result.statusCode == 200) {
+        print("토클 체크 : ${result}");
+        return result.data;
+      } else {
+        throw new Exception("토클 체크 : ${result}");
+      }
+    } catch (e) {
+      throw new Exception("상담사 오류 발생 ${e.toString()}");
+    }
   }
 }

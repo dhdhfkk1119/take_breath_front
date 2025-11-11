@@ -19,7 +19,7 @@ _$CounselorResponseImpl _$$CounselorResponseImplFromJson(
       gender: json['gender'] as String?,
       price: (json['price'] as num).toInt(),
       likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,
-      likedByMe: json['likedByMe'] as bool? ?? false,
+      likedByMe: json['likedByMe'] as bool?,
       licenses: (json['licenses'] as List<dynamic>?)
           ?.map((e) =>
               CounselorLicenseResponse.fromJson(e as Map<String, dynamic>))

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/domain/counselor/models/counselor_response.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class CounselorDetailHeader extends StatefulWidget {
+class CounselorDetailHeader extends ConsumerStatefulWidget {
   final CounselorResponse counselor;
 
   const CounselorDetailHeader({
@@ -12,10 +13,11 @@ class CounselorDetailHeader extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CounselorDetailHeader> createState() => _CounselorDetailHeaderState();
+  ConsumerState<CounselorDetailHeader> createState() =>
+      _CounselorDetailHeaderState();
 }
 
-class _CounselorDetailHeaderState extends State<CounselorDetailHeader> {
+class _CounselorDetailHeaderState extends ConsumerState<CounselorDetailHeader> {
   late bool isFavorite;
 
   @override
@@ -88,7 +90,7 @@ class _CounselorDetailHeaderState extends State<CounselorDetailHeader> {
               // 뱃지
               // 이름
               Text(
-                widget.counselor.name,
+                widget.counselor.name ?? "없음",
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
@@ -97,9 +99,23 @@ class _CounselorDetailHeaderState extends State<CounselorDetailHeader> {
               const SizedBox(height: 4),
               // 자격증
               Text(
-                "자격증",
+                widget.counselor.specialty ?? "없음",
                 style: TextStyle(
                   fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+              ),
+              Text(
+                // 💡 리스트에서 자격증 이름만 추출하여 쉼표와 공백으로 연결
+                widget.counselor.licenses != null &&
+                        widget.counselor.licenses!.isNotEmpty
+                    ? widget.counselor.licenses!
+                        .map((license) => license
+                            .licenseName) // CounselorLicenseResponse 객체에서 'name' 필드 추출
+                        .join(', ') // 추출된 이름들을 ', '로 연결
+                    : "자격증 없음", // 리스트가 null이거나 비어있을 경우
+                style: TextStyle(
+                  fontSize: 13,
                   color: Colors.grey[600],
                 ),
               ),
@@ -145,7 +161,6 @@ class _CounselorDetailHeaderState extends State<CounselorDetailHeader> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          // 상담사 전화번호 (임시 번호, 실제로는 counselor 데이터에서 가져오기)
                           _makePhoneCall('01012345678');
                         },
                         style: ElevatedButton.styleFrom(

@@ -39,8 +39,10 @@ class CounselorListNotifier
 
   // 다음 페이지 로드 (무한 스크롤)
   Future<void> fetchNextPage() async {
+    if (state.isLoading) return; // 현재 로딩 중이면 무시
     if (state.data == null || state.data!.isLast) return;
 
+    state = state.loading(); // 로딩 상태 설정
     try {
       final pageData = await counselorRepository.findAll(
         page: currentPage + 1,
@@ -48,14 +50,13 @@ class CounselorListNotifier
       );
       currentPage = pageData.pageNumber;
 
-      // 기존 content와 새 content 합치기
       final combinedContent = [
-        ...?state.data?.content, // null-safe
+        ...?state.data?.content,
         ...pageData.content,
       ];
 
       state = state.success(
-        PageResponse<CounselorResponse>(
+        PageResponse(
           content: combinedContent,
           pageNumber: pageData.pageNumber,
           pageSize: pageData.pageSize,
@@ -64,6 +65,28 @@ class CounselorListNotifier
           isFirst: pageData.isFirst,
           isLast: pageData.isLast,
         ),
+      );
+    } catch (e) {
+      state = state.failure(e.toString());
+    }
+  }
+
+  Future<void> toggleLike(int counselorId) async {
+    try {
+      final isLiked = await counselorRepository.toggleLike(counselorId);
+
+      final currentData = state.data;
+      if (currentData == null) return;
+
+      final updatedList = currentData.content.map((counselor) {
+        if (counselor.id == counselorId) {
+          return counselor.copyWith(likedByMe: isLiked);
+        }
+        return counselor;
+      }).toList();
+
+      state = state.success(
+        currentData.copyWith(content: updatedList),
       );
     } catch (e) {
       state = state.failure(e.toString());

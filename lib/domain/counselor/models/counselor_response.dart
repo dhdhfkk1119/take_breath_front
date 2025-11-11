@@ -17,7 +17,7 @@ class CounselorResponse with _$CounselorResponse {
     String? gender,
     required int price,
     @Default(0) int likeCount,
-    @Default(false) bool likedByMe,
+    bool? likedByMe,
     List<CounselorLicenseResponse>? licenses,
   }) = _CounselorResponse;
 

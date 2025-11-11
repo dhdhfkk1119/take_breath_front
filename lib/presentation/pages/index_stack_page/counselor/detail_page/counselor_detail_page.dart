@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:take_breath/domain/counselor/models/counselor_response.dart';
 import 'widgets/counselor_detail_header_with_phone_call.dart';
-import 'widgets/counselor_detail_review.dart';
 
 class CounselorDetailPage extends StatelessWidget {
   final CounselorResponse counselor;
@@ -29,8 +28,6 @@ class CounselorDetailPage extends StatelessWidget {
           children: [
             CounselorDetailHeader(counselor: counselor),
             const SizedBox(height: 20),
-            CounselorDetailReview(counselor: counselor),
-            const SizedBox(height: 30),
           ],
         ),
       ),
