@@ -26,7 +26,7 @@ class CommentReportRepository {
   }) async {
     try {
       final response = await dio.get(
-        "/community/comment-reports/comments/",
+        "/community/comment-reports",
         queryParameters: {
           "page": page,
           "size": size,

@@ -14,7 +14,6 @@ import '../new_report/user_report_assistant_page.dart';
 import '../report_page/user_report_history_page.dart';
 import '../resource_page/resource_page.dart';
 import '../settings_page/settings_page.dart';
-import '../widgets/user_counseling_history_section.dart';
 import '../widgets/user_profile_section.dart';
 import '../widgets/user_report_section.dart';
 import '../widgets/user_resource_section.dart';
@@ -39,12 +38,6 @@ class _UserMypageListPageState extends ConsumerState<UserMypageListPage> {
       MaterialPageRoute(
         builder: (context) => const UserProfileEditPage(),
       ),
-    );
-  }
-
-  void _handleViewCounselingHistory(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('상담 이력 상세 페이지로 이동')),
     );
   }
 
@@ -199,13 +192,7 @@ class _UserMypageListPageState extends ConsumerState<UserMypageListPage> {
             ),
             const SizedBox(height: 20),
 
-            // 3. 상담 이력 섹션
-            UserCounselingHistorySection(
-              onViewMore: () => _handleViewCounselingHistory(context),
-            ),
-            const SizedBox(height: 20),
-
-            // 4. ✅ 포인트 + 액티비티 그리드 (분리된 위젯)
+            // 3. ✅ 포인트 + 액티비티 그리드 (분리된 위젯)
             UserActivityGrid(
               onPaymentHistoryPressed: () => _handlePaymentHistory(context),
               onPointHistoryPressed: () => _handlePointHistory(context),
@@ -216,13 +203,13 @@ class _UserMypageListPageState extends ConsumerState<UserMypageListPage> {
             ),
             const SizedBox(height: 20),
 
-            // 5. 자료실 섹션
+            // 4. 자료실 섹션
             UserResourceSection(
               onResourcePressed: () => _handleResourcePage(context),
             ),
             const SizedBox(height: 20),
 
-            // 6. 신고 섹션
+            // 5. 신고 섹션
             UserReportSection(
               onNewReport: () => _handleNewReport(context),
             ),

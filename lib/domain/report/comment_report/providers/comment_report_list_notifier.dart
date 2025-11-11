@@ -3,6 +3,10 @@ import 'package:take_breath/_core/utils/base_state.dart';
 import 'package:take_breath/domain/report/comment_report/models/comment_report_response.dart';
 import 'package:take_breath/domain/report/comment_report/repositories/comment_report_repository.dart';
 
+final commentReportListProvider = NotifierProvider<CommentReportListNotifier, BaseState<List<CommentReportListDTO>>>(
+      () => CommentReportListNotifier(),
+);
+
 class CommentReportListNotifier
     extends Notifier<BaseState<List<CommentReportListDTO>>> {
   int _currentPage = 0;
