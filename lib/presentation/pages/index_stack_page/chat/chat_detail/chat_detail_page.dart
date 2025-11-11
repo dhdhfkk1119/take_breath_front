@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
-import 'package:take_breath/domain/chat/models/chat_message_response.dart';
-import 'package:take_breath/domain/chat/models/chat_message_ui.dart';
+import 'package:take_breath/domain/chat/models/chat_message_response/chat_message_response.dart';
+import 'package:take_breath/domain/chat/models/chat_message_ui/chat_message_ui.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_detail/widgets/chat_detail_body.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_detail/widgets/chat_input_field.dart';
 
@@ -27,8 +27,9 @@ class ChatDetailPage extends ConsumerStatefulWidget {
 
 class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
   StompClient? stompClient; // stomp 클라
-  bool _isConnected = false; // 연결 유무
   final List<ChatMessageUI> messages = []; // 전체 메세지(이전 메세지, 현재 메세지)
+  bool _isConnected = false; // 연결 유무
+  bool _isUploadingImage = false;
   int? _currentUserId;
 
   @override
@@ -115,7 +116,7 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
     stompClient!.activate(); // 연결 시작
   }
 
-  // 연결 성공 -> 구독
+  // 연결 성공 시 구독
   void _onConnect(StompFrame frame) async {
     debugPrint('✅ STOMP 연결 완료 -> 채널 구독 진행');
     setState(() => _isConnected = true);
@@ -133,7 +134,6 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
           final msg = ChatMessageResponse.fromJson(data); // json 변환
           if (mounted) {
             setState(() {
-              // ✅ 3. 이전 메시지 참조해서 변환
               final prevMsg = messages.isNotEmpty ? messages.first : null;
               messages.insert(0, _convertToUIModel(msg, prevMsg));
             });
@@ -157,6 +157,78 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
         "messageType": "TEXT",
       }),
     );
+  }
+
+  Future<void> _sendImageMessage(String imagePath) async {
+    if (_isUploadingImage) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('이미지 업로드 중입니다...')),
+      );
+      return;
+    }
+
+    setState(() => _isUploadingImage = true);
+
+    try {
+      // 로딩 표시
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Row(
+            children: [
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(width: 12),
+              Text('이미지 업로드 중...'),
+            ],
+          ),
+          duration: Duration(hours: 1),
+        ),
+      );
+
+      await ref.read(chatMessageRepositoryProvider).sendImageMessage(
+            roomId: widget.roomId,
+            imagePath: imagePath,
+          );
+
+      // 성공
+      if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('이미지를 전송했습니다.'),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      // 실패
+      debugPrint('❌ 이미지 전송 실패: $e');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('이미지 전송 실패: ${e.toString()}'),
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.red,
+            action: SnackBarAction(
+              label: '재시도',
+              textColor: Colors.white,
+              onPressed: () => _sendImageMessage(imagePath),
+            ),
+          ),
+        );
+      }
+    } finally {
+      setState(() => _isUploadingImage = false);
+    }
   }
 
   // ChatMessageResponse를 ChatMessageUI로 변환하는 핵심 메서드
@@ -196,18 +268,23 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.roomName)),
-      body: Column(
-        children: [
-          Expanded(
-            child: ChatDetailBody(messages: messages),
-          ),
-          ChatInputField(
-            onSend: _sendMessage,
-            enabled: _isConnected,
-          ),
-        ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.translucent,
+      child: Scaffold(
+        appBar: AppBar(title: Text(widget.roomName)),
+        body: Column(
+          children: [
+            Expanded(
+              child: ChatDetailBody(messages: messages),
+            ),
+            ChatInputField(
+              onSend: _sendMessage,
+              onImageSend: _sendImageMessage,
+              enabled: _isConnected,
+            ),
+          ],
+        ),
       ),
     );
   }

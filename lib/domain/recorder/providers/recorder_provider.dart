@@ -4,7 +4,7 @@ import '../../../_core/utils/my_http.dart';
 import '../record_service/record_service.dart';
 import '../repository/record_repository.dart';
 import '../models/record_item.dart';
-import '../models/record_filter.dart'; // ✅ 추가
+import '../models/record_filter.dart';
 
 final recordServiceProvider = Provider((ref) {
   return RecordService(dio: dio);
@@ -19,21 +19,40 @@ final currentPageProvider = StateProvider<int>((ref) => 0);
 
 final searchKeywordProvider = StateProvider<String>((ref) => '');
 
-// ✅ 필터 상태 Provider 추가
+// ✅ 선택된 날짜 Provider
+final selectedDateProvider = StateProvider<DateTime?>((ref) => null);
+
 final recordFilterProvider = StateProvider<RecordFilter>((ref) {
   return const RecordFilter.initial();
 });
 
-// ✅ 필터를 사용하도록 수정
 final recordListProvider = FutureProvider.family<List<RecordItem>, int>(
   (ref, page) async {
     final repository = ref.watch(recordRepositoryProvider);
-    final filter = ref.watch(recordFilterProvider); // ✅ 필터 가져오기
+    final filter = ref.watch(recordFilterProvider);
+    final selectedDate = ref.watch(selectedDateProvider);
+
+    if (selectedDate != null) {
+      return repository.searchByDateRange(
+        startDate: selectedDate,
+        endDate: selectedDate,
+        page: page,
+        size: 10,
+      );
+    }
+
+    if (filter.isFiltered) {
+      return repository.getRecordList(
+        page: page,
+        size: 10,
+        filter: filter,
+      );
+    }
 
     return repository.getRecordList(
       page: page,
       size: 10,
-      filter: filter, // ✅ 필터 전달
+      filter: null,
     );
   },
 );
@@ -68,6 +87,14 @@ final updateRecordProvider =
   (ref) {
     final repository = ref.watch(recordRepositoryProvider);
     return UpdateRecordNotifier(repository, ref);
+  },
+);
+
+final saveRecordProvider =
+    StateNotifierProvider<SaveRecordNotifier, AsyncValue<RecordItem?>>(
+  (ref) {
+    final repository = ref.watch(recordRepositoryProvider);
+    return SaveRecordNotifier(repository, ref);
   },
 );
 
@@ -113,7 +140,42 @@ class UpdateRecordNotifier extends StateNotifier<AsyncValue<void>> {
         );
 
         _ref.invalidate(recordDetailProvider(id));
-        _ref.invalidate(recordListProvider);
+        _ref.invalidate(recordListProvider(0));
+      },
+    );
+  }
+}
+
+class SaveRecordNotifier extends StateNotifier<AsyncValue<RecordItem?>> {
+  final RecordRepository _repository;
+  final Ref _ref;
+
+  SaveRecordNotifier(this._repository, this._ref)
+      : super(const AsyncValue.data(null));
+
+  Future<void> saveRecord({
+    required String title,
+    required String content,
+    List<File>? imageFiles,
+    List<File>? audioFiles,
+    List<File>? videoFiles,
+  }) async {
+    state = const AsyncValue.loading();
+
+    state = await AsyncValue.guard(
+      () async {
+        final savedRecord = await _repository.saveRecord(
+          title: title,
+          content: content,
+          imageFiles: imageFiles,
+          audioFiles: audioFiles,
+          videoFiles: videoFiles,
+        );
+
+        _ref.read(currentPageProvider.notifier).state = 0;
+        _ref.invalidate(recordListProvider(0));
+
+        return savedRecord;
       },
     );
   }

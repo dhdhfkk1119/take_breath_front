@@ -19,7 +19,7 @@ class CommunityReportDetail with _$CommunityReportDetail {
     @Default(CommunityReportStatus.PENDING) CommunityReportStatus status,
     required String createdAt,
     @Default([]) List<AdminComment> adminComments,
-  }) = _CommunityReportDetail;
+  }) = _CommentReportDetailDTO;
 
   factory CommunityReportDetail.fromJson(Map<String, dynamic> json) =>
       _$CommunityReportDetailFromJson(json);

@@ -7,20 +7,20 @@ class RecordService {
 
   RecordService({required this.dio});
 
-  // ✅ 필터 파라미터 추가
+  //  필터 파라미터 추가
   Future<Map<String, dynamic>> getRecordList({
     required int page,
     required int size,
-    bool? hasImage, // ✅ 추가
-    bool? hasAudio, // ✅ 추가
-    bool? hasVideo, // ✅ 추가
+    bool? hasImage,
+    bool? hasAudio,
+    bool? hasVideo,
   }) async {
     final queryParameters = {
       'page': page,
       'size': size,
-      if (hasImage != null) 'hasImage': hasImage, // ✅ 추가
-      if (hasAudio != null) 'hasAudio': hasAudio, // ✅ 추가
-      if (hasVideo != null) 'hasVideo': hasVideo, // ✅ 추가
+      if (hasImage != null) 'hasImage': hasImage,
+      if (hasAudio != null) 'hasAudio': hasAudio,
+      if (hasVideo != null) 'hasVideo': hasVideo,
     };
 
     final response = await dio.get(
@@ -28,6 +28,35 @@ class RecordService {
       queryParameters: queryParameters,
     );
     return response.data;
+  }
+
+  /// ✅ 날짜 범위로 검색 - 추가된 메서드 (경로 수정!)
+  Future<Map<String, dynamic>> searchByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required int page,
+    required int size,
+  }) async {
+    try {
+      final startString =
+          '${startDate.year}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}';
+      final endString =
+          '${endDate.year}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}';
+
+      final response = await dio.get(
+        '/records/search', // ✅ 원본과 동일하게 수정
+        queryParameters: {
+          'startDate': startString,
+          'endDate': endString,
+          'page': page,
+          'size': size,
+        },
+      );
+
+      return response.data ?? {};
+    } catch (e) {
+      throw Exception('날짜별 기록 조회 실패: $e');
+    }
   }
 
   Future<Map<String, dynamic>> searchRecords({
@@ -126,5 +155,66 @@ class RecordService {
       options: Options(responseType: ResponseType.bytes),
     );
     return Uint8List.fromList(response.data);
+  }
+
+  Future<Map<String, dynamic>> saveRecord({
+    required String title,
+    required String content,
+    List<File>? imageFiles,
+    List<File>? audioFiles,
+    List<File>? videoFiles,
+  }) async {
+    final formData = FormData();
+
+    formData.fields.add(MapEntry('title', title));
+    formData.fields.add(MapEntry('content', content));
+
+    if (imageFiles != null && imageFiles.isNotEmpty) {
+      for (var file in imageFiles) {
+        formData.files.add(
+          MapEntry(
+            'imageFiles',
+            await MultipartFile.fromFile(
+              file.path,
+              filename: file.path.split('/').last,
+            ),
+          ),
+        );
+      }
+    }
+
+    if (audioFiles != null && audioFiles.isNotEmpty) {
+      for (var file in audioFiles) {
+        formData.files.add(
+          MapEntry(
+            'audioFiles',
+            await MultipartFile.fromFile(
+              file.path,
+              filename: file.path.split('/').last,
+            ),
+          ),
+        );
+      }
+    }
+
+    if (videoFiles != null && videoFiles.isNotEmpty) {
+      for (var file in videoFiles) {
+        formData.files.add(
+          MapEntry(
+            'videoFiles',
+            await MultipartFile.fromFile(
+              file.path,
+              filename: file.path.split('/').last,
+            ),
+          ),
+        );
+      }
+    }
+
+    final response = await dio.post(
+      '/records',
+      data: formData,
+    );
+    return response.data;
   }
 }

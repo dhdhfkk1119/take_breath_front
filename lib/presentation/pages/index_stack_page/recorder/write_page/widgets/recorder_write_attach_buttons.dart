@@ -1,25 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
-class RecorderWriteAttachButtons extends StatelessWidget {
-  final VoidCallback onImagePick;
-  final VoidCallback onAudioRecord;
+class RecorderWriteAttachButtons extends StatefulWidget {
+  final Function(List<File>) onImagesPicked;
+  final VoidCallback onAudioPicked; // ✅ onAudioRecord -> onAudioPicked
 
   const RecorderWriteAttachButtons({
     Key? key,
-    required this.onImagePick,
-    required this.onAudioRecord,
+    required this.onImagesPicked,
+    required this.onAudioPicked,
   }) : super(key: key);
+
+  @override
+  State<RecorderWriteAttachButtons> createState() =>
+      _RecorderWriteAttachButtonsState();
+}
+
+class _RecorderWriteAttachButtonsState
+    extends State<RecorderWriteAttachButtons> {
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImages() async {
+    try {
+      final List<XFile> pickedFiles = await _picker.pickMultiImage();
+
+      if (pickedFiles.isNotEmpty) {
+        final List<File> imageFiles =
+            pickedFiles.map((xfile) => File(xfile.path)).toList();
+        widget.onImagesPicked(imageFiles);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('이미지 선택 실패: $e')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _buildButton(
-            icon: CupertinoIcons.mic_fill,
-            label: '음성녹음',
-            onTap: onAudioRecord,
+            icon: CupertinoIcons.photo_fill,
+            label: '사진',
+            onTap: _pickImages,
+          ),
+          const SizedBox(width: 12),
+          _buildButton(
+            icon: CupertinoIcons.music_note, // ✅ 아이콘 변경 (더 적절함)
+            label: '음성파일', // ✅ 라벨 변경 (녹음 -> 파일 선택)
+            onTap: widget.onAudioPicked,
           ),
         ],
       ),

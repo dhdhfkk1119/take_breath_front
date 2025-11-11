@@ -9,7 +9,7 @@ class ChatMessageBubble extends StatelessWidget {
   final bool showTimestamp;      
   final String senderName;       
   final String formattedTime;  
-  final String? imageUrl;        
+  final String? attachmentPath;
 
   const ChatMessageBubble({
     super.key,
@@ -20,7 +20,7 @@ class ChatMessageBubble extends StatelessWidget {
     required this.showTimestamp,
     required this.senderName,
     required this.formattedTime,
-    this.imageUrl,
+    this.attachmentPath,
   });
 
   @override
@@ -102,7 +102,7 @@ class ChatMessageBubble extends StatelessWidget {
                         color: isMe ? Colors.blue : Colors.grey[300],
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: messageType == 'IMAGE' && imageUrl != null
+                      child: messageType == 'IMAGE' && attachmentPath != null
                           ? _buildImageMessage()
                           : _buildTextMessage(),
                     ),
@@ -146,7 +146,7 @@ class ChatMessageBubble extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Image.network(
-            imageUrl!,
+            "http://10.0.2.2:8080${attachmentPath!}",
             width: 200,
             height: 200,
             fit: BoxFit.cover,
