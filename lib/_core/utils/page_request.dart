@@ -47,4 +47,24 @@ class PageResponse<T> {
       isLast: json['last'] ?? false,
     );
   }
+
+  PageResponse<T> copyWith({
+    List<T>? content,
+    int? pageNumber,
+    int? pageSize,
+    int? totalPages,
+    int? totalElements,
+    bool? isFirst,
+    bool? isLast,
+  }) {
+    return PageResponse<T>(
+      content: content ?? this.content,
+      pageNumber: pageNumber ?? this.pageNumber,
+      pageSize: pageSize ?? this.pageSize,
+      totalPages: totalPages ?? this.totalPages,
+      totalElements: totalElements ?? this.totalElements,
+      isFirst: isFirst ?? this.isFirst,
+      isLast: isLast ?? this.isLast,
+    );
+  }
 }

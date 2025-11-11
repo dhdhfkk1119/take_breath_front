@@ -12,7 +12,20 @@
           "package_name": "com.example.take_breath"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "498079476090-dav0g84jmk5je3i4qahfi05hjapqio6q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.take_breath",
+            "certificate_hash": "9e100ee6af6b55082bd62a05398aa74a2a4ccdf0"
+          }
+        },
+        {
+          "client_id": "498079476090-jhmaetj2ci2ub11cdodohgb7trnv3qoo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBZBxydOZ971r_jhWOCS8ZLoVsRe6C2qUQ"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "498079476090-jhmaetj2ci2ub11cdodohgb7trnv3qoo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "498079476090-teml94eg8ji6ib6k0rirg97vei6c23cd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.takeBreath"
+              }
+            }
+          ]
         }
       }
     }

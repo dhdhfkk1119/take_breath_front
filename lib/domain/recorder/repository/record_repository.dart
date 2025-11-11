@@ -1,4 +1,5 @@
 import '../models/record_item.dart';
+import '../models/record_filter.dart'; // ✅ 추가
 import '../record_service/record_service.dart';
 import 'dart:io';
 import 'dart:typed_data';
@@ -8,13 +9,18 @@ class RecordRepository {
 
   RecordRepository({required this.recordService});
 
+  // ✅ 필터 파라미터 추가
   Future<List<RecordItem>> getRecordList({
     required int page,
     required int size,
+    RecordFilter? filter, // ✅ 추가
   }) async {
     final response = await recordService.getRecordList(
       page: page,
       size: size,
+      hasImage: filter?.hasImage, // ✅ 추가
+      hasAudio: filter?.hasAudio, // ✅ 추가
+      hasVideo: filter?.hasVideo, // ✅ 추가
     );
 
     final List<dynamic> content = response['response']?['content'] ?? [];
