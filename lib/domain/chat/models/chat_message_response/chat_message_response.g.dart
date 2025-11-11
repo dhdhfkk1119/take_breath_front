@@ -15,10 +15,9 @@ _$ChatMessageResponseImpl _$$ChatMessageResponseImplFromJson(
       content: json['content'] as String,
       messageType: json['messageType'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      imageUrl: json['imageUrl'] as String?,
+      attachmentPath: json['attachmentPath'] as String?,
       currentPoint: (json['currentPoint'] as num?)?.toInt(),
       isRead: json['isRead'] as bool,
-      isMe: json['isMe'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$ChatMessageResponseImplToJson(
@@ -30,8 +29,7 @@ Map<String, dynamic> _$$ChatMessageResponseImplToJson(
       'content': instance.content,
       'messageType': instance.messageType,
       'createdAt': instance.createdAt.toIso8601String(),
-      'imageUrl': instance.imageUrl,
+      'attachmentPath': instance.attachmentPath,
       'currentPoint': instance.currentPoint,
       'isRead': instance.isRead,
-      'isMe': instance.isMe,
     };

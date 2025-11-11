@@ -6,9 +6,9 @@ part of 'community_report_detail.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CommunityReportDetailImpl _$$CommunityReportDetailImplFromJson(
+_$CommentReportDetailDTOImpl _$$CommentReportDetailDTOImplFromJson(
         Map<String, dynamic> json) =>
-    _$CommunityReportDetailImpl(
+    _$CommentReportDetailDTOImpl(
       id: (json['id'] as num).toInt(),
       reporterId: (json['reporterId'] as num).toInt(),
       reporterName: json['reporterName'] as String,
@@ -26,8 +26,8 @@ _$CommunityReportDetailImpl _$$CommunityReportDetailImplFromJson(
           const [],
     );
 
-Map<String, dynamic> _$$CommunityReportDetailImplToJson(
-        _$CommunityReportDetailImpl instance) =>
+Map<String, dynamic> _$$CommentReportDetailDTOImplToJson(
+        _$CommentReportDetailDTOImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'reporterId': instance.reporterId,

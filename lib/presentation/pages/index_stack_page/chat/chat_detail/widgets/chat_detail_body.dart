@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:take_breath/domain/chat/models/chat_message_response.dart';
-import 'package:take_breath/domain/chat/models/chat_message_ui.dart';
+import 'package:take_breath/domain/chat/models/chat_message_response/chat_message_response.dart';
+import 'package:take_breath/domain/chat/models/chat_message_ui/chat_message_ui.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_detail/widgets/chat_message_bubble.dart';
 
 import '../../legacy_widget/chat_detail_item.dart';
@@ -26,7 +26,7 @@ class ChatDetailBody extends StatelessWidget {
           showTimestamp: msg.showTimestamp,       // ✅ 시간 표시 여부
           senderName: msg.senderName,             // ✅ 발신자 이름
           formattedTime: msg.formattedTime,       // ✅ 포맷된 시간
-          imageUrl: msg.imageUrl,                 // ✅ 이미지 URL (있으면)
+          attachmentPath: msg.attachmentPath,     // ✅ 이미지 URL (있으면)
         );
       },
     );

@@ -1,8 +1,5 @@
-
-
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:take_breath/domain/chat/models/chat_message_response.dart';
+import 'package:take_breath/domain/chat/models/chat_message_response/chat_message_response.dart';
 
 part 'chat_message_ui.freezed.dart';
 
@@ -38,7 +35,7 @@ class ChatMessageUI with _$ChatMessageUI {
   bool get isRead => message.isRead;
 
   /// 이미지 URL (있는 경우)
-  String? get imageUrl => message.imageUrl;
+  String? get attachmentPath => message.attachmentPath;
 
   /// 현재 포인트 (포인트 메시지인 경우)
   int? get currentPoint => message.currentPoint;
@@ -52,7 +49,8 @@ class ChatMessageUI with _$ChatMessageUI {
   bool get isImageMessage => message.messageType == 'IMAGE';
 
   /// 포인트 관련 메시지인지
-  bool get isPointMessage => message.messageType == 'POINT' || currentPoint != null;
+  bool get isPointMessage =>
+      message.messageType == 'POINT' || currentPoint != null;
 
   /// 시스템 메시지인지 (입장/퇴장 알림 등)
   bool get isSystemMessage => message.messageType == 'SYSTEM';
@@ -67,7 +65,8 @@ class ChatMessageUI with _$ChatMessageUI {
     final now = DateTime.now();
     final messageDate = createdAt;
     final today = DateTime(now.year, now.month, now.day);
-    final msgDay = DateTime(messageDate.year, messageDate.month, messageDate.day);
+    final msgDay =
+        DateTime(messageDate.year, messageDate.month, messageDate.day);
 
     final diff = today.difference(msgDay).inDays;
 
@@ -152,11 +151,10 @@ class ChatMessageUI with _$ChatMessageUI {
 
   /// 포인트 차감 메시지 텍스트
   /// 예: "포인트 100P 차감되었습니다"
-  /*
+/*
   String? get pointDeductionText {
     if (!isPointMessage || currentPoint == null) return null;
     return '포인트 ${currentPoint}P 차감되었습니다';
   }
   */
 }
-
