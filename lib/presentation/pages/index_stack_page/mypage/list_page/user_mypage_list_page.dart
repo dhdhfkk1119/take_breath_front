@@ -6,10 +6,10 @@ import '../charge_page/point_history_page.dart';
 import '../payment_page/payment_history_page.dart';
 import '../widgets/user_activity_grid.dart';
 import '../charge_page/widgets/user_point_section.dart';
-import '../comment_page/user_comment_history_page.dart';
+import '../comment_page/user_comment_list_page.dart';
 import '../edit_page/user_profile_edit_page.dart';
 import '../favorite_page/user_favorite_list_page.dart';
-import '../my_write/my_write_page.dart';
+import '../my_write/user_post_list_page.dart';
 import '../new_report/user_report_assistant_page.dart';
 import '../report_page/user_report_history_page.dart';
 import '../resource_page/resource_page.dart';
@@ -70,7 +70,7 @@ class _UserMypageListPageState extends ConsumerState<UserMypageListPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const UserCommentHistoryPage(),
+        builder: (context) => const UserCommentListPage(),
       ),
     );
   }

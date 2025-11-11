@@ -10,6 +10,8 @@ class CommunityCommentResponse with _$CommunityCommentResponse {
     required String content,
     required int memberId,
     required String memberName,
+    required int postId,
+    required String postTitle,
     required String createdAt,
     @Default("") String updatedAt,
     @Default(false) bool modified,
