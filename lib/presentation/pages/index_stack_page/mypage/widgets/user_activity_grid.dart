@@ -55,7 +55,7 @@ class UserActivityGrid extends StatelessWidget {
               Expanded(
                 child: UserActivityButton(
                   icon: Icons.comment_outlined,
-                  label: '댓글 내역',
+                  label: '댓글 목록',
                   onPressed: onCommentHistoryPressed,
                 ),
               ),

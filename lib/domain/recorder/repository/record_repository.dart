@@ -1,5 +1,5 @@
 import '../models/record_item.dart';
-import '../models/record_filter.dart'; // ✅ 추가
+import '../models/record_filter.dart';
 import '../record_service/record_service.dart';
 import 'dart:io';
 import 'dart:typed_data';
@@ -9,18 +9,52 @@ class RecordRepository {
 
   RecordRepository({required this.recordService});
 
-  // ✅ 필터 파라미터 추가
   Future<List<RecordItem>> getRecordList({
     required int page,
     required int size,
-    RecordFilter? filter, // ✅ 추가
+    RecordFilter? filter,
   }) async {
     final response = await recordService.getRecordList(
       page: page,
       size: size,
-      hasImage: filter?.hasImage, // ✅ 추가
-      hasAudio: filter?.hasAudio, // ✅ 추가
-      hasVideo: filter?.hasVideo, // ✅ 추가
+      hasImage: filter?.hasImage,
+      hasAudio: filter?.hasAudio,
+      hasVideo: filter?.hasVideo,
+    );
+
+    final List<dynamic> content = response['response']?['content'] ?? [];
+
+    final List<RecordItem> records = content.map((item) {
+      final String? rawThumbnailUrl = item['thumbnailUrl'];
+      final String? thumbnailUrl =
+          rawThumbnailUrl != null ? _convertToValidUrl(rawThumbnailUrl) : null;
+
+      return RecordItem(
+        id: item['id'],
+        title: item['title'] ?? '',
+        content: item['content'] ?? '',
+        date: item['recordDate'] ?? '',
+        imageCount: item['imageFileCount'] ?? 0,
+        audioCount: item['audioFileCount'] ?? 0,
+        thumbnailUrl: thumbnailUrl,
+      );
+    }).toList();
+
+    return records;
+  }
+
+  /// ✅ 날짜 범위로 검색 - 추가된 메서드
+  Future<List<RecordItem>> searchByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required int page,
+    required int size,
+  }) async {
+    final response = await recordService.searchByDateRange(
+      startDate: startDate,
+      endDate: endDate,
+      page: page,
+      size: size,
     );
 
     final List<dynamic> content = response['response']?['content'] ?? [];
@@ -145,6 +179,34 @@ class RecordRepository {
 
   Future<Uint8List> downloadRecordPdf({required int id}) async {
     return await recordService.downloadRecordPdf(id: id);
+  }
+
+  Future<RecordItem> saveRecord({
+    required String title,
+    required String content,
+    List<File>? imageFiles,
+    List<File>? audioFiles,
+    List<File>? videoFiles,
+  }) async {
+    final response = await recordService.saveRecord(
+      title: title,
+      content: content,
+      imageFiles: imageFiles,
+      audioFiles: audioFiles,
+      videoFiles: videoFiles,
+    );
+
+    final recordData = response['response'] ?? response;
+
+    return RecordItem(
+      id: recordData['id'],
+      title: recordData['title'] ?? '',
+      content: recordData['content'] ?? '',
+      date: recordData['recordDate'] ?? '',
+      imageCount: recordData['imageFileCount'] ?? 0,
+      audioCount: recordData['audioFileCount'] ?? 0,
+      thumbnailUrl: null,
+    );
   }
 
   String _convertToValidUrl(String filePath) {

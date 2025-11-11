@@ -5,6 +5,10 @@ import 'package:take_breath/domain/report/community_report/repositories/communit
 
 import 'community_report_repository_provider.dart';
 
+final communityReportListProvider = NotifierProvider<CommunityReportListNotifier, BaseState<List<CommunityReportListResponse>>>(
+      () => CommunityReportListNotifier(),
+);
+
 class CommunityReportListNotifier
     extends Notifier<BaseState<List<CommunityReportListResponse>>> {
   int _currentPage = 0;

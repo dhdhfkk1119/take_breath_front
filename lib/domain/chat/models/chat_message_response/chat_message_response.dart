@@ -12,10 +12,9 @@ class ChatMessageResponse with _$ChatMessageResponse {
     required String content,
     required String messageType,
     required DateTime createdAt,
-    String? imageUrl,
+    String? attachmentPath,
     int? currentPoint,
     required bool isRead,
-    @Default(false) bool isMe,
   }) = _ChatMessageResponse;
 
   factory ChatMessageResponse.fromJson(Map<String, dynamic> json) =>

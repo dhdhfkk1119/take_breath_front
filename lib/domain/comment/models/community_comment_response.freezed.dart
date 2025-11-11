@@ -25,6 +25,8 @@ mixin _$CommunityCommentResponse {
   String get content => throw _privateConstructorUsedError;
   int get memberId => throw _privateConstructorUsedError;
   String get memberName => throw _privateConstructorUsedError;
+  int get postId => throw _privateConstructorUsedError;
+  String get postTitle => throw _privateConstructorUsedError;
   String get createdAt => throw _privateConstructorUsedError;
   String get updatedAt => throw _privateConstructorUsedError;
   bool get modified => throw _privateConstructorUsedError;
@@ -51,6 +53,8 @@ abstract class $CommunityCommentResponseCopyWith<$Res> {
       String content,
       int memberId,
       String memberName,
+      int postId,
+      String postTitle,
       String createdAt,
       String updatedAt,
       bool modified,
@@ -77,6 +81,8 @@ class _$CommunityCommentResponseCopyWithImpl<$Res,
     Object? content = null,
     Object? memberId = null,
     Object? memberName = null,
+    Object? postId = null,
+    Object? postTitle = null,
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? modified = null,
@@ -98,6 +104,14 @@ class _$CommunityCommentResponseCopyWithImpl<$Res,
       memberName: null == memberName
           ? _value.memberName
           : memberName // ignore: cast_nullable_to_non_nullable
+              as String,
+      postId: null == postId
+          ? _value.postId
+          : postId // ignore: cast_nullable_to_non_nullable
+              as int,
+      postTitle: null == postTitle
+          ? _value.postTitle
+          : postTitle // ignore: cast_nullable_to_non_nullable
               as String,
       createdAt: null == createdAt
           ? _value.createdAt
@@ -133,6 +147,8 @@ abstract class _$$CommunityCommentResponseImplCopyWith<$Res>
       String content,
       int memberId,
       String memberName,
+      int postId,
+      String postTitle,
       String createdAt,
       String updatedAt,
       bool modified,
@@ -158,6 +174,8 @@ class __$$CommunityCommentResponseImplCopyWithImpl<$Res>
     Object? content = null,
     Object? memberId = null,
     Object? memberName = null,
+    Object? postId = null,
+    Object? postTitle = null,
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? modified = null,
@@ -179,6 +197,14 @@ class __$$CommunityCommentResponseImplCopyWithImpl<$Res>
       memberName: null == memberName
           ? _value.memberName
           : memberName // ignore: cast_nullable_to_non_nullable
+              as String,
+      postId: null == postId
+          ? _value.postId
+          : postId // ignore: cast_nullable_to_non_nullable
+              as int,
+      postTitle: null == postTitle
+          ? _value.postTitle
+          : postTitle // ignore: cast_nullable_to_non_nullable
               as String,
       createdAt: null == createdAt
           ? _value.createdAt
@@ -208,6 +234,8 @@ class _$CommunityCommentResponseImpl implements _CommunityCommentResponse {
       required this.content,
       required this.memberId,
       required this.memberName,
+      required this.postId,
+      required this.postTitle,
       required this.createdAt,
       this.updatedAt = "",
       this.modified = false,
@@ -225,6 +253,10 @@ class _$CommunityCommentResponseImpl implements _CommunityCommentResponse {
   @override
   final String memberName;
   @override
+  final int postId;
+  @override
+  final String postTitle;
+  @override
   final String createdAt;
   @override
   @JsonKey()
@@ -238,7 +270,7 @@ class _$CommunityCommentResponseImpl implements _CommunityCommentResponse {
 
   @override
   String toString() {
-    return 'CommunityCommentResponse(id: $id, content: $content, memberId: $memberId, memberName: $memberName, createdAt: $createdAt, updatedAt: $updatedAt, modified: $modified, deleted: $deleted)';
+    return 'CommunityCommentResponse(id: $id, content: $content, memberId: $memberId, memberName: $memberName, postId: $postId, postTitle: $postTitle, createdAt: $createdAt, updatedAt: $updatedAt, modified: $modified, deleted: $deleted)';
   }
 
   @override
@@ -252,6 +284,9 @@ class _$CommunityCommentResponseImpl implements _CommunityCommentResponse {
                 other.memberId == memberId) &&
             (identical(other.memberName, memberName) ||
                 other.memberName == memberName) &&
+            (identical(other.postId, postId) || other.postId == postId) &&
+            (identical(other.postTitle, postTitle) ||
+                other.postTitle == postTitle) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -264,7 +299,7 @@ class _$CommunityCommentResponseImpl implements _CommunityCommentResponse {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, content, memberId,
-      memberName, createdAt, updatedAt, modified, deleted);
+      memberName, postId, postTitle, createdAt, updatedAt, modified, deleted);
 
   /// Create a copy of CommunityCommentResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -289,6 +324,8 @@ abstract class _CommunityCommentResponse implements CommunityCommentResponse {
       required final String content,
       required final int memberId,
       required final String memberName,
+      required final int postId,
+      required final String postTitle,
       required final String createdAt,
       final String updatedAt,
       final bool modified,
@@ -305,6 +342,10 @@ abstract class _CommunityCommentResponse implements CommunityCommentResponse {
   int get memberId;
   @override
   String get memberName;
+  @override
+  int get postId;
+  @override
+  String get postTitle;
   @override
   String get createdAt;
   @override
