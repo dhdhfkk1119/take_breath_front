@@ -20,7 +20,7 @@ CommunityReportDetail _$CommunityReportDetailFromJson(
 }
 
 /// @nodoc
-mixin _$CommentReportDetailDTO {
+mixin _$CommunityReportDetail {
   int get id => throw _privateConstructorUsedError;
   int get reporterId => throw _privateConstructorUsedError;
   String get reporterName => throw _privateConstructorUsedError;
@@ -32,10 +32,10 @@ mixin _$CommentReportDetailDTO {
   String get createdAt => throw _privateConstructorUsedError;
   List<AdminComment> get adminComments => throw _privateConstructorUsedError;
 
-  /// Serializes this CommentReportDetailDTO to a JSON map.
+  /// Serializes this CommunityReportDetail to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of CommentReportDetailDTO
+  /// Create a copy of CommunityReportDetail
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   $CommunityReportDetailCopyWith<CommunityReportDetail> get copyWith =>
@@ -72,7 +72,7 @@ class _$CommunityReportDetailCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CommentReportDetailDTO
+  /// Create a copy of CommunityReportDetail
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -135,7 +135,7 @@ class _$CommunityReportDetailCopyWithImpl<$Res,
 
 /// @nodoc
 abstract class _$$CommentReportDetailDTOImplCopyWith<$Res>
-    implements $CommentReportDetailDTOCopyWith<$Res> {
+    implements $CommunityReportDetailCopyWith<$Res> {
   factory _$$CommentReportDetailDTOImplCopyWith(
           _$CommentReportDetailDTOImpl value,
           $Res Function(_$CommentReportDetailDTOImpl) then) =
@@ -157,7 +157,7 @@ abstract class _$$CommentReportDetailDTOImplCopyWith<$Res>
 
 /// @nodoc
 class __$$CommentReportDetailDTOImplCopyWithImpl<$Res>
-    extends _$CommentReportDetailDTOCopyWithImpl<$Res,
+    extends _$CommunityReportDetailCopyWithImpl<$Res,
         _$CommentReportDetailDTOImpl>
     implements _$$CommentReportDetailDTOImplCopyWith<$Res> {
   __$$CommentReportDetailDTOImplCopyWithImpl(
@@ -165,7 +165,7 @@ class __$$CommentReportDetailDTOImplCopyWithImpl<$Res>
       $Res Function(_$CommentReportDetailDTOImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CommentReportDetailDTO
+  /// Create a copy of CommunityReportDetail
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -275,7 +275,7 @@ class _$CommentReportDetailDTOImpl implements _CommentReportDetailDTO {
 
   @override
   String toString() {
-    return 'CommentReportDetailDTO(id: $id, reporterId: $reporterId, reporterName: $reporterName, postId: $postId, postTitle: $postTitle, postContent: $postContent, reason: $reason, status: $status, createdAt: $createdAt, adminComments: $adminComments)';
+    return 'CommunityReportDetail(id: $id, reporterId: $reporterId, reporterName: $reporterName, postId: $postId, postTitle: $postTitle, postContent: $postContent, reason: $reason, status: $status, createdAt: $createdAt, adminComments: $adminComments)';
   }
 
   @override
@@ -316,7 +316,7 @@ class _$CommentReportDetailDTOImpl implements _CommentReportDetailDTO {
       createdAt,
       const DeepCollectionEquality().hash(_adminComments));
 
-  /// Create a copy of CommentReportDetailDTO
+  /// Create a copy of CommunityReportDetail
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
@@ -333,8 +333,8 @@ class _$CommentReportDetailDTOImpl implements _CommentReportDetailDTO {
   }
 }
 
-abstract class _CommunityReportDetail implements CommunityReportDetail {
-  const factory _CommunityReportDetail(
+abstract class _CommentReportDetailDTO implements CommunityReportDetail {
+  const factory _CommentReportDetailDTO(
       {required final int id,
       required final int reporterId,
       required final String reporterName,
@@ -370,7 +370,7 @@ abstract class _CommunityReportDetail implements CommunityReportDetail {
   @override
   List<AdminComment> get adminComments;
 
-  /// Create a copy of CommentReportDetailDTO
+  /// Create a copy of CommunityReportDetail
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
