@@ -91,7 +91,13 @@ class RecorderListPage extends ConsumerWidget {
   ) {
     if (searchKeyword.isNotEmpty) {
       final TextEditingController controller = TextEditingController();
-      controller.text = searchKeyword;
+
+      // ✅ __SEARCH_MODE__일 때는 빈 문자열로 설정
+      if (searchKeyword == '__SEARCH_MODE__') {
+        controller.text = ''; // ✅ 빈 문자열
+      } else {
+        controller.text = searchKeyword; // ✅ 실제 검색어만 표시
+      }
 
       return RecorderListSearchAppBar(
         controller: controller,
@@ -111,7 +117,7 @@ class RecorderListPage extends ConsumerWidget {
           _showDatePicker(context);
         },
         onFilterPressed: () {
-          _showFilterDialog(context, ref); // ✅ ref 전달
+          _showFilterDialog(context, ref);
         },
         onNotificationPressed: () {
           Navigator.push(
@@ -322,19 +328,17 @@ class RecorderListPage extends ConsumerWidget {
     }
   }
 
-  // ✅ 필터 다이얼로그 수정
   void _showFilterDialog(BuildContext context, WidgetRef ref) {
-    final currentFilter = ref.read(recordFilterProvider); // ✅ 현재 필터 가져오기
+    final currentFilter = ref.read(recordFilterProvider);
 
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => RecorderListFilter(
-          initialFilter: currentFilter, // ✅ 현재 필터 전달
+          initialFilter: currentFilter,
           onFilterApplied: (filter) {
-            // ✅ 필터 적용
             ref.read(recordFilterProvider.notifier).state = filter;
-            ref.refresh(recordListProvider(0)); // ✅ 목록 새로고침
+            ref.refresh(recordListProvider(0));
           },
         ),
       ),

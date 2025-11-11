@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:io';
 
 class RecorderWriteAudioList extends StatelessWidget {
-  final List<String> audios;
+  final List<File> audios;
   final Function(int) onRemove;
 
   const RecorderWriteAudioList({
@@ -13,45 +14,69 @@ class RecorderWriteAudioList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (audios.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Column(
-      children: List.generate(
-        audios.length,
-        (index) => Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                CupertinoIcons.mic_fill,
-                size: 20,
-                color: Colors.grey[700],
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          '음성 녹음',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 12),
+        Column(
+          children: List.generate(
+            audios.length,
+            (index) => Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  '음성 녹음 ${index + 1}',
-                  style: const TextStyle(fontSize: 14),
-                ),
+              child: Row(
+                children: [
+                  Icon(
+                    CupertinoIcons.mic_fill,
+                    size: 20,
+                    color: Colors.grey[700],
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '음성 녹음 ${index + 1}',
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          audios[index].path.split('/').last,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          maxLines: 1,
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(CupertinoIcons.trash, size: 20),
+                    color: Colors.red,
+                    onPressed: () => onRemove(index),
+                  ),
+                ],
               ),
-              IconButton(
-                icon: const Icon(CupertinoIcons.play_circle, size: 24),
-                onPressed: () {
-                  // TODO: 음성 재생
-                },
-              ),
-              IconButton(
-                icon: const Icon(CupertinoIcons.trash, size: 20),
-                color: Colors.red,
-                onPressed: () => onRemove(index),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
+        const SizedBox(height: 24),
+      ],
     );
   }
 }

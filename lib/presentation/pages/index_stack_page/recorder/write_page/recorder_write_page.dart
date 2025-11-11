@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:take_breath/_core/utils/closable_info_box.dart';
-import 'package:take_breath/_core/utils/image_picker_list.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
 import '../../../../../domain/recorder/models/record_item.dart';
+import '../../../../../domain/recorder/providers/recorder_provider.dart';
 import 'widgets/recorder_write_app_bar.dart';
 import 'widgets/recorder_write_title_field.dart';
 import 'widgets/recorder_write_content_field.dart';
@@ -9,7 +11,7 @@ import 'widgets/recorder_write_image_list.dart';
 import 'widgets/recorder_write_audio_list.dart';
 import 'widgets/recorder_write_attach_buttons.dart';
 
-class RecorderWritePage extends StatefulWidget {
+class RecorderWritePage extends ConsumerStatefulWidget {
   final RecordItem? editingRecord;
 
   const RecorderWritePage({
@@ -18,15 +20,15 @@ class RecorderWritePage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<RecorderWritePage> createState() => _RecorderWritePageState();
+  ConsumerState<RecorderWritePage> createState() => _RecorderWritePageState();
 }
 
-class _RecorderWritePageState extends State<RecorderWritePage> {
+class _RecorderWritePageState extends ConsumerState<RecorderWritePage> {
   late TextEditingController _titleController;
   late TextEditingController _contentController;
 
-  List<String> selectedImages = [];
-  List<String> selectedAudios = [];
+  List<File> selectedImages = [];
+  List<File> selectedAudios = [];
 
   @override
   void initState() {
@@ -34,20 +36,9 @@ class _RecorderWritePageState extends State<RecorderWritePage> {
     _titleController = TextEditingController();
     _contentController = TextEditingController();
 
-    // 수정 모드인 경우 기존 데이터 로드
     if (widget.editingRecord != null) {
       _titleController.text = widget.editingRecord!.title;
       _contentController.text = widget.editingRecord!.content;
-
-      // 기존 이미지 개수만큼 로드
-      for (int i = 0; i < widget.editingRecord!.imageCount; i++) {
-        selectedImages.add('image_${i + 1}');
-      }
-
-      // 기존 오디오 개수만큼 로드
-      for (int i = 0; i < widget.editingRecord!.audioCount; i++) {
-        selectedAudios.add('audio_${i + 1}');
-      }
     }
   }
 
@@ -58,8 +49,97 @@ class _RecorderWritePageState extends State<RecorderWritePage> {
     super.dispose();
   }
 
+  Future<void> _pickAudioFile() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.audio,
+        allowMultiple: true,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        setState(() {
+          for (var file in result.files) {
+            if (file.path != null) {
+              selectedAudios.add(File(file.path!));
+            }
+          }
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${result.files.length}개의 음성 파일이 추가되었습니다'),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('파일 선택 실패: $e')),
+      );
+    }
+  }
+
+  void _handleImagesPicked(List<File> images) {
+    setState(() {
+      selectedImages.addAll(images);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    ref.listen(saveRecordProvider, (previous, next) {
+      next.when(
+        data: (record) {
+          if (record != null && mounted) {
+            Navigator.of(context, rootNavigator: true).pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('기록이 저장되었습니다')),
+            );
+            Future.delayed(const Duration(milliseconds: 500), () {
+              if (mounted) {
+                Navigator.pop(context);
+              }
+            });
+          }
+        },
+        loading: () {},
+        error: (error, stackTrace) {
+          if (mounted) {
+            Navigator.of(context, rootNavigator: true).pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('저장 실패: $error')),
+            );
+          }
+        },
+      );
+    });
+
+    ref.listen(updateRecordProvider, (previous, next) {
+      next.when(
+        data: (_) {
+          if (mounted) {
+            Navigator.of(context, rootNavigator: true).pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('기록이 수정되었습니다')),
+            );
+            Future.delayed(const Duration(milliseconds: 500), () {
+              if (mounted) {
+                Navigator.pop(context);
+              }
+            });
+          }
+        },
+        loading: () {},
+        error: (error, stackTrace) {
+          if (mounted) {
+            Navigator.of(context, rootNavigator: true).pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('수정 실패: $error')),
+            );
+          }
+        },
+      );
+    });
+
     return Scaffold(
       appBar: RecorderWriteAppBar(
         onSave: _saveRecord,
@@ -75,13 +155,16 @@ class _RecorderWritePageState extends State<RecorderWritePage> {
               const SizedBox(height: 16),
               RecorderWriteContentField(controller: _contentController),
               const SizedBox(height: 24),
-              ImagePickerList(),
-              if (selectedAudios.isNotEmpty) ...[
-                const Text(
-                  '음성 녹음',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              if (selectedImages.isNotEmpty)
+                RecorderWriteImageList(
+                  images: selectedImages,
+                  onRemove: (index) {
+                    setState(() {
+                      selectedImages.removeAt(index);
+                    });
+                  },
                 ),
-                const SizedBox(height: 12),
+              if (selectedAudios.isNotEmpty)
                 RecorderWriteAudioList(
                   audios: selectedAudios,
                   onRemove: (index) {
@@ -90,19 +173,9 @@ class _RecorderWritePageState extends State<RecorderWritePage> {
                     });
                   },
                 ),
-                const SizedBox(height: 24),
-              ],
               RecorderWriteAttachButtons(
-                onImagePick: () {
-                  setState(() {
-                    selectedImages.add('image_${selectedImages.length + 1}');
-                  });
-                },
-                onAudioRecord: () {
-                  setState(() {
-                    selectedAudios.add('audio_${selectedAudios.length + 1}');
-                  });
-                },
+                onImagesPicked: _handleImagesPicked,
+                onAudioPicked: _pickAudioFile,
               ),
             ],
           ),
@@ -126,27 +199,45 @@ class _RecorderWritePageState extends State<RecorderWritePage> {
       return;
     }
 
-    // 수정 모드인 경우 기존 기록 업데이트
+    _showLoadingDialog();
+
     if (widget.editingRecord != null) {
-      widget.editingRecord!.update(
-        title: _titleController.text,
-        content: _contentController.text,
-        imageCount: selectedImages.length,
-        audioCount: selectedAudios.length,
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('기록이 수정되었습니다')),
-      );
-
-      // 수정된 기록을 반환하면서 이전 페이지로 이동
-      Navigator.pop(context, widget.editingRecord);
+      ref.read(updateRecordProvider.notifier).updateRecord(
+            id: widget.editingRecord!.id,
+            title: _titleController.text,
+            content: _contentController.text,
+            imageFiles: selectedImages.isNotEmpty ? selectedImages : null,
+            audioFiles: selectedAudios.isNotEmpty ? selectedAudios : null,
+            videoFiles: null,
+            deletedImageIds: null,
+          );
     } else {
-      // 새로 작성하는 경우
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('기록이 저장되었습니다')),
-      );
-      Navigator.pop(context);
+      ref.read(saveRecordProvider.notifier).saveRecord(
+            title: _titleController.text,
+            content: _contentController.text,
+            imageFiles: selectedImages.isNotEmpty ? selectedImages : null,
+            audioFiles: selectedAudios.isNotEmpty ? selectedAudios : null,
+            videoFiles: null,
+          );
     }
+  }
+
+  void _showLoadingDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return const AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('저장 중...'),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

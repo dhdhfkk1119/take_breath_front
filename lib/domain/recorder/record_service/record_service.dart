@@ -7,20 +7,20 @@ class RecordService {
 
   RecordService({required this.dio});
 
-  // ✅ 필터 파라미터 추가
+  //  필터 파라미터 추가
   Future<Map<String, dynamic>> getRecordList({
     required int page,
     required int size,
-    bool? hasImage, // ✅ 추가
-    bool? hasAudio, // ✅ 추가
-    bool? hasVideo, // ✅ 추가
+    bool? hasImage,
+    bool? hasAudio,
+    bool? hasVideo,
   }) async {
     final queryParameters = {
       'page': page,
       'size': size,
-      if (hasImage != null) 'hasImage': hasImage, // ✅ 추가
-      if (hasAudio != null) 'hasAudio': hasAudio, // ✅ 추가
-      if (hasVideo != null) 'hasVideo': hasVideo, // ✅ 추가
+      if (hasImage != null) 'hasImage': hasImage,
+      if (hasAudio != null) 'hasAudio': hasAudio,
+      if (hasVideo != null) 'hasVideo': hasVideo,
     };
 
     final response = await dio.get(
@@ -126,5 +126,66 @@ class RecordService {
       options: Options(responseType: ResponseType.bytes),
     );
     return Uint8List.fromList(response.data);
+  }
+
+  Future<Map<String, dynamic>> saveRecord({
+    required String title,
+    required String content,
+    List<File>? imageFiles,
+    List<File>? audioFiles,
+    List<File>? videoFiles,
+  }) async {
+    final formData = FormData();
+
+    formData.fields.add(MapEntry('title', title));
+    formData.fields.add(MapEntry('content', content));
+
+    if (imageFiles != null && imageFiles.isNotEmpty) {
+      for (var file in imageFiles) {
+        formData.files.add(
+          MapEntry(
+            'imageFiles',
+            await MultipartFile.fromFile(
+              file.path,
+              filename: file.path.split('/').last,
+            ),
+          ),
+        );
+      }
+    }
+
+    if (audioFiles != null && audioFiles.isNotEmpty) {
+      for (var file in audioFiles) {
+        formData.files.add(
+          MapEntry(
+            'audioFiles',
+            await MultipartFile.fromFile(
+              file.path,
+              filename: file.path.split('/').last,
+            ),
+          ),
+        );
+      }
+    }
+
+    if (videoFiles != null && videoFiles.isNotEmpty) {
+      for (var file in videoFiles) {
+        formData.files.add(
+          MapEntry(
+            'videoFiles',
+            await MultipartFile.fromFile(
+              file.path,
+              filename: file.path.split('/').last,
+            ),
+          ),
+        );
+      }
+    }
+
+    final response = await dio.post(
+      '/records',
+      data: formData,
+    );
+    return response.data;
   }
 }
