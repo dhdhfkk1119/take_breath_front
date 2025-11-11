@@ -26,8 +26,7 @@ mixin _$Member {
   String get name => throw _privateConstructorUsedError;
   String get nickName => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
-  String? get profileImageUrl =>
-      throw _privateConstructorUsedError; // nullable 처리
+  String? get profileImage => throw _privateConstructorUsedError; // nullable 처리
   String get role => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
   String get phone => throw _privateConstructorUsedError;
@@ -54,7 +53,7 @@ abstract class $MemberCopyWith<$Res> {
       String name,
       String nickName,
       String email,
-      String? profileImageUrl,
+      String? profileImage,
       String role,
       String status,
       String phone,
@@ -82,7 +81,7 @@ class _$MemberCopyWithImpl<$Res, $Val extends Member>
     Object? name = null,
     Object? nickName = null,
     Object? email = null,
-    Object? profileImageUrl = freezed,
+    Object? profileImage = freezed,
     Object? role = null,
     Object? status = null,
     Object? phone = null,
@@ -113,9 +112,9 @@ class _$MemberCopyWithImpl<$Res, $Val extends Member>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      profileImageUrl: freezed == profileImageUrl
-          ? _value.profileImageUrl
-          : profileImageUrl // ignore: cast_nullable_to_non_nullable
+      profileImage: freezed == profileImage
+          ? _value.profileImage
+          : profileImage // ignore: cast_nullable_to_non_nullable
               as String?,
       role: null == role
           ? _value.role
@@ -151,7 +150,7 @@ abstract class _$$MemberImplCopyWith<$Res> implements $MemberCopyWith<$Res> {
       String name,
       String nickName,
       String email,
-      String? profileImageUrl,
+      String? profileImage,
       String role,
       String status,
       String phone,
@@ -177,7 +176,7 @@ class __$$MemberImplCopyWithImpl<$Res>
     Object? name = null,
     Object? nickName = null,
     Object? email = null,
-    Object? profileImageUrl = freezed,
+    Object? profileImage = freezed,
     Object? role = null,
     Object? status = null,
     Object? phone = null,
@@ -208,9 +207,9 @@ class __$$MemberImplCopyWithImpl<$Res>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      profileImageUrl: freezed == profileImageUrl
-          ? _value.profileImageUrl
-          : profileImageUrl // ignore: cast_nullable_to_non_nullable
+      profileImage: freezed == profileImage
+          ? _value.profileImage
+          : profileImage // ignore: cast_nullable_to_non_nullable
               as String?,
       role: null == role
           ? _value.role
@@ -242,7 +241,7 @@ class _$MemberImpl implements _Member {
       required this.name,
       required this.nickName,
       required this.email,
-      this.profileImageUrl,
+      this.profileImage,
       required this.role,
       required this.status,
       required this.phone,
@@ -264,7 +263,7 @@ class _$MemberImpl implements _Member {
   @override
   final String email;
   @override
-  final String? profileImageUrl;
+  final String? profileImage;
 // nullable 처리
   @override
   final String role;
@@ -277,7 +276,7 @@ class _$MemberImpl implements _Member {
 
   @override
   String toString() {
-    return 'Member(accessToken: $accessToken, refreshToken: $refreshToken, id: $id, name: $name, nickName: $nickName, email: $email, profileImageUrl: $profileImageUrl, role: $role, status: $status, phone: $phone, daysLeft: $daysLeft)';
+    return 'Member(accessToken: $accessToken, refreshToken: $refreshToken, id: $id, name: $name, nickName: $nickName, email: $email, profileImage: $profileImage, role: $role, status: $status, phone: $phone, daysLeft: $daysLeft)';
   }
 
   @override
@@ -294,8 +293,8 @@ class _$MemberImpl implements _Member {
             (identical(other.nickName, nickName) ||
                 other.nickName == nickName) &&
             (identical(other.email, email) || other.email == email) &&
-            (identical(other.profileImageUrl, profileImageUrl) ||
-                other.profileImageUrl == profileImageUrl) &&
+            (identical(other.profileImage, profileImage) ||
+                other.profileImage == profileImage) &&
             (identical(other.role, role) || other.role == role) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.phone, phone) || other.phone == phone) &&
@@ -306,7 +305,7 @@ class _$MemberImpl implements _Member {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, accessToken, refreshToken, id,
-      name, nickName, email, profileImageUrl, role, status, phone, daysLeft);
+      name, nickName, email, profileImage, role, status, phone, daysLeft);
 
   /// Create a copy of Member
   /// with the given fields replaced by the non-null parameter values.
@@ -332,7 +331,7 @@ abstract class _Member implements Member {
       required final String name,
       required final String nickName,
       required final String email,
-      final String? profileImageUrl,
+      final String? profileImage,
       required final String role,
       required final String status,
       required final String phone,
@@ -353,7 +352,7 @@ abstract class _Member implements Member {
   @override
   String get email;
   @override
-  String? get profileImageUrl; // nullable 처리
+  String? get profileImage; // nullable 처리
   @override
   String get role;
   @override

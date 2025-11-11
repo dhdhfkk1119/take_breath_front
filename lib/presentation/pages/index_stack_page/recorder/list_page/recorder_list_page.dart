@@ -111,7 +111,7 @@ class RecorderListPage extends ConsumerWidget {
           _showDatePicker(context);
         },
         onFilterPressed: () {
-          _showFilterDialog(context);
+          _showFilterDialog(context, ref); // ✅ ref 전달
         },
         onNotificationPressed: () {
           Navigator.push(
@@ -322,17 +322,20 @@ class RecorderListPage extends ConsumerWidget {
     }
   }
 
-  void _showFilterDialog(BuildContext context) {
+  // ✅ 필터 다이얼로그 수정
+  void _showFilterDialog(BuildContext context, WidgetRef ref) {
+    final currentFilter = ref.read(recordFilterProvider); // ✅ 현재 필터 가져오기
+
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => RecorderListFilter(
-          onFilterApplied: (selectedCategory) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('필터: $selectedCategory')),
-            );
+          initialFilter: currentFilter, // ✅ 현재 필터 전달
+          onFilterApplied: (filter) {
+            // ✅ 필터 적용
+            ref.read(recordFilterProvider.notifier).state = filter;
+            ref.refresh(recordListProvider(0)); // ✅ 목록 새로고침
           },
-          initialCategory: 'all',
         ),
       ),
     );

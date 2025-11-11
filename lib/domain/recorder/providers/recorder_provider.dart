@@ -4,6 +4,7 @@ import '../../../_core/utils/my_http.dart';
 import '../record_service/record_service.dart';
 import '../repository/record_repository.dart';
 import '../models/record_item.dart';
+import '../models/record_filter.dart'; // ✅ 추가
 
 final recordServiceProvider = Provider((ref) {
   return RecordService(dio: dio);
@@ -18,10 +19,22 @@ final currentPageProvider = StateProvider<int>((ref) => 0);
 
 final searchKeywordProvider = StateProvider<String>((ref) => '');
 
+// ✅ 필터 상태 Provider 추가
+final recordFilterProvider = StateProvider<RecordFilter>((ref) {
+  return const RecordFilter.initial();
+});
+
+// ✅ 필터를 사용하도록 수정
 final recordListProvider = FutureProvider.family<List<RecordItem>, int>(
   (ref, page) async {
     final repository = ref.watch(recordRepositoryProvider);
-    return repository.getRecordList(page: page, size: 10);
+    final filter = ref.watch(recordFilterProvider); // ✅ 필터 가져오기
+
+    return repository.getRecordList(
+      page: page,
+      size: 10,
+      filter: filter, // ✅ 필터 전달
+    );
   },
 );
 
@@ -100,7 +113,6 @@ class UpdateRecordNotifier extends StateNotifier<AsyncValue<void>> {
         );
 
         _ref.invalidate(recordDetailProvider(id));
-
         _ref.invalidate(recordListProvider);
       },
     );
