@@ -15,6 +15,7 @@ import 'package:take_breath/domain/comment/models/community_comment_response.dar
 import 'package:take_breath/domain/comment/providers/community_comment_write_notifier.dart';
 import 'package:take_breath/domain/community/models/community_detail.dart';
 import 'package:take_breath/domain/community/providers/community_detail_notifier.dart';
+import 'package:take_breath/domain/community/providers/community_list_notifier.dart';
 import 'package:take_breath/domain/member/providers/member_login_notifier.dart';
 import 'package:take_breath/domain/toggle_like/providers/toggle_like_provider.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/community/detail_page/widgets/full_screen_image.dart';
@@ -360,8 +361,9 @@ class _CommunityDetailItemState extends ConsumerState<CommunityDetailItem> {
   Widget likeCount(CommunityDetail detail) {
     return InkWell(
       onTap: () async {
-        await ref.read(toggleLikeProvider.notifier).toggleLike(detail.id);
-        await ref.read(communityDetailProvider.notifier).fetchDetail(detail.id);
+        await ref
+            .read(communityListProvider.notifier)
+            .toggleLikeAndRefresh(detail.id);
       },
       child: Row(
         children: [

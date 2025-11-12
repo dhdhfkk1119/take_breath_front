@@ -15,7 +15,9 @@ _$CounselorResponseImpl _$$CounselorResponseImplFromJson(
       specialty: json['specialty'] as String?,
       introduction: json['introduction'] as String?,
       profileImage: json['profileImage'] as String?,
-      hashtags: json['hashtags'] as String?,
+      hashtags: (json['hashtags'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       gender: json['gender'] as String?,
       price: (json['price'] as num).toInt(),
       likeCount: (json['likeCount'] as num?)?.toInt() ?? 0,

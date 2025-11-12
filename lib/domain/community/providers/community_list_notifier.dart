@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/domain/community/models/community_list.dart';
+import 'package:take_breath/domain/community/providers/community_detail_notifier.dart';
+import 'package:take_breath/domain/toggle_like/providers/toggle_like_provider.dart';
 import 'community_repository_provider.dart';
 import 'search_dto_provider.dart';
 
@@ -58,6 +60,12 @@ class CommunityListNotifier extends AsyncNotifier<List<CommunityList>> {
   Future<void> refreshList() async {
     state = const AsyncValue.loading();
     state = AsyncValue.data(await _fetchPosts(reset: true));
+  }
+
+  Future<void> toggleLikeAndRefresh(int communityId) async {
+    await ref.read(toggleLikeProvider.notifier).toggleLike(communityId);
+    await ref.read(communityDetailProvider.notifier).fetchDetail(communityId);
+    await refreshList(); // 자신의 리스트 새로고침
   }
 }
 
