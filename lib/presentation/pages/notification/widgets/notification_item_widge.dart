@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../models/notification_model.dart';
+import 'package:take_breath/_core/utils/formatTime.dart';
+import 'package:take_breath/_core/utils/thumbnail_image.dart';
+import 'package:take_breath/domain/sse_notification/models/notification_model.dart';
 
 class NotificationItemWidget extends StatelessWidget {
-  final NotificationItem notification;
+  final NotificationModel notification;
   final VoidCallback onTap;
   final VoidCallback onDelete;
 
@@ -15,6 +17,7 @@ class NotificationItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("알람 읽음 체크 : ${notification.read}");
     return GestureDetector(
       onTap: onTap,
       child: Dismissible(
@@ -33,7 +36,7 @@ class NotificationItemWidget extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: notification.isRead ? Colors.grey[50] : Colors.blue[50],
+            color: notification.read ? Colors.grey[50] : Colors.blue[50],
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: Colors.grey[200]!,
@@ -42,23 +45,11 @@ class NotificationItemWidget extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 프로필 이미지 또는 아이콘
-              Container(
+              ThumbnailImage(
+                url: notification.profileImageUrl,
                 width: 48,
                 height: 48,
-                decoration: BoxDecoration(
-                  color: Colors.orange[300],
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: notification.profileImage != null
-                      ? Image.network(notification.profileImage!)
-                      : const Icon(
-                          Icons.notifications,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                ),
+                borderRadius: 50,
               ),
               const SizedBox(width: 12),
               // 알람 내용
@@ -67,13 +58,12 @@ class NotificationItemWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      notification.title,
+                      notification.content,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: notification.isRead
-                            ? Colors.grey[600]
-                            : Colors.black,
+                        color:
+                            notification.read ? Colors.grey[600] : Colors.black,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -88,7 +78,7 @@ class NotificationItemWidget extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      notification.timeAgo,
+                      FormatTime.createFormat(notification.createdAt),
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.grey[500],
@@ -98,7 +88,7 @@ class NotificationItemWidget extends StatelessWidget {
                 ),
               ),
               // 읽음 표시
-              if (!notification.isRead)
+              if (!notification.read)
                 Container(
                   width: 8,
                   height: 8,
