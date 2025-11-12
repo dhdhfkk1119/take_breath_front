@@ -11,7 +11,7 @@ class PointHistoryPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('충전 내역'),
+        title: const Text('포인트 내역'),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 1,

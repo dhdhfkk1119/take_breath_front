@@ -56,7 +56,7 @@ class CounselorRepository {
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        final data = response.data; // 백엔드 JSON 구조에 맞게 조정
+        final data = response.data;
         return PageResponse.fromJson(
           data,
           (json) => CounselorResponse.fromJson(json),
@@ -88,6 +88,54 @@ class CounselorRepository {
       }
     } catch (e) {
       throw new Exception("상담사 오류 발생 ${e.toString()}");
+    }
+  }
+
+  Future<List<CounselorResponse>> getLikedCounselors({
+    int page = 0,
+    int size = 10,
+  }) async {
+    try {
+      final response = await dio.get(
+        "/counselors/likes/my",
+        queryParameters: {
+          "page": page,
+          "size": size,
+        },
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+
+        final Map<String, dynamic> data = response.data;
+        final List<dynamic> content = data['content'] ?? [];
+
+        print("찜한 상담사 목록 - Content 길이: ${content.length}");
+
+        return content
+            .map((json) => CounselorResponse.fromJson(json))
+            .toList();
+      } else {
+        throw Exception("찜한 상담사 목록 조회 실패 (상태코드: ${response.statusCode})");
+      }
+    } catch (e) {
+      throw Exception("찜한 상담사 목록 조회 실패: ${e.toString()}");
+    }
+  }
+
+  // 특정 상담사 좋아요 개수
+  Future<int> getLikeCount(int counselorId) async {
+    try {
+      final response = await dio.get(
+        "/counselors/likes/$counselorId/count",
+      );
+
+      if (response.statusCode == 200) {
+        return response.data as int;
+      } else {
+        throw Exception("좋아요 개수 조회 실패");
+      }
+    } catch (e) {
+      throw Exception("좋아요 개수 조회 실패: ${e.toString()}");
     }
   }
 }
