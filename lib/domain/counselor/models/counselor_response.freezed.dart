@@ -26,7 +26,7 @@ mixin _$CounselorResponse {
   String? get specialty => throw _privateConstructorUsedError;
   String? get introduction => throw _privateConstructorUsedError;
   String? get profileImage => throw _privateConstructorUsedError;
-  String? get hashtags => throw _privateConstructorUsedError;
+  List<String>? get hashtags => throw _privateConstructorUsedError;
   String? get gender => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
   int get likeCount => throw _privateConstructorUsedError;
@@ -57,7 +57,7 @@ abstract class $CounselorResponseCopyWith<$Res> {
       String? specialty,
       String? introduction,
       String? profileImage,
-      String? hashtags,
+      List<String>? hashtags,
       String? gender,
       int price,
       int likeCount,
@@ -121,7 +121,7 @@ class _$CounselorResponseCopyWithImpl<$Res, $Val extends CounselorResponse>
       hashtags: freezed == hashtags
           ? _value.hashtags
           : hashtags // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as List<String>?,
       gender: freezed == gender
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
@@ -161,7 +161,7 @@ abstract class _$$CounselorResponseImplCopyWith<$Res>
       String? specialty,
       String? introduction,
       String? profileImage,
-      String? hashtags,
+      List<String>? hashtags,
       String? gender,
       int price,
       int likeCount,
@@ -221,9 +221,9 @@ class __$$CounselorResponseImplCopyWithImpl<$Res>
           : profileImage // ignore: cast_nullable_to_non_nullable
               as String?,
       hashtags: freezed == hashtags
-          ? _value.hashtags
+          ? _value._hashtags
           : hashtags // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as List<String>?,
       gender: freezed == gender
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
@@ -258,13 +258,14 @@ class _$CounselorResponseImpl implements _CounselorResponse {
       this.specialty,
       this.introduction,
       this.profileImage,
-      this.hashtags,
+      final List<String>? hashtags,
       this.gender,
       required this.price,
       this.likeCount = 0,
       this.likedByMe,
       final List<CounselorLicenseResponse>? licenses})
-      : _licenses = licenses;
+      : _hashtags = hashtags,
+        _licenses = licenses;
 
   factory _$CounselorResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$CounselorResponseImplFromJson(json);
@@ -281,8 +282,16 @@ class _$CounselorResponseImpl implements _CounselorResponse {
   final String? introduction;
   @override
   final String? profileImage;
+  final List<String>? _hashtags;
   @override
-  final String? hashtags;
+  List<String>? get hashtags {
+    final value = _hashtags;
+    if (value == null) return null;
+    if (_hashtags is EqualUnmodifiableListView) return _hashtags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   final String? gender;
   @override
@@ -321,8 +330,7 @@ class _$CounselorResponseImpl implements _CounselorResponse {
                 other.introduction == introduction) &&
             (identical(other.profileImage, profileImage) ||
                 other.profileImage == profileImage) &&
-            (identical(other.hashtags, hashtags) ||
-                other.hashtags == hashtags) &&
+            const DeepCollectionEquality().equals(other._hashtags, _hashtags) &&
             (identical(other.gender, gender) || other.gender == gender) &&
             (identical(other.price, price) || other.price == price) &&
             (identical(other.likeCount, likeCount) ||
@@ -342,7 +350,7 @@ class _$CounselorResponseImpl implements _CounselorResponse {
       specialty,
       introduction,
       profileImage,
-      hashtags,
+      const DeepCollectionEquality().hash(_hashtags),
       gender,
       price,
       likeCount,
@@ -374,7 +382,7 @@ abstract class _CounselorResponse implements CounselorResponse {
           final String? specialty,
           final String? introduction,
           final String? profileImage,
-          final String? hashtags,
+          final List<String>? hashtags,
           final String? gender,
           required final int price,
           final int likeCount,
@@ -398,7 +406,7 @@ abstract class _CounselorResponse implements CounselorResponse {
   @override
   String? get profileImage;
   @override
-  String? get hashtags;
+  List<String>? get hashtags;
   @override
   String? get gender;
   @override

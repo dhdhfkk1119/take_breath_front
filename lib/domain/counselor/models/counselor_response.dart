@@ -13,7 +13,7 @@ class CounselorResponse with _$CounselorResponse {
     String? specialty,
     String? introduction,
     String? profileImage,
-    String? hashtags,
+    List<String>? hashtags,
     String? gender,
     required int price,
     @Default(0) int likeCount,

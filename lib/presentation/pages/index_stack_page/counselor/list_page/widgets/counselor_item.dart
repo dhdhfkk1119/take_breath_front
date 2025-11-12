@@ -29,12 +29,13 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
   @override
   Widget build(BuildContext context) {
     final counselorListState = ref.watch(counselorListProvider);
-    final updatedCounselor = counselorListState.data?.content.firstWhere(
-      (c) => c.id == widget.counselor.id,
-      orElse: () => widget.counselor,
-    );
-
-    final isLiked = updatedCounselor?.likedByMe ?? false;
+    final isLiked = counselorListState.data?.content
+            .firstWhere(
+              (c) => c.id == widget.counselor.id,
+              orElse: () => widget.counselor,
+            )
+            .likedByMe ??
+        widget.counselor.likedByMe;
 
     return GestureDetector(
       onTap: widget.onTap,
@@ -101,7 +102,10 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          widget.counselor.hashtags ?? "해시태그",
+                          widget.counselor.hashtags != null &&
+                                  widget.counselor.hashtags!.isNotEmpty
+                              ? widget.counselor.hashtags!.join(' ')
+                              : "해시태그",
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.grey[600],
@@ -119,12 +123,16 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
                           .read(counselorListProvider.notifier)
                           .toggleLike(widget.counselor.id);
                     },
-                    child: Icon(
-                      isLiked
-                          ? CupertinoIcons.heart_fill
-                          : CupertinoIcons.heart,
-                      color: isLiked ? Colors.red : Colors.grey[400],
-                      size: 24,
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      child: Icon(
+                        isLiked!
+                            ? CupertinoIcons.heart_fill
+                            : CupertinoIcons.heart,
+                        key: ValueKey(isLiked),
+                        color: isLiked ? Colors.red : Colors.grey[400],
+                        size: 24,
+                      ),
                     ),
                   ),
                 ],

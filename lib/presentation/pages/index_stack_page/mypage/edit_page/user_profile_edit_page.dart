@@ -132,7 +132,7 @@ class _UserProfileEditPageState extends ConsumerState<UserProfileEditPage> {
                             ? ClipOval(
                           child: Image.network(
                             //member.profileImage!,
-                            '$imageLocalUrl/uploads/${member.profileImage!}',
+                            '$imageLocalUrl${member.profileImage!}',
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return const Icon(

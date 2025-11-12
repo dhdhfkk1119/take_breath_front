@@ -71,6 +71,11 @@ class CounselorListNotifier
     }
   }
 
+  Future<void> refreshList() async {
+    currentPage = 0;
+    await fetchFirstPage();
+  }
+
   Future<void> toggleLike(int counselorId) async {
     try {
       final isLiked = await counselorRepository.toggleLike(counselorId);

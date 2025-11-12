@@ -43,7 +43,9 @@ class UserProfileSection extends ConsumerWidget {
                 ? ClipOval(
               child: Image.network(
                 // notifier.profileImage!
-                '$imageLocalUrl/uploads/${notifier.profileImage!}',
+                notifier.profileImage!.startsWith('http')
+                    ? notifier.profileImage!
+                    : '$imageLocalUrl${notifier.profileImage!}',
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return const Icon(

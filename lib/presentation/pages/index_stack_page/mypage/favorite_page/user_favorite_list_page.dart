@@ -1,64 +1,50 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/utils/base_state.dart';
+import 'package:take_breath/domain/counselor/models/counselor_response.dart';
+import 'package:take_breath/presentation/pages/index_stack_page/mypage/favorite_page/widgets/counselor_card.dart';
+import '../../../../../domain/counselor/providers/like_counselors_provider.dart';
 
-class UserFavoriteListPage extends StatelessWidget {
+class UserFavoriteListPage extends ConsumerStatefulWidget {
   const UserFavoriteListPage({Key? key}) : super(key: key);
 
   @override
+  ConsumerState<UserFavoriteListPage> createState() =>
+      _UserFavoriteListPageState();
+}
+
+class _UserFavoriteListPageState extends ConsumerState<UserFavoriteListPage> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 초기 데이터 로드
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(likedCounselorsProvider.notifier).fetchList();
+    });
+
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.9) {
+      ref.read(likedCounselorsProvider.notifier).loadMore();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // 임시 데이터 (실제로는 서버에서 가져옴)
-    final List<Map<String, dynamic>> favorites = [
-      {
-        'id': 1,
-        'author': '직장인A',
-        'title': '직장 내 괴롭힘 대처 방법',
-        'content': '상사로부터의 부당한 지시에 어떻게 대처해야 할까요? 법적 조치는 어떻게 하나요?',
-        'date': '2024.01.22',
-        'likes': 45,
-        'comments': 12,
-        'views': 320,
-      },
-      {
-        'id': 2,
-        'author': '심리상담사B',
-        'title': '직장 스트레스 관리 팁',
-        'content': '직장에서 받는 스트레스를 효과적으로 관리하는 방법들을 알려드립니다.',
-        'date': '2024.01.20',
-        'likes': 78,
-        'comments': 23,
-        'views': 450,
-      },
-      {
-        'id': 3,
-        'author': '노동법전문가C',
-        'title': '근로기준법으로 알아보는 부당한 업무 강요',
-        'content': '과도한 야근과 휴일 없는 업무 지시는 법적으로 문제가 될 수 있습니다.',
-        'date': '2024.01.18',
-        'likes': 92,
-        'comments': 34,
-        'views': 580,
-      },
-      {
-        'id': 4,
-        'author': '직장인D',
-        'title': '성희롱 피해 후 극복 경험기',
-        'content': '직장에서의 성희롱 피해로부터 벗어나는 과정을 공유합니다.',
-        'date': '2024.01.15',
-        'likes': 56,
-        'comments': 18,
-        'views': 390,
-      },
-      {
-        'id': 5,
-        'author': '직장인E',
-        'title': '팀 따돌림을 극복한 방법',
-        'content': '팀 내 따돌림을 겪었지만 이를 극복한 개인적인 경험을 나눕니다.',
-        'date': '2024.01.12',
-        'likes': 67,
-        'comments': 21,
-        'views': 410,
-      },
-    ];
+    final state = ref.watch(likedCounselorsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -66,158 +52,92 @@ class UserFavoriteListPage extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
       ),
-      body: favorites.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    CupertinoIcons.heart,
-                    size: 48,
-                    color: Colors.grey[400],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    '찜한 글이 없습니다',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: favorites.length,
-              itemBuilder: (context, index) {
-                final favorite = favorites[index];
-                return _buildFavoriteCard(context, favorite);
-              },
-            ),
+      body: _buildBody(state),
     );
   }
 
-  Widget _buildFavoriteCard(
-      BuildContext context, Map<String, dynamic> favorite) {
-    return GestureDetector(
-      onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('글 상세 페이지: ${favorite['title']}')),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey[200]!),
-        ),
+  Widget _buildBody(BaseState<List<CounselorResponse>> state) {
+    // 에러 상태
+    if (state.error != null && (state.data == null || state.data!.isEmpty)) {
+      return Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // 작성자
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 16,
-                  backgroundColor: Colors.grey[300],
-                  child: const Icon(
-                    CupertinoIcons.person_fill,
-                    size: 16,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  favorite['author'],
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[700],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
+            Icon(
+              CupertinoIcons.exclamationmark_triangle,
+              size: 48,
+              color: Colors.grey[400],
             ),
-            const SizedBox(height: 10),
-            // 제목
+            const SizedBox(height: 16),
             Text(
-              favorite['title'],
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              '오류가 발생했습니다',
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
-            // 내용
             Text(
-              favorite['content'],
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[700],
-                height: 1.4,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              state.error!,
+              style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 12),
-            // 날짜 및 통계
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  favorite['date'],
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                Row(
-                  children: [
-                    _buildStatItem(
-                      icon: CupertinoIcons.heart,
-                      count: favorite['likes'],
-                    ),
-                    const SizedBox(width: 12),
-                    _buildStatItem(
-                      icon: CupertinoIcons.chat_bubble,
-                      count: favorite['comments'],
-                    ),
-                    const SizedBox(width: 12),
-                    _buildStatItem(
-                      icon: CupertinoIcons.eye,
-                      count: favorite['views'],
-                    ),
-                  ],
-                ),
-              ],
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                ref.read(likedCounselorsProvider.notifier).fetchList();
+              },
+              child: const Text('다시 시도'),
             ),
           ],
         ),
-      ),
-    );
-  }
+      );
+    }
 
-  Widget _buildStatItem({required IconData icon, required int count}) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          size: 14,
-          color: Colors.grey[600],
+    // 로딩 중 (첫 로딩)
+    if (state.isLoading && (state.data == null || state.data!.isEmpty)) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    // 빈 상태
+    if (state.data == null || state.data!.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              CupertinoIcons.heart,
+              size: 48,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '찜한 상담사가 없습니다',
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+            ),
+          ],
         ),
-        const SizedBox(width: 4),
-        Text(
-          count.toString(),
-          style: TextStyle(
-            fontSize: 11,
-            color: Colors.grey[600],
-          ),
-        ),
-      ],
+      );
+    }
+
+    // 리스트
+    return RefreshIndicator(
+      onRefresh: () async {
+        await ref.read(likedCounselorsProvider.notifier).fetchList();
+      },
+      child: ListView.builder(
+        controller: _scrollController,
+        padding: const EdgeInsets.all(16),
+        itemCount: state.data!.length + (state.isLoading ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (index >= state.data!.length) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          return CounselorCard(counselor: state.data![index]);
+        },
+      ),
     );
   }
 }
