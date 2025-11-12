@@ -1,81 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'models/notification_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/domain/sse_notification/models/notification_model.dart';
+import 'package:take_breath/domain/sse_notification/provider/notification_list_notifier.dart';
+import 'package:take_breath/presentation/pages/index_stack_page/community/detail_page/community_detail_page.dart';
 import 'widgets/notification_item_widge.dart';
 
-class NotificationPage extends StatefulWidget {
+class NotificationPage extends ConsumerStatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
 
   @override
-  State<NotificationPage> createState() => _NotificationPageState();
+  ConsumerState<NotificationPage> createState() => _NotificationPageState();
 }
 
-class _NotificationPageState extends State<NotificationPage> {
-  late List<NotificationItem> notifications;
+class _NotificationPageState extends ConsumerState<NotificationPage> {
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    notifications = [
-      NotificationItem(
-        id: 1,
-        title: "직장 괴롭힘 기록",
-        content: "오늘 작성하신 기록이 저장되었습니다. 힘들었던 하루를 기록으로 남기셨네요.",
-        timeAgo: "14초 전",
-        isRead: false,
-      ),
-      NotificationItem(
-        id: 2,
-        title: "커뮤니티 댓글 알림",
-        content: "당신의 게시글에 '익명 사용자'님이 댓글을 남겼습니다. 응원의 메시지입니다.",
-        timeAgo: "4일 전",
-        isRead: false,
-      ),
-      NotificationItem(
-        id: 3,
-        title: "공감 알림",
-        content: "'함께하는 마음'님이 당신의 게시글에 공감했습니다.",
-        timeAgo: "1주 전",
-        isRead: true,
-      ),
-      NotificationItem(
-        id: 4,
-        title: "팔로우 알림",
-        content: "'희망 찾기'님이 당신을 팔로우하기 시작했습니다.",
-        timeAgo: "1주 전",
-        isRead: true,
-      ),
-      NotificationItem(
-        id: 5,
-        title: "시스템 알림",
-        content: "Take Breath를 이용해주셔서 감사합니다. 건강한 직장 문화를 함께 만들어가요.",
-        timeAgo: "2주 전",
-        isRead: true,
-      ),
-    ];
-  }
 
-  void _deleteNotification(int id) {
-    setState(() {
-      notifications.removeWhere((notification) => notification.id == id);
+    Future.microtask(() {
+      ref.read(notificationProvider.notifier).getNotificationList();
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('알림이 삭제되었습니다')),
-    );
-  }
 
-  void _markAsRead(int id) {
-    setState(() {
-      final index =
-          notifications.indexWhere((notification) => notification.id == id);
-      if (index != -1) {
-        notifications[index].isRead = true;
+    // 스크롤 끝에 도달하면 다음 페이지 로드
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        ref.read(notificationProvider.notifier).loadNextPage();
       }
     });
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final state = ref.watch(notificationProvider);
+    if (state.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    if (state.error != null) {
+      return Center(
+        child: Text('오류 발생: ${state.error}'),
+      );
+    }
+
+    final notifications = state.data?.content ?? [];
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -112,10 +91,31 @@ class _NotificationPageState extends State<NotificationPage> {
               itemBuilder: (context, index) {
                 final notification = notifications[index];
                 return NotificationItemWidget(
-                  notification: notification,
-                  onTap: () => _markAsRead(notification.id),
-                  onDelete: () => _deleteNotification(notification.id),
-                );
+                    notification: notification,
+                    onTap: () async {
+                      await ref
+                          .read(notificationProvider.notifier)
+                          .markNotificationAsRead(notification.id);
+                      switch (notification.notificationType) {
+                        case NotificationType.POST_LIKE:
+                        case NotificationType.COMMENT:
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => CommunityDetailPage(
+                                  id: notification.relatedId),
+                            ),
+                          );
+                          break;
+                        case NotificationType.SYSTEM:
+                          // 시스템 알림은 상세 화면 없으면 그냥 토스트 등
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("시스템 알림입니다.")),
+                          );
+                          break;
+                      }
+                    },
+                    onDelete: () {});
               },
             ),
     );

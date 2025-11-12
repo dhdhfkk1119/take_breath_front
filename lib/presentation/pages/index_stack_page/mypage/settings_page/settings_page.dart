@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../../domain/sse_notification/service/notification_service.dart';
 import 'widgets/settings_notification_section.dart';
@@ -60,6 +61,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 제목
+                  InkWell(
+                    onTap: () {},
+                    child: Icon(CupertinoIcons.back),
+                  ),
                   const Text(
                     '설정',
                     style: TextStyle(
