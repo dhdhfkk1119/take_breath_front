@@ -13,7 +13,7 @@ class ResourcePage extends StatelessWidget {
   // 유튜브 썸네일 URL 생성
   String _getYoutubeThumbnail(String youtubeUrl) {
     final videoId = _extractVideoId(youtubeUrl);
-    return 'https://img.youtube.com/vi/$videoId/hqdefault.jpg'; // ← 이렇게 수정!
+    return 'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
   }
 
   @override
@@ -25,6 +25,24 @@ class ResourcePage extends StatelessWidget {
         'description': '직장 내 괴롭힘 예방 및 대처 방법',
         'youtubeUrl': 'https://www.youtube.com/watch?v=YFnojqczG6E',
         'duration': '16분18초',
+      },
+      {
+        'title': '직장인 괴롭힘 예방 교육',
+        'description': '직장 내 괴롭힘 예방 교육영상',
+        'youtubeUrl': 'https://www.youtube.com/watch?v=qcqjRb3m7k8&t=3s',
+        'duration': '39분15초',
+      },
+      {
+        'title': '직장인 괴롭힘 예방 교육',
+        'description': '나만 무시하는 동료 때문에 하루하루가 지옥 같을 때!',
+        'youtubeUrl': 'https://www.youtube.com/watch?v=0xAH1onGyi8',
+        'duration': '7분2초',
+      },
+      {
+        'title': '직장인 괴롭힘 예방 교육',
+        'description': '직장 내 괴롭힘의 사례와 처리 절차!! 쉽게 알아보는 직장 내 괴롭힘 금지제도',
+        'youtubeUrl': 'https://www.youtube.com/watch?v=CuPrUAyK9iY',
+        'duration': '10분44초',
       },
     ];
 
