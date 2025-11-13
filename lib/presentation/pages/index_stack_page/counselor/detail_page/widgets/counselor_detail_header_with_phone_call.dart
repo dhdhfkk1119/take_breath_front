@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/domain/chat/providers/chat_room_repository_provider.dart';
 import 'package:take_breath/domain/counselor/models/counselor_response.dart';
+import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_detail/chat_detail_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CounselorDetailHeader extends ConsumerStatefulWidget {
@@ -37,6 +39,33 @@ class _CounselorDetailHeaderState extends ConsumerState<CounselorDetailHeader> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('전화를 걸 수 없습니다: $e')),
       );
+    }
+  }
+
+  Future<void> _createConsultationRoom() async {
+    try {
+      final repository = ref.read(chatRoomRepositoryProvider);
+      final response = await repository.createConsultationRoom(
+        consultantId: widget.counselor.id!,
+      );
+
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatDetailPage(
+              roomId: response.roomId,
+              roomName: response.roomName,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('상담방 생성 실패: $e')),
+        );
+      }
     }
   }
 
@@ -140,7 +169,7 @@ class _CounselorDetailHeaderState extends ConsumerState<CounselorDetailHeader> {
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: _createConsultationRoom,
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: Colors.grey),
                           padding: const EdgeInsets.symmetric(vertical: 12),
