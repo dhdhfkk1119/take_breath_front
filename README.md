@@ -67,7 +67,7 @@
 |  |  |  |
 |-----------------|-----------------|-----------------|
 | 조정우    |  [<img src="https://avatars.githubusercontent.com/u/140272714?v=4" alt="조정우" width="100">](https://github.com/dhdhfkk1119) | <ul><li>전체적인 프로젝트 계획,배포 및 관리</li><li>[SpringBoot] 공통 Util , AOP 예외 처리, 구글 소셜 로그인 및 필요한 코드 리펙토링 코드편집 </li><li>[Flutter] 전체적인 UI 구성 및 상태관리 회원가입,소셜로그인,커뮤니티</li></ul>     |
-| 유류진   |  [<img src="https://avatars.githubusercontent.com/u/208729786?v=4" alt="이승민" width="100">](https://github.com/leesssmin)| <ul><li>기록실 추가 기능 및 코드 수정</li><li>스플래쉬 화면 , 기록실 화면 , 상담사 리스트 화면, 마이페이지 화면,  알림 화면 및 UI 전반 기능관리, 백엔드 연동</li></ul> |
+| 이승민   |  [<img src="https://avatars.githubusercontent.com/u/208729786?v=4" alt="이승민" width="100">](https://github.com/leesssmin)| <ul><li>기록실 추가 기능 및 코드 수정</li><li>스플래쉬 화면 , 기록실 화면 , 상담사 리스트 화면, 마이페이지 화면,  알림 화면 및 UI 전반 기능관리, 백엔드 연동</li></ul> |
 | 양성빈   |  [<img src="https://avatars.githubusercontent.com/u/197378605?v=4" alt="양성빈" width="100">](https://github.com/ysb5397)    |<ul><li>Flutter GPS 기능 </li><li>Toss 결제 하기 기능</li><li>상품 등록 Ai 이미지 인식 기능</li></ul>  |
 | 조충희    |  [<img src="https://avatars.githubusercontent.com/u/105851912?v=4" alt="조충희" width="100">](https://github.com/dovahk11m)    | <ul><li>회원가입 및 로그인 기능</li><li>flutter 상태관리 회원가입 및 로그인 기능</li></ul>    |
 | 손지윤    |  [<img src="https://avatars.githubusercontent.com/u/208729868?v=4" alt="손지윤" width="100">](https://github.com/sonjiyoon12)    | <ul><li>Back 게시물 전체적인 기능 및 신고 SSE 알람기능</li><li>Front 상태관리 게시물 리스트 및 상세보기</li><li>게시물 댓글 작성 좋아요</li></ul>    |
