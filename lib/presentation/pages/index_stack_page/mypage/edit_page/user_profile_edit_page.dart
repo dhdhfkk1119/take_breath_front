@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:take_breath/_core/utils/widgets_app_bar.dart';
 import 'package:take_breath/domain/member/providers/member_login_notifier.dart';
 import 'package:take_breath/domain/member/providers/member_repository_provider.dart';
 
@@ -13,7 +14,8 @@ class UserProfileEditPage extends ConsumerStatefulWidget {
   const UserProfileEditPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<UserProfileEditPage> createState() => _UserProfileEditPageState();
+  ConsumerState<UserProfileEditPage> createState() =>
+      _UserProfileEditPageState();
 }
 
 class _UserProfileEditPageState extends ConsumerState<UserProfileEditPage> {
@@ -92,10 +94,8 @@ class _UserProfileEditPageState extends ConsumerState<UserProfileEditPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('정보 수정'),
-        centerTitle: true,
-        elevation: 0,
+      appBar: WidgetsAppBar(
+        title: '정보 수정',
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -123,31 +123,33 @@ class _UserProfileEditPageState extends ConsumerState<UserProfileEditPage> {
                         ),
                         child: _selectedImage != null
                             ? ClipOval(
-                          child: Image.file(
-                            _selectedImage!,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                            : member?.profileImage != null && member!.profileImage!.isNotEmpty
-                            ? ClipOval(
-                          child: Image.network(
-                            //member.profileImage!,
-                            '$imageLocalUrl${member.profileImage!}',
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(
-                                CupertinoIcons.person_fill,
-                                size: 50,
-                                color: Colors.grey,
-                              );
-                            },
-                          ),
-                        )
-                            : const Icon(
-                          CupertinoIcons.person_fill,
-                          size: 50,
-                          color: Colors.grey,
-                        ),
+                                child: Image.file(
+                                  _selectedImage!,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : member?.profileImage != null &&
+                                    member!.profileImage!.isNotEmpty
+                                ? ClipOval(
+                                    child: Image.network(
+                                      //member.profileImage!,
+                                      '$imageLocalUrl${member.profileImage!}',
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return const Icon(
+                                          CupertinoIcons.person_fill,
+                                          size: 50,
+                                          color: Colors.grey,
+                                        );
+                                      },
+                                    ),
+                                  )
+                                : const Icon(
+                                    CupertinoIcons.person_fill,
+                                    size: 50,
+                                    color: Colors.grey,
+                                  ),
                       ),
                       Positioned(
                         bottom: 0,

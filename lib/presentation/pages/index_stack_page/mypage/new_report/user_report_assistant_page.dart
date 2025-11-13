@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:take_breath/_core/utils/closable_info_box.dart';
+import 'package:take_breath/_core/utils/widgets_app_bar.dart';
 
 class UserReportAssistantPage extends StatefulWidget {
   const UserReportAssistantPage({Key? key}) : super(key: key);
@@ -157,10 +159,8 @@ class _UserReportAssistantPageState extends State<UserReportAssistantPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('신고 도우미'),
-        centerTitle: true,
-        elevation: 0,
+      appBar: WidgetsAppBar(
+        title: '신고 도우미',
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -169,47 +169,10 @@ class _UserReportAssistantPageState extends State<UserReportAssistantPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 소개 섹션
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue[200]!),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          CupertinoIcons.info_circle,
-                          color: Colors.blue[700],
-                          size: 24,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            '신고 도우미란?',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.blue[700],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      '지금까지 기록실에 저장하신 모든 기록, 사진, 음성파일 등을 한 번에 다운로드하여 신고 시 증거자료로 사용할 수 있습니다.',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.blue[900],
-                        height: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
+              ClosableInfoBox(
+                noticeTitle: '신고 도우미란?',
+                title1:
+                    '지금까지 기록실에 저장하신 모든 기록, 사진, 음성파일 등을 한 번에 다운로드하여 신고 시 증거자료로 사용할 수 있습니다.',
               ),
               const SizedBox(height: 24),
               // 다운로드 내용

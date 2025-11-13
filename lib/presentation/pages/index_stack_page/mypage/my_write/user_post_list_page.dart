@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/utils/widgets_app_bar.dart';
 import 'package:take_breath/domain/community/models/community_list.dart';
 import 'package:take_breath/domain/community/providers/community_repository_provider.dart';
 
@@ -37,7 +38,7 @@ class _UserPostListPageState extends ConsumerState<UserPostListPage> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.9 &&
+            _scrollController.position.maxScrollExtent * 0.9 &&
         !_isLoading &&
         _hasMore) {
       _loadMorePosts();
@@ -108,10 +109,8 @@ class _UserPostListPageState extends ConsumerState<UserPostListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('작성한 글 목록'),
-        centerTitle: true,
-        elevation: 0,
+      appBar: WidgetsAppBar(
+        title: '작성한 글 목록',
       ),
       body: _buildBody(),
     );

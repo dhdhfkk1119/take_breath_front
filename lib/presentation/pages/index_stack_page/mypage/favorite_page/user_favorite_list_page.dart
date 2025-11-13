@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/_core/utils/base_state.dart';
+import 'package:take_breath/_core/utils/widgets_app_bar.dart';
 import 'package:take_breath/domain/counselor/models/counselor_response.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/mypage/favorite_page/widgets/counselor_card.dart';
 import '../../../../../domain/counselor/providers/like_counselors_provider.dart';
@@ -47,10 +48,8 @@ class _UserFavoriteListPageState extends ConsumerState<UserFavoriteListPage> {
     final state = ref.watch(likedCounselorsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('찜목록'),
-        centerTitle: true,
-        elevation: 0,
+      appBar: WidgetsAppBar(
+        title: '찜 목록',
       ),
       body: _buildBody(state),
     );

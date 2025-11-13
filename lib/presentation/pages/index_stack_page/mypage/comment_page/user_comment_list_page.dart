@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/utils/widgets_app_bar.dart';
 
 import '../../../../../domain/comment/models/community_comment_response.dart';
 import '../../../../../domain/comment/providers/community_comment_provider.dart';
@@ -10,7 +11,8 @@ class UserCommentListPage extends ConsumerStatefulWidget {
   const UserCommentListPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<UserCommentListPage> createState() => _UserCommentHistoryPageState();
+  ConsumerState<UserCommentListPage> createState() =>
+      _UserCommentHistoryPageState();
 }
 
 class _UserCommentHistoryPageState extends ConsumerState<UserCommentListPage> {
@@ -37,7 +39,7 @@ class _UserCommentHistoryPageState extends ConsumerState<UserCommentListPage> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.9 &&
+            _scrollController.position.maxScrollExtent * 0.9 &&
         !_isLoading &&
         _hasMore) {
       _loadMoreComments();
@@ -113,10 +115,8 @@ class _UserCommentHistoryPageState extends ConsumerState<UserCommentListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('작성한 댓글 목록'),
-        centerTitle: true,
-        elevation: 0,
+      appBar: WidgetsAppBar(
+        title: '작성한 댓글 목록',
       ),
       body: _buildBody(),
     );
@@ -214,7 +214,8 @@ class _UserCommentHistoryPageState extends ConsumerState<UserCommentListPage> {
     );
   }
 
-  Widget _buildCommentCard(BuildContext context, CommunityCommentResponse comment) {
+  Widget _buildCommentCard(
+      BuildContext context, CommunityCommentResponse comment) {
     return GestureDetector(
       onTap: () async {
         // 상세 페이지로 이동

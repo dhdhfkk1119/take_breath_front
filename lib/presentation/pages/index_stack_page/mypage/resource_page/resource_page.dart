@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:take_breath/_core/utils/widgets_app_bar.dart';
 import 'widgets/resource_card.dart';
 
 class ResourcePage extends StatelessWidget {
@@ -47,12 +48,8 @@ class ResourcePage extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('교육 자료실'),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+      appBar: WidgetsAppBar(
+        title: '교육 자료실',
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),

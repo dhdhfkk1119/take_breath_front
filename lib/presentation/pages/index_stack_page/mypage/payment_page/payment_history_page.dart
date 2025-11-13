@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/utils/widgets_app_bar.dart';
 import 'package:take_breath/domain/payment/providers/payment_history_notifier.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/mypage/payment_page/widgets/payment_card.dart';
 
@@ -7,8 +8,7 @@ class PaymentHistoryPage extends ConsumerStatefulWidget {
   const PaymentHistoryPage({super.key});
 
   @override
-  ConsumerState<PaymentHistoryPage> createState() =>
-      _PaymentHistoryPageState();
+  ConsumerState<PaymentHistoryPage> createState() => _PaymentHistoryPageState();
 }
 
 class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
@@ -39,15 +39,8 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
     final historyState = ref.watch(paymentHistoryProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('결제 내역'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 1,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+      appBar: WidgetsAppBar(
+        title: '결제 내역',
       ),
       body: historyState.when(
         data: (payments) {
