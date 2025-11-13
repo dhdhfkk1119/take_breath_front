@@ -40,10 +40,9 @@ class _ClosableInfoBoxState extends State<ClosableInfoBox> {
           ),
           child: Padding(
             padding: const EdgeInsets.only(
-              top: 8.0,
-              bottom: 8.0,
-              left: 8.0,
-              right: 36.0,
+              top: 16.0,
+              bottom: 16.0,
+              left: 16.0,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

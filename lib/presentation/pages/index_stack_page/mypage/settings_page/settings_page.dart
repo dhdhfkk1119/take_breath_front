@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:take_breath/_core/utils/widgets_app_bar.dart';
 import '../../../../../domain/sse_notification/service/notification_service.dart';
 import 'widgets/settings_notification_section.dart';
 import 'widgets/settings_account_section.dart';
@@ -43,71 +44,81 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: DraggableScrollableSheet(
-        initialChildSize: 0.9,
-        minChildSize: 0.7,
-        maxChildSize: 0.95,
-        builder: (context, scrollController) {
-          return SingleChildScrollView(
-            controller: scrollController,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // 제목
-                  InkWell(
-                    onTap: () {},
-                    child: Icon(CupertinoIcons.back),
-                  ),
-                  const Text(
-                    '설정',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: DraggableScrollableSheet(
+          initialChildSize: 0.9,
+          minChildSize: 0.7,
+          maxChildSize: 0.95,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 24, right: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 제목
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Icon(CupertinoIcons.back),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          '설정',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
-                  // =====================
-                  // 섹션 1: 알림 설정
-                  // =====================
-                  _buildNotificationSection(),
-                  const SizedBox(height: 28),
+                    // =====================
+                    // 섹션 1: 알림 설정
+                    // =====================
+                    _buildNotificationSection(),
+                    const SizedBox(height: 28),
 
-                  // =====================
-                  // 섹션 2: 개인정보 설정
-                  // =====================
-                  SettingsAccountSection(
-                    isAnonymous: _isAnonymous,
-                    onAnonymousChanged: (value) {
-                      setState(() => _isAnonymous = value);
-                      widget.onAnonymousChanged(value);
-                    },
-                  ),
-                  const SizedBox(height: 28),
+                    // =====================
+                    // 섹션 2: 개인정보 설정
+                    // =====================
+                    SettingsAccountSection(
+                      isAnonymous: _isAnonymous,
+                      onAnonymousChanged: (value) {
+                        setState(() => _isAnonymous = value);
+                        widget.onAnonymousChanged(value);
+                      },
+                    ),
+                    const SizedBox(height: 28),
 
-                  // =====================
-                  // 섹션 3: 디스플레이 설정
-                  // =====================
-                  const SettingsDisplaySection(),
-                  const SizedBox(height: 28),
+                    // =====================
+                    // 섹션 3: 디스플레이 설정
+                    // =====================
+                    const SettingsDisplaySection(),
+                    const SizedBox(height: 28),
 
-                  // =====================
-                  // 섹션 4: 데이터 및 보안
-                  // =====================
-                  const SettingsDataSection(),
-                  const SizedBox(height: 40),
-                ],
+                    // =====================
+                    // 섹션 4: 데이터 및 보안
+                    // =====================
+                    const SettingsDataSection(),
+                    const SizedBox(height: 40),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

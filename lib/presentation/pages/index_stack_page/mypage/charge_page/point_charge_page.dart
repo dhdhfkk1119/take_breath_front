@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/utils/widgets_app_bar.dart';
 import 'package:take_breath/domain/payment/providers/payment_notifier.dart';
 import 'package:take_breath/domain/point/providers/point_notifier.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/mypage/payment_page/payment_webview_page.dart';
@@ -42,12 +43,12 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
       }
 
       final prepareData = await ref.read(paymentProvider.notifier).prepare(
-        amount: _selectedAmount!,
-        orderName: '$_selectedAmount P',
-        buyerName: member.name,
-        buyerEmail: member.email,
-        buyerTel: member.phone,
-      );
+            amount: _selectedAmount!,
+            orderName: '$_selectedAmount P',
+            buyerName: member.name,
+            buyerEmail: member.email,
+            buyerTel: member.phone,
+          );
 
       if (!mounted) return;
 
@@ -91,15 +92,8 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
     final pointState = ref.watch(pointProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('포인트 충전'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 1,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+      appBar: WidgetsAppBar(
+        title: '포인트 충전',
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -243,22 +237,22 @@ class _PointChargePageState extends ConsumerState<PointChargePage> {
                   ),
                   child: _isProcessing
                       ? const SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor:
-                      AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
                       : const Text(
-                    '결제하기',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+                          '결제하기',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
             ],

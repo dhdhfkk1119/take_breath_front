@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/utils/widgets_app_bar.dart';
 import '../../../../../domain/point/providers/point_notifier.dart';
 
 class PointHistoryPage extends ConsumerWidget {
@@ -10,15 +11,8 @@ class PointHistoryPage extends ConsumerWidget {
     final pointState = ref.watch(pointProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('포인트 내역'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 1,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+      appBar: WidgetsAppBar(
+        title: '포인트 내역',
       ),
       body: pointState.transactions.isEmpty
           ? Center(
