@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:take_breath/domain/member/services/auth_interceptor.dart';
+import 'package:take_breath/main.dart';
 
 const baseUrl = "http://192.168.0.87:8080/api";
 const imageLocalUrl = "http://10.0.2.2:8080/uploads/";
@@ -11,4 +12,4 @@ final dio = Dio(
     validateStatus: (status) => true, // 모든 상태 코드를 onResponse에서 처리
     listFormat: ListFormat.multi,
   ),
-)..interceptors.add(AuthInterceptor());
+)..interceptors.add(AuthInterceptor(navigatorKey: navigatorKey));
