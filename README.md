@@ -173,7 +173,7 @@
   </tr>
   <tr>
     <td align="center">
-      ![admin](https://github.com/user-attachments/assets/e15f504d-9f9b-49d4-9aef-2bcd5a5ca0e1)
+      <img src="https://github.com/user-attachments/assets/e15f504d-9f9b-49d4-9aef-2bcd5a5ca0e1" alt="관리자 페이지" width="500"/>
     </td>
   </tr>
 </table>
