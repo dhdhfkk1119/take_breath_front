@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/domain/counselor/providers/counselor_list_notifier.dart';
+import '../../../../../_core/constants/custom_color.dart';
 import 'widgets/counselor_list_body.dart';
 
 class CounselorListPage extends ConsumerStatefulWidget {
@@ -26,7 +27,9 @@ class _CounselorListPageState extends ConsumerState<CounselorListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('상담사 리스트'),
+        backgroundColor: brandAppBarColor,
+        surfaceTintColor: Colors.transparent,
+        title: const Text('상담사 리스트', style: TextStyle(fontSize: 20),),
         centerTitle: true,
         elevation: 0,
       ),

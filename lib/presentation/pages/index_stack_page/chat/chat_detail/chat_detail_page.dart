@@ -8,6 +8,7 @@ import 'package:take_breath/domain/chat/models/chat_message_ui/chat_message_ui.d
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_detail/widgets/chat_detail_body.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_detail/widgets/chat_input_field.dart';
 
+import '../../../../../_core/constants/custom_color.dart';
 import '../../../../../domain/chat/providers/chat_message_repository_provider.dart';
 import '../../../../../domain/member/services/auth_storage.dart';
 
@@ -26,9 +27,9 @@ class ChatDetailPage extends ConsumerStatefulWidget {
 }
 
 class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
-  StompClient? stompClient;                 // stomp 클라
+  StompClient? stompClient; // stomp 클라
   final List<ChatMessageUI> messages = []; // 전체 메세지(이전 메세지, 현재 메세지)
-  bool _isConnected = false;                // 연결 유무
+  bool _isConnected = false; // 연결 유무
   bool _isUploadingImage = false;
   int? _currentUserId;
   final ScrollController _scrollController = ScrollController();
@@ -53,7 +54,6 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
 
     await _loadChatHistory();
     await _connectStomp();
-
   }
 
   // 채팅 이력 가져오기
@@ -269,7 +269,10 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
       onTap: () => FocusScope.of(context).unfocus(),
       behavior: HitTestBehavior.translucent,
       child: Scaffold(
-        appBar: AppBar(title: Text(widget.roomName)),
+        appBar: AppBar(
+            backgroundColor: brandAppBarColor,
+            surfaceTintColor: Colors.transparent,
+            title: Text(widget.roomName)),
         body: Column(
           children: [
             Expanded(
@@ -317,6 +320,4 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
       showTimestamp: shouldShowTimestamp,
     );
   }
-
-
 }

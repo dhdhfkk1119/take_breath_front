@@ -3,3 +3,5 @@ import 'dart:ui';
 
 final brandBackColor = Color(0xFF06B6D4);
 final brandFontColor = Color(0xFF0891B2);
+final brandAppBarColor = Color(0xFFE0F7FA);
+

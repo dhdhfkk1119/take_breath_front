@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../../../_core/constants/custom_color.dart';
 import '../../../../../../domain/recorder/models/record_filter.dart';
 
 class RecorderListFilter extends StatefulWidget {
@@ -36,7 +37,8 @@ class _RecorderListFilterState extends State<RecorderListFilter> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('필터'),
-        backgroundColor: Colors.white,
+        backgroundColor: brandAppBarColor,
+        surfaceTintColor: Colors.transparent,
         foregroundColor: Colors.black,
         elevation: 0,
       ),

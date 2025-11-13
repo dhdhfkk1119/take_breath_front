@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../../../../../_core/constants/custom_color.dart';
+
 class RecorderWriteAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   final VoidCallback onSave;
@@ -15,6 +17,7 @@ class RecorderWriteAppBar extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: brandAppBarColor,
       leading: IconButton(
         icon: const Icon(CupertinoIcons.back),
         onPressed: () => Navigator.pop(context),

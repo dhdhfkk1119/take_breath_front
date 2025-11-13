@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/mypage/settings_page/settings_page.dart';
+import '../../../../../_core/constants/custom_color.dart';
 import '../widgets/counselor_profile_section.dart';
 import '../widgets/counselor_stats_section.dart';
 import '../widgets/counselor_activity_section.dart';
@@ -65,6 +66,8 @@ class _CounselorMypageListPageState extends State<CounselorMypageListPage> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            backgroundColor: brandAppBarColor,
+            surfaceTintColor: Colors.transparent,
             title: const Text('프로필'),
             centerTitle: true,
             elevation: 0,

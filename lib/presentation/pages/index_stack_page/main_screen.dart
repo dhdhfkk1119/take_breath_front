@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:take_breath/_core/constants/custom_color.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_list/chat_list_page.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/counselor/list_page/counselor_list_page.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/mypage/list_page/user_mypage_list_page.dart';
@@ -19,7 +20,7 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const Color primaryColor = Color(0xFFF96666);
+    Color primaryColor = brandFontColor;
 
     return Scaffold(
       backgroundColor: Colors.white,

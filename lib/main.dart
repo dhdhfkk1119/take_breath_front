@@ -49,6 +49,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white,
+      ),
       home: const SplashScreen(),
       routes: {
         "/social_page": (context) => const SocialPage(),

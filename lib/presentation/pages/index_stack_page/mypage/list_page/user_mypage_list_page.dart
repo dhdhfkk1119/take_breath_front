@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/constants/custom_color.dart';
 import '../../../../../domain/point/providers/point_notifier.dart';
 import '../charge_page/point_charge_page.dart';
 import '../charge_page/point_history_page.dart';
@@ -152,6 +153,8 @@ class _UserMypageListPageState extends ConsumerState<UserMypageListPage> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: brandAppBarColor,
+        surfaceTintColor: Colors.transparent,
         title: const Text('프로필'),
         centerTitle: true,
         elevation: 0,

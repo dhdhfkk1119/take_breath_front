@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../../../../../_core/constants/custom_color.dart';
+
 class RecorderListAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   final VoidCallback onSearchPressed;
@@ -19,12 +21,14 @@ class RecorderListAppBar extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: brandAppBarColor,
+      surfaceTintColor: Colors.transparent,
       elevation: 0,
       title: const Text(
         '기록실',
         style: TextStyle(
           color: Colors.black,
-          fontSize: 24,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
       ),
