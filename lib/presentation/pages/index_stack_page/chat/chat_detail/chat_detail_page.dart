@@ -27,12 +27,12 @@ class ChatDetailPage extends ConsumerStatefulWidget {
 }
 
 class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
-  StompClient? stompClient; // stomp 클라
-  final List<ChatMessageUI> messages = []; // 전체 메세지(이전 메세지, 현재 메세지)
-  bool _isConnected = false; // 연결 유무
-  bool _isUploadingImage = false;
-  int? _currentUserId;
+  StompClient? stompClient;                 // stomp 클라
+  final List<ChatMessageUI> messages = [];  // 전체 메세지(이전 메세지, 현재 메세지)
   final ScrollController _scrollController = ScrollController();
+  bool _isConnected = false;        // 연결 유무
+  bool _isUploadingImage = false;   //
+  int? _currentUserId;
 
   @override
   void initState() {
