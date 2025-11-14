@@ -1,5 +1,5 @@
 <a href="https://club-project-one.vercel.app/" target="_blank">
-// 홍보 이미지 넣기
+  <img width="1920" height="1080" alt="제목을-입력해주세요_-001" src="https://github.com/user-attachments/assets/57f2e633-5a95-40b1-aaa2-cb102c8399bb" />
 </a>
 
 <br/>
