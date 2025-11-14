@@ -1,3 +1,5 @@
+import 'package:take_breath/_core/utils/my_http.dart';
+
 import '../models/record_item.dart';
 import '../models/record_filter.dart';
 import '../record_service/record_service.dart';
@@ -9,11 +11,11 @@ class RecordRepository {
 
   RecordRepository({required this.recordService});
 
-  Future<List<RecordItem>> getRecordList({
-    required int page,
-    required int size,
-    RecordFilter? filter,
-  }) async {
+  Future<List<RecordItem>> getRecordList(
+      {required int page,
+      required int size,
+      RecordFilter? filter,
+      String? sort}) async {
     final response = await recordService.getRecordList(
       page: page,
       size: size,
@@ -219,17 +221,17 @@ class RecordRepository {
     }
 
     if (filePath.startsWith('/uploads/')) {
-      return 'http://192.168.0.156:8080$filePath';
+      return '$imageLocalUrl$filePath';
     }
 
     if (filePath.startsWith('records/')) {
-      return 'http://192.168.0.156:8080/uploads/$filePath';
+      return '$imageLocalUrl$filePath';
     }
 
     if (filePath.contains('uploads')) {
       final parts = filePath.split('uploads');
       if (parts.length > 1) {
-        String imageUrl = 'http://192.168.0.156:8080/uploads${parts[1]}';
+        String imageUrl = '$imageLocalUrl${parts[1]}';
         return imageUrl.replaceAll('\\', '/');
       }
     }
