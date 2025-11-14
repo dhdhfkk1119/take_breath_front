@@ -12,7 +12,6 @@ import 'package:take_breath/domain/comment/providers/community_comment_write_not
 import 'package:take_breath/domain/community/providers/community_detail_notifier.dart';
 import 'package:take_breath/domain/community/providers/community_list_notifier.dart';
 import 'package:take_breath/domain/member/providers/member_login_notifier.dart';
-import 'package:take_breath/domain/member/providers/member_repository_provider.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/community/detail_page/widgets/community_detail_item.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/community/write_page/community_write_page.dart';
 

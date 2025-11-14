@@ -174,8 +174,8 @@ class CommunityRepository {
         '/community/posts/$id',
       );
       if (response.statusCode == 200) {
-        print("커뮤니티 삭제 : ${response.data}");
-        return response.data;
+        print("커뮤니티 삭제 : ${response.data['response']}");
+        return response.data['response'];
       } else {
         throw Exception("게시물 리스트 조회 실패: ${response.statusCode}");
       }
