@@ -1,4 +1,4 @@
-<img width="1280" height="720" alt="제목을-입력해주세요_-001" src="https://github.com/user-attachments/assets/57f2e633-5a95-40b1-aaa2-cb102c8399bb" />
+<img width="720px" height="480px" alt="제목을-입력해주세요_-001" src="https://github.com/user-attachments/assets/57f2e633-5a95-40b1-aaa2-cb102c8399bb" />
 
 <br/>
 <br/>
