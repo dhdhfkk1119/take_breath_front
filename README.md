@@ -23,6 +23,7 @@
 - **Build Tool** : Gradle (Groovy)
 - **의존성 관리** : pubspec.yaml (YAML 기반)
 - **개발기간** : 2025.10.22 ~ 2025.11.11
+- *협업 도구 : * : Git , Jira
 
 ## 🔑 3. Key Features (주요 기능)
 - **회원 가입**
