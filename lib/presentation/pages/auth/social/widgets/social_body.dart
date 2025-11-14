@@ -22,8 +22,15 @@ class SocialBody extends ConsumerWidget {
             width: 150,
             height: 150,
             decoration: BoxDecoration(
-              color: brandBackColor,
+              border: Border.all(width: 2, color: brandBackColor),
               borderRadius: BorderRadius.circular(100),
+            ),
+            child: Center(
+              child: Image.asset(
+                'assets/logo/logo.png',
+                width: 120,
+                height: 120,
+              ),
             ),
           ),
           SizedBox(

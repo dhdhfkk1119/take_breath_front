@@ -19,6 +19,7 @@ class PaymentCard extends ConsumerWidget {
     final formatter = NumberFormat('#,###');
 
     return Card(
+      color: Colors.white,
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 2,
       child: Padding(

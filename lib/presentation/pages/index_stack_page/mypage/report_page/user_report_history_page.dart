@@ -5,6 +5,7 @@ import 'package:take_breath/_core/utils/base_state.dart';
 import 'package:take_breath/domain/report/comment_report/models/comment_report_response.dart';
 import 'package:take_breath/domain/report/community_report/models/community_report_list_response.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/mypage/report_page/widgets/report_card.dart';
+import '../../../../../_core/constants/custom_color.dart';
 import '../../../../../domain/report/comment_report/providers/comment_report_list_notifier.dart';
 import '../../../../../domain/report/community_report/provider/community_report_list_notifier.dart';
 
@@ -65,6 +66,8 @@ class _UserReportHistoryPageState extends ConsumerState<UserReportHistoryPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: brandAppBarColor,
+        surfaceTintColor: Colors.transparent,
         title: const Text('신고내역'),
         centerTitle: true,
         elevation: 0,
