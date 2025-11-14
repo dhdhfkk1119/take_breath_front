@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:take_breath/_core/utils/my_http.dart';
 import '../../../presentation/pages/index_stack_page/recorder/detail_page/recorder_detail_page.dart';
 import 'record_item.dart';
 
@@ -128,7 +129,7 @@ class RecorderListItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
         child: record.thumbnailUrl != null && record.thumbnailUrl!.isNotEmpty
             ? Image.network(
-                record.thumbnailUrl!,
+                imageLocalUrl + record.thumbnailUrl!,
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
