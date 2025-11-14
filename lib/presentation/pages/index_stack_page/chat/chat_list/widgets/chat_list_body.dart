@@ -4,7 +4,6 @@ import 'package:take_breath/_core/constants/custom_color.dart';
 import 'package:take_breath/_core/utils/selectable_button.dart';
 import 'package:take_breath/domain/chat/models/chat_filter.dart';
 import 'package:take_breath/domain/chat/providers/chat_room_provider.dart';
-import 'package:take_breath/domain/chat/providers/notifier/chat_room_notifier.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_list/widgets/chat_list_item.dart';
 
 class ChatListBody extends ConsumerStatefulWidget {
@@ -30,7 +29,6 @@ class _ChatListBodyState extends ConsumerState<ChatListBody> {
     super.dispose();
   }
 
-  // 스크롤 이벤트 처리 (무한 스크롤)
   void _onScroll() {
     // 스크롤이 80% 이상 내려갔을 때 다음 페이지 로드
     if (_scrollController.position.pixels >=
@@ -105,14 +103,11 @@ class _ChatListBodyState extends ConsumerState<ChatListBody> {
                   // 리스트 렌더링
                   return ListView.separated(
                     controller: _scrollController,
-                    // ⭐ ScrollController 연결
                     physics: const AlwaysScrollableScrollPhysics(),
                     itemCount: filteredRooms.length + (state.hasNext ? 1 : 0),
-                    // ⭐ 로딩 인디케이터용 +1
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 8),
                     itemBuilder: (context, index) {
-                      // 마지막 아이템이고 다음 페이지가 있으면 로딩 인디케이터 표시
                       if (index == filteredRooms.length) {
                         return const Center(
                           child: Padding(

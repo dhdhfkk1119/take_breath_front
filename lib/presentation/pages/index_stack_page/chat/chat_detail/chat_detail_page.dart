@@ -27,11 +27,11 @@ class ChatDetailPage extends ConsumerStatefulWidget {
 }
 
 class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
-  StompClient? stompClient;                 // stomp 클라
-  final List<ChatMessageUI> messages = [];  // 전체 메세지(이전 메세지, 현재 메세지)
+  StompClient? stompClient; // stomp 클라
+  final List<ChatMessageUI> messages = []; // 전체 메세지(이전 메세지, 현재 메세지)
   final ScrollController _scrollController = ScrollController();
-  bool _isConnected = false;        // 연결 유무
-  bool _isUploadingImage = false;   //
+  bool _isConnected = false; // 서버 연결 유무
+  bool _isUploadingImage = false; // 이미지 업로드 로딩
   int? _currentUserId;
 
   @override
@@ -46,11 +46,11 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
     _currentUserId = userInfo?.id;
 
     if (_currentUserId == null) {
-      debugPrint('❌ 사용자 정보 없음 - 로그인 필요');
+      debugPrint('사용자 정보 없음 - 로그인 필요');
       return;
     }
 
-    debugPrint('✅ 현재 사용자 ID: $_currentUserId');
+    debugPrint('현재 사용자 ID: $_currentUserId');
 
     await _loadChatHistory();
     await _connectStomp();
@@ -74,9 +74,9 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
       });
 
       _scrollToBottom(force: true);
-      debugPrint('✅ 과거 메시지 ${messages.length}개 로드 완료');
+      debugPrint('과거 메시지 ${messages.length}개 로드 완료');
     } catch (e) {
-      debugPrint("❌ 이전 메시지 로드 실패: $e");
+      debugPrint("이전 메시지 로드 실패: $e");
     }
   }
 
@@ -98,16 +98,16 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
         },
         onConnect: _onConnect,
         onWebSocketDone: () {
-          debugPrint('🛑 WebSocket 연결 닫힘');
+          debugPrint('WebSocket 연결 닫힘');
         },
         onStompError: (frame) {
-          debugPrint('❌ STOMP Error: ${frame.body}');
+          debugPrint('STOMP Error: ${frame.body}');
         },
         onWebSocketError: (error) {
-          debugPrint('❌ WebSocket Error: $error');
+          debugPrint('WebSocket Error: $error');
         },
         onDisconnect: (frame) {
-          debugPrint('🛑 WebSocket 연결 종료');
+          debugPrint('WebSocket 연결 종료');
           if (mounted) {
             setState(() => _isConnected = false);
           }
@@ -119,7 +119,7 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
 
   // 연결 성공 시 구독
   void _onConnect(StompFrame frame) async {
-    debugPrint('✅ STOMP 연결 완료 -> 채널 구독 진행');
+    debugPrint('STOMP 연결 완료 -> 채널 구독 진행');
     setState(() => _isConnected = true);
     final token = await AuthStorage.getAccessToken();
 
@@ -130,9 +130,9 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
       headers: {'Authorization': 'Bearer $token'},
       callback: (frame) {
         if (frame.body != null) {
-          final decoded = jsonDecode(frame.body!); // 받은 응답 String -> Map 변환
-          final data = decoded['response'] ?? decoded; // ApiResult 구조 파싱
-          final msg = ChatMessageResponse.fromJson(data); // json 변환
+          final decoded = jsonDecode(frame.body!);
+          final data = decoded['response'] ?? decoded;
+          final msg = ChatMessageResponse.fromJson(data);
           if (mounted) {
             setState(() {
               final prevMsg = messages.isNotEmpty ? messages.first : null;
@@ -148,7 +148,7 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
 
   // 텍스트 메세지 전송
   Future<void> _sendTextMessage(String content) async {
-    debugPrint('✅ 채팅방 메세지 전송');
+    debugPrint('채팅방 메세지 전송');
     if (!_isConnected) return;
     final token = await AuthStorage.getAccessToken();
 
@@ -160,8 +160,6 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
         "messageType": "TEXT",
       }),
     );
-
-    // _scrollToBottom();
   }
 
   // 이미지 메세지 전송
@@ -214,8 +212,7 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
         );
       }
     } catch (e) {
-      // 실패
-      debugPrint('❌ 이미지 전송 실패: $e');
+      debugPrint('이미지 전송 실패: $e');
 
       if (mounted) {
         ScaffoldMessenger.of(context).clearSnackBars();
@@ -243,7 +240,7 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
       if (_scrollController.hasClients) {
         final currentPosition = _scrollController.position.pixels;
         final maxScroll = _scrollController.position.maxScrollExtent;
-        final isNearBottom = (maxScroll - currentPosition) < 100; // ✅ 수정
+        final isNearBottom = (maxScroll - currentPosition) < 100;
 
         if (force || isNearBottom) {
           _scrollController.animateTo(
@@ -292,7 +289,7 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
     );
   }
 
-  // ChatMessageResponse를 ChatMessageUI로 변환하는 핵심 메서드
+  // ChatMessageResponse를 ChatMessageUI로 변환
   ChatMessageUI _convertToUIModel(
     ChatMessageResponse response,
     ChatMessageUI? previousMessage,
@@ -309,7 +306,7 @@ class _ChatDetailPageState extends ConsumerState<ChatDetailPage> {
             .abs()
         : 999;
 
-    // ✅ 같은 발신자 + 5분 이내면 프로필/시간 숨김
+    // 같은 발신자 + 5분 이내면 프로필/시간 숨김
     final shouldShowProfile = !isSameSender || minutesDiff >= 5;
     final shouldShowTimestamp = !isSameSender || minutesDiff >= 5;
 

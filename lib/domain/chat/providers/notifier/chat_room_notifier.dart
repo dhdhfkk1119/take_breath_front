@@ -2,9 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/domain/chat/models/chat_room_list_state.dart';
 import 'package:take_breath/domain/chat/providers/chat_room_repository_provider.dart';
 
-// 채팅방 목록을 관리하는 Notifier
 class ChatRoomNotifier extends AsyncNotifier<ChatRoomListState> {
-  static const int pageSize = 10; // 한 페이지당 20개
+  static const int pageSize = 10;
 
   @override
   Future<ChatRoomListState> build() async {
@@ -26,13 +25,13 @@ class ChatRoomNotifier extends AsyncNotifier<ChatRoomListState> {
     );
   }
 
-  /// 다음 페이지 로드 (무한 스크롤)
+  /// 다음 페이지 로드
   Future<void> loadMore() async {
     final currentState = state.value;
     if (currentState == null ||
         !currentState.hasNext ||
         currentState.isLoadingMore) {
-      return; // 더 이상 로드할 페이지가 없거나 이미 로딩 중이면 중단
+      return;
     }
 
     // 로딩 상태로 변경
@@ -60,16 +59,14 @@ class ChatRoomNotifier extends AsyncNotifier<ChatRoomListState> {
         isLoadingMore: false,
       ));
     } catch (e, stackTrace) {
-      // 에러 발생 시 로딩 상태만 해제
       state = AsyncData(currentState.copyWith(isLoadingMore: false));
-      // 에러를 다시 던져서 UI에서 처리할 수 있게 함
       rethrow;
     }
   }
 
-  /// 새로고침 (첫 페이지부터 다시 로드)
+  // 새로고침
   Future<void> refresh() async {
-    state = const AsyncLoading(); // 로딩 상태
+    state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       return _loadPage(0);
     });

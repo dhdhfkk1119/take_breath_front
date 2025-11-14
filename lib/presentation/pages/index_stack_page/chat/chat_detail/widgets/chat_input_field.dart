@@ -95,7 +95,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white, // 📌 배경을 흰색으로
+      color: Colors.white,
       child: SafeArea(
         bottom: false,
         child: Padding(
@@ -110,7 +110,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
                   color: Colors.grey[100],
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.grey[300]!, // 📌 테두리 추가
+                    color: Colors.grey[300]!,
                     width: 1,
                   ),
                 ),
@@ -126,10 +126,10 @@ class _ChatInputFieldState extends State<ChatInputField> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[100], // 📌 입력 필드 배경 연한 회색
-                    borderRadius: BorderRadius.circular(24), // 📌 둥근 모서리
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(24),
                     border: Border.all(
-                      color: Colors.grey[300]!, // 📌 테두리 추가
+                      color: Colors.grey[300]!,
                       width: 1,
                     ),
                   ),
@@ -137,17 +137,17 @@ class _ChatInputFieldState extends State<ChatInputField> {
                     controller: _controller,
                     enabled: widget.enabled,
                     style: const TextStyle(
-                      color: Colors.black87, // 📌 텍스트 색상
+                      color: Colors.black87,
                       fontSize: 15,
                     ),
                     decoration: InputDecoration(
                       hintText:
                           widget.enabled ? "메시지를 입력하세요..." : "서버에 연결 중입니다...",
                       hintStyle: TextStyle(
-                        color: Colors.grey[500], // 📌 힌트 텍스트 색상
+                        color: Colors.grey[500],
                         fontSize: 15,
                       ),
-                      border: InputBorder.none, // 📌 기본 테두리 제거
+                      border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 20,
                         vertical: 12,

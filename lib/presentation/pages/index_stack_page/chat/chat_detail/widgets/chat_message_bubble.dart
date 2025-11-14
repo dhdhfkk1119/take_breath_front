@@ -33,7 +33,7 @@ class ChatMessageBubble extends StatelessWidget {
             : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ✅ 프로필 이미지 (타인 메시지 + showProfile)
+          // 프로필 이미지
           if (!isMe && showProfile)
             Padding(
               padding: const EdgeInsets.only(right: 8),
@@ -46,9 +46,9 @@ class ChatMessageBubble extends StatelessWidget {
               ),
             ),
 
-          // ✅ 프로필 없을 때 공간 유지 (정렬용)
+          // 프로필 없을 때
           if (!isMe && !showProfile)
-            const SizedBox(width: 44), // CircleAvatar 크기만큼
+            const SizedBox(width: 44),
 
           // 메시지 컬럼
           Flexible(
@@ -57,7 +57,7 @@ class ChatMessageBubble extends StatelessWidget {
                   ? CrossAxisAlignment.end
                   : CrossAxisAlignment.start,
               children: [
-                // ✅ 발신자 이름 (타인 메시지 + showProfile)
+                // 발신자 이름
                 if (!isMe && showProfile)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 4, left: 4),
@@ -76,7 +76,7 @@ class ChatMessageBubble extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    // ✅ 시간 표시 (내 메시지 + showTimestamp)
+                    // 시간 표시
                     if (isMe && showTimestamp)
                       Padding(
                         padding: const EdgeInsets.only(right: 6),
@@ -92,7 +92,7 @@ class ChatMessageBubble extends StatelessWidget {
                     // 메시지 내용
                     _buildMessageContent(context),
 
-                    // ✅ 시간 표시 (타인 메시지 + showTimestamp)
+                    // 타인 시간 표시
                     if (!isMe && showTimestamp)
                       Padding(
                         padding: const EdgeInsets.only(left: 6),
@@ -189,67 +189,8 @@ class ChatMessageBubble extends StatelessWidget {
             },
           ),
         ),
-        /*
-        if (message != null && message!.isNotEmpty) ...[
-          const SizedBox(height: 4),
-          Text(
-            message!,
-            style: TextStyle(
-              color: isMe ? Colors.white : Colors.black87,
-              fontSize: 14,
-            ),
-          ),
-        ],
-        */
+
       ],
     );
   }
 }
-
-/*
-
-class ChatMessageBubble extends StatelessWidget {
-  final bool isMe;
-  final String message;
-  final String messageType;
-  final bool showProfile;
-  final bool showTimestamp;
-  final String senderName;
-  final String formattedTime;
-  final String? imageUrl;
-
-  const ChatMessageBubble({
-    super.key,
-    required this.isMe,
-    required this.message,
-    required this.messageType,
-    required this.showProfile,
-    required this.showTimestamp,
-    required this.senderName,
-    required this.formattedTime,
-    this.imageUrl,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final bgColor = isMe ? Colors.blue[300]! : Colors.grey[300]!;
-    final align = isMe ? Alignment.centerRight : Alignment.centerLeft;
-
-    return Align(
-      alignment: align,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: messageType == "IMAGE"
-            ? Image.network(message)
-            : Text(message),
-      ),
-    );
-  }
-}
-
-*/

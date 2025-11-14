@@ -64,17 +64,3 @@ class ChatMessageRepository {
     }
   }
 }
-
-/*
-
-} on DioException catch (e) {
-  if (e.response?.statusCode == 400) {
-    final errorMsg = e.response?.data['error']?['message'] ?? '잘못된 요청입니다';
-    throw Exception(errorMsg);
-  }
-  throw Exception("네트워크 오류: ${e.message}");
-} catch (e) {
-  throw Exception("이미지 전송 중 오류 발생: $e");
-}
-
- */

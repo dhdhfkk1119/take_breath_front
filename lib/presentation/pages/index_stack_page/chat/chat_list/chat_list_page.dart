@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:take_breath/_core/utils/widgets_app_bar.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_list/widgets/chat_list_body.dart';
 
 import '../../../../../_core/constants/custom_color.dart';

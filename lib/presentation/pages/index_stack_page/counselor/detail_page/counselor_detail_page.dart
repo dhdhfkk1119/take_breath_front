@@ -7,9 +7,9 @@ class CounselorDetailPage extends StatelessWidget {
   final CounselorResponse counselor;
 
   const CounselorDetailPage({
-    Key? key,
+    super.key,
     required this.counselor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
