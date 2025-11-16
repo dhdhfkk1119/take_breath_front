@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/utils/my_http.dart';
 import 'package:take_breath/domain/member/models/member.dart';
 import 'package:take_breath/domain/member/repositories/member_repository.dart';
 import 'package:take_breath/domain/member/services/auth_storage.dart';
@@ -72,6 +75,17 @@ class MemberNotifier extends Notifier<Member?> {
         await AuthStorage.saveTokens(
             member.accessToken, member.refreshToken ?? "");
         await AuthStorage.saveUserInfo(member);
+
+        // 로그인시 fcm 코드 등록
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        if (fcmToken != null) {
+          print("소셜 FCM 토큰 전달 : ${fcmToken}");
+          await dio.post(
+            "/members/fcm-token",
+            data: {"fcmToken": fcmToken},
+          );
+        }
+
         state = member;
         connectSSE();
         print('소셜 로그인 완료!');
@@ -93,6 +107,17 @@ class MemberNotifier extends Notifier<Member?> {
     // member가 null이 아니라면 데이터를 저장함
     if (member != null) {
       await AuthStorage.saveUserInfo(member);
+
+      // FCM 토큰 가져오기
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+
+      if (fcmToken != null) {
+        print("일반 로그인 FCM 토큰 전달 : ${fcmToken}");
+        await dio.post(
+          "/members/fcm-token",
+          data: {"fcmToken": fcmToken},
+        );
+      }
     }
 
     if (autoLogin) {
