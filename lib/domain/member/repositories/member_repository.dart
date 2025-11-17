@@ -180,7 +180,7 @@ class MemberRepository {
   Future<Member?> socialLogin(String idToken, String provider) async {
     try {
       final response = await dio.post(
-        '/social/google-login',
+        '/auth/social-login',
         data: jsonEncode({
           'idToken': idToken,
           'provider': provider,
@@ -189,6 +189,9 @@ class MemberRepository {
 
       if (response.statusCode == 200) {
         final responseBody = response.data;
+        final String jwt = responseBody['jwt'];
+        final memberJson = responseBody['member'];
+
         if (responseBody['phone'] == null) {
           responseBody['phone'] = '';
         }
@@ -196,7 +199,8 @@ class MemberRepository {
           responseBody['daysLeft'] = 0; // 또는 null 유지
         }
 
-        Member member = Member.fromJson(responseBody);
+        Member member = Member.fromJson(memberJson);
+        member = member.copyWith(accessToken: jwt);
 
         final accessTokenFromHeader =
             response.headers['authorization']?.first?.split(' ').last;

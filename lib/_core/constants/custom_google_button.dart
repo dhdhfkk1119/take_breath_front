@@ -3,9 +3,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:take_breath/_core/constants/custom_widget.dart'; // 기존 유틸리티 위젯 임포트
 
 class CustomGoogleButton extends StatelessWidget {
+  String? logoUrl;
+  String? logoName;
   final VoidCallback click;
 
-  const CustomGoogleButton({super.key, required this.click});
+  CustomGoogleButton(
+      {super.key, required this.click, this.logoUrl, this.logoName});
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +43,13 @@ class CustomGoogleButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(
-                'assets/social/google.svg', // 이미지 경로는 그대로 유지
+                logoUrl!,
                 height: 20.0,
                 width: 20.0,
               ),
               const SizedBox(width: 10.0),
               CustomWidget.buildTitle(
-                "구글 로그인 진행",
+                logoName!,
                 size: 16,
                 weight: FontWeight.bold,
                 color: googleTextColor, // 텍스트 색상을 검은색 계열로 변경
