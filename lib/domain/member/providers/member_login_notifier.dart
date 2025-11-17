@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/_core/utils/my_http.dart';
 import 'package:take_breath/domain/member/models/member.dart';
@@ -27,76 +28,98 @@ class MemberNotifier extends Notifier<Member?> {
   }
 
   // 소셜 로그인
-  Future<bool> socialLoginUser(BuildContext context) async {
+  Future<bool> socialLoginUser(BuildContext context, String provider) async {
     try {
-      final GoogleSignIn googleSignIn = GoogleSignIn.instance;
-      await googleSignIn.initialize();
+      Member? member;
 
-      const List<String> scopes = ['email', 'profile'];
-      final GoogleSignInAccount? googleUser =
-          await googleSignIn.authenticate(scopeHint: scopes);
-
-      if (googleUser == null) {
-        print('Google sign-in aborted by user.');
-        return false;
+      if (provider == "google") {
+        member = await _googleLogin();
+      } else if (provider == "naver") {
+        member = await _naverLogin();
+      } else {
+        throw Exception("지원하지 않는 소셜 로그인 제공자: $provider");
       }
-
-      final GoogleSignInClientAuthorization authz =
-          await googleUser.authorizationClient.authorizeScopes(scopes);
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final String? accessToken = authz.accessToken;
-      final String? idToken = googleAuth.idToken;
-
-      if (accessToken == null) {
-        throw Exception("Google accessToken 획득 실패");
-      }
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: accessToken,
-        idToken: idToken,
-      );
-
-      final userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-
-      final firebaseIdToken = await userCredential.user?.getIdToken(true);
-
-      if (firebaseIdToken == null) {
-        throw Exception("Firebase ID Token 획득 실패");
-      }
-
-      final member =
-          await memberRepository.socialLogin(firebaseIdToken, 'google');
 
       if (member != null) {
+        // 토큰 저장
         await AuthStorage.saveTokens(
             member.accessToken, member.refreshToken ?? "");
         await AuthStorage.saveUserInfo(member);
 
-        // 로그인시 fcm 코드 등록
+        // FCM 등록
         final fcmToken = await FirebaseMessaging.instance.getToken();
         if (fcmToken != null) {
-          print("소셜 FCM 토큰 전달 : ${fcmToken}");
-          await dio.post(
-            "/members/fcm-token",
-            data: {"fcmToken": fcmToken},
-          );
+          print("소셜 FCM 토큰 전달 : $fcmToken");
+          await dio.post("/members/fcm-token", data: {"fcmToken": fcmToken});
         }
 
         state = member;
         connectSSE();
-        print('소셜 로그인 완료!');
+        print('$provider 소셜 로그인 완료!');
         return true;
       } else {
         print("서버에서 사용자 정보를 가져오지 못함");
         return false;
       }
     } catch (e) {
-      print('소셜 로그인 중 오류 발생: $e');
+      print('$provider 소셜 로그인 중 오류 발생: $e');
       return false;
+    }
+  }
+
+// ================= Google 로그인 로직 =================
+  Future<Member?> _googleLogin() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn.instance;
+    await googleSignIn.initialize();
+
+    const List<String> scopes = ['email', 'profile'];
+    final GoogleSignInAccount? googleUser =
+        await googleSignIn.authenticate(scopeHint: scopes);
+
+    if (googleUser == null) {
+      print('Google sign-in aborted by user.');
+      return null;
+    }
+
+    final GoogleSignInClientAuthorization authz =
+        await googleUser.authorizationClient.authorizeScopes(scopes);
+
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final String? idToken = googleAuth.idToken;
+    if (idToken == null) throw Exception("Google ID Token 획득 실패");
+
+    final credential = GoogleAuthProvider.credential(
+      idToken: idToken,
+      accessToken: authz.accessToken,
+    );
+
+    final userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+    final firebaseIdToken = await userCredential.user?.getIdToken(true);
+
+    if (firebaseIdToken == null) throw Exception("Firebase ID Token 획득 실패");
+
+    return await memberRepository.socialLogin(firebaseIdToken, "google");
+  }
+
+  // ================= Naver 로그인 로직 =================
+  Future<Member?> _naverLogin() async {
+    try {
+      final NaverLoginResult result = await FlutterNaverLogin.logIn();
+      if (result.status == NaverLoginStatus.loggedIn) {
+        final token = await FlutterNaverLogin.currentAccessToken;
+        if (token != null && token.isValid()) {
+          final String accessToken = token.accessToken;
+          // 서버로 보내서 Member 받아오기
+          return await memberRepository.socialLogin(accessToken, "naver");
+        }
+      }
+      throw Exception("Naver 로그인 실패");
+    } catch (e) {
+      print("Naver 로그인 오류: $e");
+      throw Exception("Naver 로그인 토큰 획득 실패");
     }
   }
 

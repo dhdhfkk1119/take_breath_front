@@ -98,11 +98,29 @@ class SocialBody extends ConsumerWidget {
           SizedBox(
             height: 180,
           ),
-          // 소셜 로그인 버튼
           CustomGoogleButton(
+            logoName: "네이버 로그인 진행",
+            logoUrl: 'assets/social/naver.svg',
             click: () async {
               final memberNotifier = ref.read(memberProvider.notifier);
-              await memberNotifier.socialLoginUser(context);
+              await memberNotifier.socialLoginUser(context, "naver");
+
+              final member = ref.read(memberProvider);
+              if (member != null) {
+                Navigator.pushReplacementNamed(context, "/main");
+              }
+            },
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          // 소셜 로그인 버튼
+          CustomGoogleButton(
+            logoName: "구글 로그인 진행",
+            logoUrl: 'assets/social/google.svg',
+            click: () async {
+              final memberNotifier = ref.read(memberProvider.notifier);
+              await memberNotifier.socialLoginUser(context, "google");
 
               final member = ref.read(memberProvider);
               if (member != null) {
