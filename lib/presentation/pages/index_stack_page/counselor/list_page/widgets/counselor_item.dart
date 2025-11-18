@@ -89,6 +89,13 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
                         ),
                         const SizedBox(height: 4),
                         Text(
+                          "${widget.counselor.gender}" ?? "설정안함",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        Text(
                           widget.counselor.licenses != null &&
                                   widget.counselor.licenses!.isNotEmpty
                               ? widget.counselor.licenses!
@@ -157,89 +164,34 @@ class _CounselorItemState extends ConsumerState<CounselorItem> {
               const SizedBox(height: 12),
               // 가격 정보
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // 상담료
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          //여기 문자를 주고받는 로직 추가 부탁
-                        },
-                        child: Text(
-                          '문자 상담',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.teal[50],
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Icon(
-                              CupertinoIcons.chat_bubble_text_fill,
-                              size: 14,
-                              color: Colors.teal[700],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '1000만',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  // 후기료
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '문자 상담',
+                        '정보',
                         style: TextStyle(
-                          fontSize: 11,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
                           color: Colors.grey[500],
                         ),
                       ),
                       const SizedBox(height: 2),
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.orange[50],
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Icon(
-                              CupertinoIcons.phone_fill,
-                              size: 14,
-                              color: Colors.orange[700],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
                           Text(
-                            '1000만',
+                            '보유 자격증 갯수 : ${widget.counselor.licenses?.length ?? "1"}개',
                             style: const TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w700,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          Text(
+                            '외부 상담 평균 가격 : ${widget.counselor.price}원',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
                             ),
                           ),
                         ],

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:take_breath/_core/utils/my_http.dart';
+import 'package:take_breath/_core/utils/thumbnail_image.dart';
 import 'package:take_breath/domain/chat/providers/chat_room_repository_provider.dart';
 import 'package:take_breath/domain/counselor/models/counselor_response.dart';
 import 'package:take_breath/presentation/pages/index_stack_page/chat/chat_detail/chat_detail_page.dart';
@@ -90,7 +92,6 @@ class _CounselorDetailHeaderState extends ConsumerState<CounselorDetailHeader> {
           offset: const Offset(0, -50),
           child: Column(
             children: [
-              // 프로필 사진
               Container(
                 width: 100,
                 height: 100,
@@ -116,8 +117,6 @@ class _CounselorDetailHeaderState extends ConsumerState<CounselorDetailHeader> {
                 ),
               ),
               const SizedBox(height: 12),
-              // 뱃지
-              // 이름
               Text(
                 widget.counselor.name ?? "없음",
                 style: const TextStyle(
@@ -135,7 +134,6 @@ class _CounselorDetailHeaderState extends ConsumerState<CounselorDetailHeader> {
                 ),
               ),
               Text(
-                // 💡 리스트에서 자격증 이름만 추출하여 쉼표와 공백으로 연결
                 widget.counselor.licenses != null &&
                         widget.counselor.licenses!.isNotEmpty
                     ? widget.counselor.licenses!
@@ -146,19 +144,6 @@ class _CounselorDetailHeaderState extends ConsumerState<CounselorDetailHeader> {
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.grey[600],
-                ),
-              ),
-              const SizedBox(height: 16),
-              // 인포 박스
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildInfoBox('인간관계', '4,915'),
-                    _buildInfoBox('친절성', '3,271'),
-                    _buildInfoBox('전문성', '2,154'),
-                  ],
                 ),
               ),
               const SizedBox(height: 16),
@@ -211,29 +196,68 @@ class _CounselorDetailHeaderState extends ConsumerState<CounselorDetailHeader> {
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+              const SizedBox(height: 16),
+              Divider(thickness: 1, color: Colors.grey),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                child: widget.counselor.licenses == null ||
+                        widget.counselor.licenses!.isEmpty
+                    ? const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: Text(
+                          "아직 등록한 자격증이 없습니다.",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: widget.counselor.licenses!.map((license) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // 왼쪽: 자격증 이미지
+                                ThumbnailImage(
+                                  url: imageLocalUrl + license.licenseImage,
+                                ),
 
-  Widget _buildInfoBox(String label, String value) {
-    return Column(
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
+                                const SizedBox(width: 12),
+
+                                // 오른쪽: 자격증 정보
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        license.licenseName ?? "자격증 제목 없음",
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                          "자격증 번호: ${license.licenseNumber ?? '-'}"),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                          "등록 번호: ${license.licenseRegistrationNumber ?? '-'}"),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                      ),
+              ),
+            ],
           ),
         ),
       ],
