@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/_core/utils/my_http.dart';
 import 'package:take_breath/domain/member/models/member.dart';
@@ -96,6 +97,51 @@ class MemberNotifier extends Notifier<Member?> {
       }
     } catch (e) {
       print('소셜 로그인 중 오류 발생: $e');
+      return false;
+    }
+  }
+
+  Future<bool?> naverLogin(BuildContext context) async {
+    try {
+      final NaverLoginResult res = await FlutterNaverLogin.logIn();
+
+      // 로그인 성공 확인
+      if (res.status == NaverLoginStatus.loggedIn) {
+        final NaverAccessToken token =
+            await FlutterNaverLogin.currentAccessToken;
+        final member = await memberRepository.socialNaverLogin(
+            token.accessToken, // String 값
+            'naver');
+
+        if (member != null) {
+          await AuthStorage.saveTokens(
+              member.accessToken, member.refreshToken ?? "");
+          await AuthStorage.saveUserInfo(member);
+
+          // 로그인시 fcm 코드 등록
+          final fcmToken = await FirebaseMessaging.instance.getToken();
+          if (fcmToken != null) {
+            print("소셜 FCM 토큰 전달 : ${fcmToken}");
+            await dio.post(
+              "/members/fcm-token",
+              data: {"fcmToken": fcmToken},
+            );
+          }
+
+          state = member;
+          connectSSE();
+          print('소셜 로그인 완료!');
+          return true;
+        } else {
+          print("서버에서 사용자 정보를 가져오지 못함");
+          return false;
+        }
+      } else {
+        print("네이버 로그인 실패: ${res.status}");
+        return false;
+      }
+    } catch (error) {
+      print('Login failed: $error');
       return false;
     }
   }

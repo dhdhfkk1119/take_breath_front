@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "498079476090-lpfehtvljvav95mcl127t7nv048kkqvl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.take_breath",
+            "certificate_hash": "45919c2f37f0bb075d3f6ac9fbde1f074a53b1da"
+          }
+        },
+        {
           "client_id": "498079476090-jhmaetj2ci2ub11cdodohgb7trnv3qoo.apps.googleusercontent.com",
           "client_type": 3
         }

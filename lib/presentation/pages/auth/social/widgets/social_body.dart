@@ -104,6 +104,7 @@ class SocialBody extends ConsumerWidget {
             logoUrl: 'assets/social/naver.svg',
             click: () async {
               final memberNotifier = ref.read(memberProvider.notifier);
+              await memberNotifier.naverLogin(context);
 
               final member = ref.read(memberProvider);
               if (member != null) {

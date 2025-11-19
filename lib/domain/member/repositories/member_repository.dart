@@ -217,4 +217,45 @@ class MemberRepository {
       return null;
     }
   }
+
+  Future<Member?> socialNaverLogin(String idToken, String provider) async {
+    try {
+      final response = await dio.post(
+        '/auth/naver-login',
+        data: jsonEncode({
+          'idToken': idToken,
+          'provider': provider,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = response.data;
+        if (responseBody['phone'] == null) {
+          responseBody['phone'] = '';
+        }
+        if (responseBody['daysLeft'] == null) {
+          responseBody['daysLeft'] = 0; // 또는 null 유지
+        }
+
+        Member member = Member.fromJson(responseBody);
+
+        final accessTokenFromHeader =
+            response.headers['authorization']?.first?.split(' ').last;
+
+        final String newAccessToken = member.accessToken.isNotEmpty
+            ? member.accessToken
+            : (accessTokenFromHeader ?? member.accessToken);
+
+        member = member.copyWith(accessToken: newAccessToken);
+
+        return member;
+      } else {
+        print('소셜 로그인 API 오류: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('소셜 로그인 통신 실패: $e');
+      return null;
+    }
+  }
 }
