@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:take_breath/_core/constants/custom_color.dart';
-import 'package:take_breath/_core/constants/custom_google_button.dart';
+import 'package:take_breath/_core/constants/custom_social_button.dart';
 import 'package:take_breath/_core/constants/custom_text_button.dart';
 import 'package:take_breath/domain/member/providers/member_login_notifier.dart';
 import 'package:take_breath/presentation/pages/auth/login/member_login/member_login_page.dart';
@@ -99,7 +99,25 @@ class SocialBody extends ConsumerWidget {
             height: 180,
           ),
           // 소셜 로그인 버튼
-          CustomGoogleButton(
+          CustomSocialButton(
+            logoName: "네이버 로그인 진행",
+            logoUrl: 'assets/social/naver.svg',
+            click: () async {
+              final memberNotifier = ref.read(memberProvider.notifier);
+
+              final member = ref.read(memberProvider);
+              if (member != null) {
+                Navigator.pushReplacementNamed(context, "/main");
+              }
+            },
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          // 소셜 로그인 버튼
+          CustomSocialButton(
+            logoName: "구글 로그인 진행",
+            logoUrl: 'assets/social/google.svg',
             click: () async {
               final memberNotifier = ref.read(memberProvider.notifier);
               await memberNotifier.socialLoginUser(context);
