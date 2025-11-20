@@ -269,4 +269,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+
+android/app/google-services.json
+app/src/main/res/values/strings.xml
+
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij,visualstudiocode,macos,windows,eclipse

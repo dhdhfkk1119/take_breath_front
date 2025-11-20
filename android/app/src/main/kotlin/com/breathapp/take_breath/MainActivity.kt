@@ -1,4 +1,4 @@
-package com.example.take_breath
+package com.breathapp.take_breath
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

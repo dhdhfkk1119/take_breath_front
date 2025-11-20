@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.take_breath"
+    namespace = "com.breathapp.take_breath"
     compileSdk = flutter.compileSdkVersion
 
     defaultConfig {
-        applicationId = "com.example.take_breath"
+        applicationId = "com.breathapp.take_breath"
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

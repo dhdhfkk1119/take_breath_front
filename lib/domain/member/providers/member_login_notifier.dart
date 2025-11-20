@@ -103,25 +103,28 @@ class MemberNotifier extends Notifier<Member?> {
 
   Future<bool?> naverLogin(BuildContext context) async {
     try {
+      // 기존 로그인 세션 초기화
+      await FlutterNaverLogin.logOut();
+
       final NaverLoginResult res = await FlutterNaverLogin.logIn();
 
-      // 로그인 성공 확인
       if (res.status == NaverLoginStatus.loggedIn) {
         final NaverAccessToken token =
             await FlutterNaverLogin.currentAccessToken;
-        final member = await memberRepository.socialNaverLogin(
-            token.accessToken, // String 값
-            'naver');
+
+        print('네이버 액세스 토큰: ${token.accessToken}');
+
+        final member =
+            await memberRepository.socialNaverLogin(token.accessToken, 'naver');
 
         if (member != null) {
           await AuthStorage.saveTokens(
               member.accessToken, member.refreshToken ?? "");
           await AuthStorage.saveUserInfo(member);
 
-          // 로그인시 fcm 코드 등록
           final fcmToken = await FirebaseMessaging.instance.getToken();
           if (fcmToken != null) {
-            print("소셜 FCM 토큰 전달 : ${fcmToken}");
+            print("소셜 FCM 토큰 전달 : $fcmToken");
             await dio.post(
               "/members/fcm-token",
               data: {"fcmToken": fcmToken},
@@ -136,8 +139,12 @@ class MemberNotifier extends Notifier<Member?> {
           print("서버에서 사용자 정보를 가져오지 못함");
           return false;
         }
+      } else if (res.status == NaverLoginStatus.cancelledByUser) {
+        print("사용자가 로그인을 취소함");
+        return false;
       } else {
         print("네이버 로그인 실패: ${res.status}");
+        print("에러 메시지: ${res.errorMessage}");
         return false;
       }
     } catch (error) {
